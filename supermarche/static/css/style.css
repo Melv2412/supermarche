@@ -1,0 +1,7 @@
+body { background: #f5f7fb; }
+.card { box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+.nav-link { color: #333; }
+.nav-link:hover { color: #0d6efd; }
+#pos-products .product { border: 1px solid #e9ecef; border-radius: .5rem; padding: .5rem; cursor: pointer; }
+#pos-products .product:hover { background: #f8f9fa; }
+#pos-cart .qty { width: 3rem; text-align: center; }

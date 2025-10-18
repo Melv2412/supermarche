@@ -1,0 +1,369 @@
+<svg viewBox="0 0 1800 2400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .class-box { fill: #fff; stroke: #059669; stroke-width: 2; }
+      .class-header { fill: #10b981; }
+      .class-name { fill: #fff; font: bold 16px Arial; text-anchor: middle; }
+      .attribute { fill: #065f46; font: 12px 'Courier New'; }
+      .method { fill: #0891b2; font: 12px 'Courier New'; }
+      .relation-line { stroke: #64748b; stroke-width: 2; fill: none; }
+      .composition { stroke: #dc2626; stroke-width: 2; fill: none; }
+      .aggregation { stroke: #059669; stroke-width: 2; fill: none; }
+      .association { stroke: #0891b2; stroke-width: 2; fill: none; }
+      .label { fill: #475569; font: 11px Arial; }
+      .cardinality { fill: #dc2626; font: bold 10px Arial; }
+    </style>
+    
+    <!-- Arrow markers -->
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L9,3 z" fill="#64748b"/>
+    </marker>
+    <marker id="diamond-full" markerWidth="12" markerHeight="12" refX="0" refY="6" orient="auto">
+      <path d="M0,6 L6,0 L12,6 L6,12 z" fill="#dc2626" stroke="#dc2626"/>
+    </marker>
+    <marker id="diamond-empty" markerWidth="12" markerHeight="12" refX="0" refY="6" orient="auto">
+      <path d="M0,6 L6,0 L12,6 L6,12 z" fill="#fff" stroke="#059669" stroke-width="2"/>
+    </marker>
+    <linearGradient id="gradient2" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#10b981;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0891b2;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Titre -->
+  <rect x="0" y="0" width="1800" height="80" fill="url(#gradient2)"/>
+  <text x="900" y="35" style="fill:#fff; font:bold 28px Arial; text-anchor:middle;">Diagramme UML 2 : Gestion des Ventes et Caisses</text>
+  <text x="900" y="60" style="fill:#d1fae5; font:14px Arial; text-anchor:middle;">Système de Point de Vente (POS) - Classes, Attributs, Méthodes et Relations</text>
+
+  <!-- Classe Transaction (Centre gauche) -->
+  <g id="transaction">
+    <rect class="class-box" x="50" y="120" width="340" height="320"/>
+    <rect class="class-header" x="50" y="120" width="340" height="35"/>
+    <text class="class-name" x="220" y="142">Transaction</text>
+    <line x1="50" y1="155" x2="390" y2="155" stroke="#059669" stroke-width="1"/>
+    
+    <text class="attribute" x="60" y="175">- idTransaction: Integer</text>
+    <text class="attribute" x="60" y="190">- numeroTicket: String</text>
+    <text class="attribute" x="60" y="205">- dateTransaction: DateTime</text>
+    <text class="attribute" x="60" y="220">- montantBrut: Decimal</text>
+    <text class="attribute" x="60" y="235">- montantRemises: Decimal</text>
+    <text class="attribute" x="60" y="250">- montantNet: Decimal</text>
+    <text class="attribute" x="60" y="265">- montantTVA: Decimal</text>
+    <text class="attribute" x="60" y="280">- statut: String</text>
+    
+    <line x1="50" y1="295" x2="390" y2="295" stroke="#059669" stroke-width="1"/>
+    
+    <text class="method" x="60" y="315">+ calculerMontantTotal(): Decimal</text>
+    <text class="method" x="60" y="330">+ appliquerRemises(): void</text>
+    <text class="method" x="60" y="345">+ validerTransaction(): void</text>
+    <text class="method" x="60" y="360">+ imprimerTicket(): Ticket</text>
+  </g>
+
+  <!-- Classe LigneTransaction -->
+  <g id="lignetransaction">
+    <rect class="class-box" x="50" y="500" width="340" height="240"/>
+    <rect class="class-header" x="50" y="500" width="340" height="35"/>
+    <text class="class-name" x="220" y="522">LigneTransaction</text>
+    <line x1="50" y1="535" x2="390" y2="535" stroke="#059669" stroke-width="1"/>
+    
+    <text class="attribute" x="60" y="555">- idLigneTransaction: Integer</text>
+    <text class="attribute" x="60" y="570">- quantite: Integer</text>
+    <text class="attribute" x="60" y="585">- prixUnitaire: Decimal</text>
+    <text class="attribute" x="60" y="600">- prixPromotion: Decimal</text>
+    <text class="attribute" x="60" y="615">- sousTotal: Decimal</text>
+    <text class="attribute" x="60" y="630">- remiseAppliquee: Decimal</text>
+    
+    <line x1="50" y1="645" x2="390" y2="645" stroke="#059669" stroke-width="1"/>
+    
+    <text class="method" x="60" y="665">+ calculerSousTotal(): Decimal</text>
+    <text class="method" x="60" y="680">+ verifierPromotion(): Promotion</text>
+    <text class="method" x="60" y="695">+ mettreAjourStock(): void</text>
+  </g>
+
+  <!-- Classe Caisse -->
+  <g id="caisse">
+    <rect class="class-box" x="470" y="120" width="340" height="280"/>
+    <rect class="class-header" x="470" y="120" width="340" height="35"/>
+    <text class="class-name" x="640" y="142">Caisse</text>
+    <line x1="470" y1="155" x2="810" y2="155" stroke="#059669" stroke-width="1"/>
+    
+    <text class="attribute" x="480" y="175">- idCaisse: Integer</text>
+    <text class="attribute" x="480" y="190">- numeroCaisse: String</text>
+    <text class="attribute" x="480" y="205">- emplacement: String</text>
+    <text class="attribute" x="480" y="220">- estOuverte: Boolean</text>
+    <text class="attribute" x="480" y="235">- fondDeCaisse: Decimal</text>
+    <text class="attribute" x="480" y="250">- montantEnCaisse: Decimal</text>
+    
+    <line x1="470" y1="265" x2="810" y2="265" stroke="#059669" stroke-width="1"/>
+    
+    <text class="method" x="480" y="285">+ ouvrirCaisse(fond: Decimal): void</text>
+    <text class="method" x="480" y="300">+ fermerCaisse(): RapportVente</text>
+    <text class="method" x="480" y="315">+ calculerEcartCaisse(): Decimal</text>
+    <text class="method" x="480" y="330">+ enregistrerTransaction(): void</text>
+  </g>
+
+  <!-- Classe ModePaiement -->
+  <g id="modepaiement">
+    <rect class="class-box" x="470" y="460" width="340" height="200"/>
+    <rect class="class-header" x="470" y="460" width="340" height="35"/>
+    <text class="class-name" x="640" y="482">ModePaiement</text>
+    <line x1="470" y1="495" x2="810" y2="495" stroke="#059669" stroke-width="1"/>
+    
+    <text class="attribute" x="480" y="515">- idModePaiement: Integer</text>
+    <text class="attribute" x="480" y="530">- type: String</text>
+    <text class="attribute" x="480" y="545">- montant: Decimal</text>
+    <text class="attribute" x="480" y="560">- reference: String</text>
+    <text class="attribute" x="480" y="575">- statut: String</text>
+    
+    <line x1="470" y1="590" x2="810" y2="590" stroke="#059669" stroke-width="1"/>
+    
+    <text class="method" x="480" y="610">+ validerPaiement(): Boolean</text>
+    <text class="method" x="480" y="625">+ annulerPaiement(): void</text>
+  </g>
+
+  <!-- Classe Promotion -->
+  <g id="promotion">
+    <rect class="class-box" x="470" y="720" width="340" height="280"/>
+    <rect class="class-header" x="470" y="720" width="340" height="35"/>
+    <text class="class-name" x="640" y="742">Promotion</text>
+    <line x1="470" y1="755" x2="810" y2="755" stroke="#059669" stroke-width="1"/>
+    
+    <text class="attribute" x="480" y="775">- idPromotion: Integer</text>
+    <text class="attribute" x="480" y="790">- code: String</text>
+    <text class="attribute" x="480" y="805">- nom: String</text>
+    <text class="attribute" x="480" y="820">- typeRemise: String</text>
+    <text class="attribute" x="480" y="835">- valeurRemise: Decimal</text>
+    <text class="attribute" x="480" y="850">- seuilMinimum: Decimal</text>
+    <text class="attribute" x="480" y="865">- dateDebut: DateTime</text>
+    
+    <line x1="470" y1="880" x2="810" y2="880" stroke="#059669" stroke-width="1"/>
+    
+    <text class="method" x="480" y="900">+ verifierEligibilite(): Boolean</text>
+    <text class="method" x="480" y="915">+ calculerRemise(): Decimal</text>
+    <text class="method" x="480" y="930">+ estValide(): Boolean</text>
+  </g>
+
+  <!-- Classe Remise -->
+  <g id="remise">
+    <rect class="class-box" x="890" y="120" width="320" height="220"/>
+    <rect class="class-header" x="890" y="120" width="320" height="35"/>
+    <text class="class-name" x="1050" y="142">Remise</text>
+    <line x1="890" y1="155" x2="1210" y2="155" stroke="#059669" stroke-width="1"/>
+    
+    <text class="attribute" x="900" y="175">- idRemise: Integer</text>
+    <text class="attribute" x="900" y="190">- typeRemise: String</text>
+    <text class="attribute" x="900" y="205">- montantRemise: Decimal</text>
+    <text class="attribute" x="900" y="220">- pourcentage: Decimal</text>
+    <text class="attribute" x="900" y="235">- source: String</text>
+    <text class="attribute" x="900" y="250">- estAutomatique: Boolean</text>
+    
+    <line x1="890" y1="265" x2="1210" y2="265" stroke="#059669" stroke-width="1"/>
+    
+    <text class="method" x="900" y="285">+ appliquer(trans: Transaction): void</text>
+    <text class="method" x="900" y="300">+ valider(): Boolean</text>
+  </g>
+
+  <!-- Classe Ticket -->
+  <g id="ticket">
+    <rect class="class-box" x="890" y="400" width="320" height="220"/>
+    <rect class="class-header" x="890" y="400" width="320" height="35"/>
+    <text class="class-name" x="1050" y="422">Ticket</text>
+    <line x1="890" y1="435" x2="1210" y2="435" stroke="#059669" stroke-width="1"/>
+    
+    <text class="attribute" x="900" y="455">- idTicket: Integer</text>
+    <text class="attribute" x="900" y="470">- numeroTicket: String</text>
+    <text class="attribute" x="900" y="485">- dateImpression: DateTime</text>
+    <text class="attribute" x="900" y="500">- contenuHTML: String</text>
+    <text class="attribute" x="900" y="515">- qrCode: String</text>
+    
+    <line x1="890" y1="530" x2="1210" y2="530" stroke="#059669" stroke-width="1"/>
+    
+    <text class="method" x="900" y="550">+ genererTicket(): String</text>
+    <text class="method" x="900" y="565">+ imprimer(): void</text>
+    <text class="method" x="900" y="580">+ envoyerParEmail(): void</text>
+  </g>
+
+  <!-- Classe RapportVente -->
+  <g id="rapportvente">
+    <rect class="class-box" x="890" y="680" width="380" height="320"/>
+    <rect class="class-header" x="890" y="680" width="380" height="35"/>
+    <text class="class-name" x="1080" y="702">RapportVente</text>
+    <line x1="890" y1="715" x2="1270" y2="715" stroke="#059669" stroke-width="1"/>
+    
+    <text class="attribute" x="900" y="735">- idRapport: Integer</text>
+    <text class="attribute" x="900" y="750">- dateRapport: Date</text>
+    <text class="attribute" x="900" y="765">- typeRapport: String</text>
+    <text class="attribute" x="900" y="780">- nombreTransactions: Integer</text>
+    <text class="attribute" x="900" y="795">- chiffreAffaires: Decimal</text>
+    <text class="attribute" x="900" y="810">- montantRemises: Decimal</text>
+    <text class="attribute" x="900" y="825">- ticketMoyen: Decimal</text>
+    <text class="attribute" x="900" y="840">- produitPlusVendu: String</text>
+    <text class="attribute" x="900" y="855">- heurePointe: String</text>
+    
+    <line x1="890" y1="870" x2="1270" y2="870" stroke="#059669" stroke-width="1"/>
+    
+    <text class="method" x="900" y="890">+ genererRapport(): void</text>
+    <text class="method" x="900" y="905">+ calculerStatistiques(): void</text>
+    <text class="method" x="900" y="920">+ exporterPDF(): File</text>
+    <text class="method" x="900" y="935">+ exporterExcel(): File</text>
+  </g>
+
+  <!-- Classe ArticleVendu -->
+  <g id="articlevendu">
+    <rect class="class-box" x="1330" y="120" width="380" height="220"/>
+    <rect class="class-header" x="1330" y="120" width="380" height="35"/>
+    <text class="class-name" x="1520" y="142">ArticleVendu</text>
+    <line x1="1330" y1="155" x2="1710" y2="155" stroke="#059669" stroke-width="1"/>
+    
+    <text class="attribute" x="1340" y="175">- idArticleVendu: Integer</text>
+    <text class="attribute" x="1340" y="190">- dateVente: DateTime</text>
+    <text class="attribute" x="1340" y="205">- quantiteVendue: Integer</text>
+    <text class="attribute" x="1340" y="220">- montantVente: Decimal</text>
+    <text class="attribute" x="1340" y="235">- marge: Decimal</text>
+    <text class="attribute" x="1340" y="250">- categorie: String</text>
+    
+    <line x1="1330" y1="265" x2="1710" y2="265" stroke="#059669" stroke-width="1"/>
+    
+    <text class="method" x="1340" y="285">+ calculerMarge(): Decimal</text>
+    <text class="method" x="1340" y="300">+ enregistrerVente(): void</text>
+  </g>
+
+  <!-- RELATIONS -->
+
+  <!-- Transaction -> LigneTransaction (Composition) -->
+  <path class="composition" d="M 220 440 L 220 500" marker-start="url(#diamond-full)"/>
+  <text class="cardinality" x="225" y="450">1</text>
+  <text class="cardinality" x="225" y="495">1..*</text>
+  <text class="label" x="230" y="470">composée de</text>
+
+  <!-- Transaction -> Caisse (Association) -->
+  <path class="association" d="M 390 260 L 470 260" marker-end="url(#arrow)"/>
+  <text class="cardinality" x="395" y="255">*</text>
+  <text class="cardinality" x="460" y="255">1</text>
+  <text class="label" x="410" y="250">traitée par</text>
+
+  <!-- Transaction -> ModePaiement (Association) -->
+  <path class="association" d="M 390 380 Q 430 440 470 540" marker-end="url(#arrow)"/>
+  <text class="cardinality" x="395" y="385">1</text>
+  <text class="cardinality" x="465" y="540">1..*</text>
+  <text class="label" x="420" y="460">utilise</text>
+
+  <!-- Transaction -> Remise (Association) -->
+  <path class="association" d="M 390 200 L 890 200" marker-end="url(#arrow)"/>
+  <text class="cardinality" x="395" y="195">1</text>
+  <text class="cardinality" x="875" y="195">0..*</text>
+  <text class="label" x="600" y="190">bénéficie de</text>
+
+  <!-- Transaction -> Ticket (Association) -->
+  <path class="association" d="M 390 340 Q 640 380 890 480" marker-end="url(#arrow)"/>
+  <text class="cardinality" x="395" y="345">1</text>
+  <text class="cardinality" x="875" y="485">1</text>
+  <text class="label" x="620" y="400">génère</text>
+
+  <!-- LigneTransaction -> Promotion (Association) -->
+  <path class="association" d="M 390 680 L 470 820" marker-end="url(#arrow)"/>
+  <text class="cardinality" x="395" y="685">*</text>
+  <text class="cardinality" x="465" y="825">0..1</text>
+  <text class="label" x="410" y="750">a promotion</text>
+
+  <!-- Promotion -> Remise (Association) -->
+  <path class="association" d="M 810 800 Q 850 500 890 250" marker-end="url(#arrow)"/>
+  <text class="cardinality" x="815" y="800">1</text>
+  <text class="cardinality" x="875" y="260">*</text>
+  <text class="label" x="850" y="520">génère</text>
+
+  <!-- Caisse -> RapportVente (Association) -->
+  <path class="association" d="M 810 340 Q 850 500 890 800" marker-end="url(#arrow)"/>
+  <text class="cardinality" x="815" y="345">1</text>
+  <text class="cardinality" x="875" y="805">*</text>
+  <text class="label" x="850" y="570">produit</text>
+
+  <!-- LigneTransaction -> ArticleVendu (Association) -->
+  <path class="association" d="M 390 600 Q 860 400 1330 220" marker-end="url(#arrow)"/>
+  <text class="cardinality" x="395" y="605">1</text>
+  <text class="cardinality" x="1315" y="225">1</text>
+  <text class="label" x="850" y="420">crée</text>
+
+  <!-- LigneTransaction -> Produit (lien externe vers Diagramme 1) -->
+  <path class="association" d="M 220 740 L 220 800" marker-end="url(#arrow)" stroke-dasharray="5,5"/>
+  <text class="cardinality" x="225" y="745">*</text>
+  <text class="label" x="230" y="770">concerne Produit</text>
+  <text class="label" x="230" y="790" style="font-style:italic;">(Diag. 1)</text>
+
+  <!-- Légende -->
+  <g id="legend">
+    <rect x="50" y="1080" width="700" height="240" fill="#f0fdf4" stroke="#059669" stroke-width="2" rx="10"/>
+    <text x="400" y="1110" style="fill:#065f46; font:bold 18px Arial; text-anchor:middle;">Légende des Relations</text>
+    
+    <line x1="70" y1="1140" x2="150" y2="1140" class="composition" marker-start="url(#diamond-full)"/>
+    <text x="160" y="1145" class="label">Composition (fort - contient)</text>
+    
+    <line x1="70" y1="1170" x2="150" y2="1170" class="aggregation" marker-start="url(#diamond-empty)"/>
+    <text x="160" y="1175" class="label">Agrégation (faible - utilise)</text>
+    
+    <line x1="70" y1="1200" x2="150" y2="1200" class="association" marker-end="url(#arrow)"/>
+    <text x="160" y="1205" class="label">Association simple</text>
+    
+    <line x1="70" y1="1230" x2="150" y2="1230" class="association" marker-end="url(#arrow)" stroke-dasharray="5,5"/>
+    <text x="160" y="1235" class="label">Relation vers autre diagramme</text>
+    
+    <text x="70" y="1270" style="fill:#dc2626; font:bold 12px Arial;">1, *, 1..*, 0..1, 0..*</text>
+    <text x="200" y="1270" class="label">Cardinalités (multiplicités des relations)</text>
+  </g>
+
+  <!-- Annotations RG -->
+  <g id="annotations">
+    <rect x="820" y="1080" width="900" height="290" fill="#ecfeff" stroke="#0891b2" stroke-width="2" rx="10"/>
+    <text x="1270" y="1110" style="fill:#0e7490; font:bold 18px Arial; text-anchor:middle;">Règles de Gestion Implémentées (RG7-RG11)</text>
+    
+    <text x="840" y="1145" style="fill:#0e7490; font:bold 14px Arial;">RG7 - Remises fidélité automatiques :</text>
+    <text x="860" y="1165" style="fill:#475569; font:12px Arial;">✓ Remise.estAutomatique = true + Transaction.appliquerRemises()</text>
+    <text x="860" y="1180" style="fill:#475569; font:12px Arial;">✓ Application lors du scan de la carte client en caisse</text>
+    
+    <text x="840" y="1210" style="fill:#0e7490; font:bold 14px Arial;">RG8 - Promotions avec seuil minimum :</text>
+    <text x="860" y="1230" style="fill:#475569; font:12px Arial;">✓ Promotion.seuilMinimum (ex: 100€) + verifierEligibilite()</text>
+    <text x="860" y="1245" style="fill:#475569; font:12px Arial;">✓ Vérification automatique avant application de la promo</text>
+    
+    <text x="840" y="1275" style="fill:#0e7490; font:bold 14px Arial;">RG9 - Rapport quotidien automatique :</text>
+    <text x="860" y="1295" style="fill:#475569; font:12px Arial;">✓ RapportVente.estGenereAuto + Caisse.fermerCaisse()</text>
+    <text x="860" y="1310" style="fill:#475569; font:12px Arial;">✓ Génération en fin de journée avec toutes les statistiques</text>
+    
+    <text x="1280" y="1145" style="fill:#0e7490; font:bold 14px Arial;">RG10 - Enregistrement complet :</text>
+    <text x="1300" y="1165" style="fill:#475569; font:12px Arial;">✓ Transaction stocke : produits, montants,</text>
+    <text x="1300" y="1180" style="fill:#475569; font:12px Arial;">    remises, mode paiement</text>
+    
+    <text x="1280" y="1210" style="fill:#0e7490; font:bold 14px Arial;">RG11 - Suivi ventes détaillé :</text>
+    <text x="1300" y="1230" style="fill:#475569; font:12px Arial;">✓ ArticleVendu par produit/catégorie</text>
+    <text x="1300" y="1245" style="fill:#475569; font:12px Arial;">✓ RapportVente agrège par période</text>
+    
+    <rect x="840" y="1330" width="860" height="30" fill="#10b981" rx="5"/>
+    <text x="1270" y="1350" style="fill:#fff; font:bold 12px Arial; text-anchor:middle;">
+      ✓ 9 Classes principales | ✓ 70+ Attributs | ✓ 35+ Méthodes | ✓ 12 Relations clés
+    </text>
+  </g>
+
+  <!-- Scénarios d'utilisation -->
+  <g id="scenarios">
+    <rect x="50" y="1400" width="1670" height="280" fill="#f0f9ff" stroke="#3b82f6" stroke-width="2" rx="10"/>
+    <text x="885" y="1430" style="fill:#1e40af; font:bold 20px Arial; text-anchor:middle;">🎬 Scénarios d'Utilisation Typiques</text>
+    
+    <!-- Scénario 1 -->
+    <rect x="70" y="1450" width="520" height="200" fill="#fff" stroke="#3b82f6" rx="5"/>
+    <text x="330" y="1475" style="fill:#1e40af; font:bold 14px Arial; text-anchor:middle;">Scénario 1 : Achat avec carte fidélité</text>
+    <text x="80" y="1500" style="fill:#475569; font:12px Arial;">1. Client présente CarteFidelite → scan</text>
+    <text x="80" y="1520" style="fill:#475569; font:12px Arial;">2. Scan produits → création LigneTransaction</text>
+    <text x="80" y="1540" style="fill:#475569; font:12px Arial;">3. Transaction.appliquerRemises() → RG7</text>
+    <text x="80" y="1560" style="fill:#475569; font:12px Arial;">4. Vérif Promotion.seuilMinimum → RG8</text>
+    <text x="80" y="1580" style="fill:#475569; font:12px Arial;">5. ModePaiement.validerPaiement()</text>
+    <text x="80" y="1600" style="fill:#475569; font:12px Arial;">6. Ticket.genererTicket() + impression</text>
+    <text x="80" y="1620" style="fill:#475569; font:12px Arial;">7. Mise à jour Stock + points fidélité</text>
+    
+    <!-- Scénario 2 -->
+    <rect x="620" y="1450" width="520" height="200" fill="#fff" stroke="#10b981" rx="5"/>
+    <text x="880" y="1475" style="fill:#065f46; font:bold 14px Arial; text-anchor:middle;">Scénario 2 : Fermeture de caisse</text>
+    <text x="630" y="1500" style="fill:#475569; font:12px Arial;">1. Caissier : Caisse.fermerCaisse()</text>
+    <text x="630" y="1520" style="fill:#475569; font:12px Arial;">2. Calcul écart caisse (théorique vs réel)</text>
+    <text x="630" y="1540" style="fill:#475569; font:12px Arial;">3. RapportVente.genererRapport() → RG9</text>
+    <text x="630" y="1560" style="fill:#475569; font:12px Arial;">4. Calcul KPI : CA, nb transactions, ticket</text>
+    <text x="630" y="1580" style="fill:#475569; font:12px Arial;">   moyen, produit star, heures de pointe</text>
+    <text x="630" y="1600" style="fill:#

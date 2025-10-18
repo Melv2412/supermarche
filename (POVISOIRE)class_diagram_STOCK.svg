@@ -1,0 +1,381 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2000 2600" style="background: #f8f9fa;">
+  <defs>
+    <style>
+      .class-box { fill: white; stroke: #2e7d32; stroke-width: 3; }
+      .class-header { fill: #2e7d32; }
+      .class-title { fill: white; font-size: 18px; font-weight: bold; font-family: Arial, sans-serif; }
+      .attribute-text { fill: #333; font-size: 13px; font-family: 'Courier New', monospace; }
+      .section-title { fill: #388e3c; font-size: 14px; font-weight: bold; font-family: Arial, sans-serif; }
+      .relation-line { stroke: #4caf50; stroke-width: 2; fill: none; }
+      .relation-text { fill: #2e7d32; font-size: 12px; font-family: Arial, sans-serif; }
+      .pk-icon { fill: #d32f2f; }
+      .fk-icon { fill: #1976d2; }
+      .attr-icon { fill: #388e3c; }
+    </style>
+    
+    <marker id="arrowhead-green" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#4caf50" />
+    </marker>
+  </defs>
+  
+  <!-- Titre principal -->
+  <rect x="0" y="0" width="2000" height="80" fill="#2e7d32"/>
+  <text x="1000" y="35" text-anchor="middle" style="fill: white; font-size: 28px; font-weight: bold; font-family: Arial;">
+    Module 1: Gestion des Stocks et Fournisseurs
+  </text>
+  <text x="1000" y="60" text-anchor="middle" style="fill: white; font-size: 16px; font-family: Arial;">
+    Diagramme de Classes UML - Système de Gestion de Supermarché
+  </text>
+  
+  <!-- Classe Categorie -->
+  <g id="categorie">
+    <rect class="class-box" x="50" y="120" width="380" height="240" rx="8"/>
+    <rect class="class-header" x="50" y="120" width="380" height="40" rx="8"/>
+    <text class="class-title" x="240" y="145" text-anchor="middle">Categorie</text>
+    
+    <text class="section-title" x="65" y="180">Attributs:</text>
+    <text class="attribute-text" x="80" y="200">🔑 id_categorie: int [PK]</text>
+    <text class="attribute-text" x="80" y="220">● nom: varchar(100)</text>
+    <text class="attribute-text" x="80" y="240">● description: text</text>
+    <text class="attribute-text" x="80" y="260">🔗 categorie_parent_id: int [FK]</text>
+    <text class="attribute-text" x="80" y="280">● date_creation: timestamp</text>
+    
+    <text x="240" y="335" text-anchor="middle" style="fill: #666; font-size: 11px; font-style: italic;">
+      Organisation hiérarchique | RG4
+    </text>
+  </g>
+  
+  <!-- Classe Produit (centrale) -->
+  <g id="produit">
+    <rect class="class-box" x="500" y="100" width="500" height="440" rx="8"/>
+    <rect class="class-header" x="500" y="100" width="500" height="40" rx="8"/>
+    <text class="class-title" x="750" y="125" text-anchor="middle">Produit</text>
+    
+    <text class="section-title" x="515" y="160">Attributs:</text>
+    <text class="attribute-text" x="530" y="180">🔑 id_produit: int [PK]</text>
+    <text class="attribute-text" x="530" y="200">● code_barre: varchar(50) [unique]</text>
+    <text class="attribute-text" x="530" y="220">● nom: varchar(200)</text>
+    <text class="attribute-text" x="530" y="240">● description: text</text>
+    <text class="attribute-text" x="530" y="260">🔗 id_categorie: int [FK]</text>
+    <text class="attribute-text" x="530" y="280">● prix_unitaire: decimal(10,2)</text>
+    <text class="attribute-text" x="530" y="300">● prix_achat: decimal(10,2)</text>
+    <text class="attribute-text" x="530" y="320">● unite_mesure: varchar(20)</text>
+    <text class="attribute-text" x="530" y="340">● seuil_reapprovisionnement: int</text>
+    <text class="attribute-text" x="530" y="360">● est_perissable: boolean</text>
+    <text class="attribute-text" x="530" y="380">● duree_conservation_jours: int</text>
+    <text class="attribute-text" x="530" y="400">● image_url: varchar(255)</text>
+    <text class="attribute-text" x="530" y="420">● actif: boolean</text>
+    <text class="attribute-text" x="530" y="440">● date_creation: timestamp</text>
+    <text class="attribute-text" x="530" y="460">● date_modification: timestamp</text>
+    
+    <text x="750" y="515" text-anchor="middle" style="fill: #666; font-size: 11px; font-style: italic;">
+      RG1, RG4 | Classe centrale Page 12
+    </text>
+  </g>
+  
+  <!-- Classe Stock -->
+  <g id="stock">
+    <rect class="class-box" x="1070" y="100" width="480" height="340" rx="8"/>
+    <rect class="class-header" x="1070" y="100" width="480" height="40" rx="8"/>
+    <text class="class-title" x="1310" y="125" text-anchor="middle">Stock</text>
+    
+    <text class="section-title" x="1085" y="160">Attributs:</text>
+    <text class="attribute-text" x="1100" y="180">🔑 id_stock: int [PK]</text>
+    <text class="attribute-text" x="1100" y="200">🔗 id_produit: int [FK]</text>
+    <text class="attribute-text" x="1100" y="220">🔗 id_entrepot: int [FK]</text>
+    <text class="attribute-text" x="1100" y="240">● quantite_disponible: int</text>
+    <text class="attribute-text" x="1100" y="260">● quantite_reservee: int</text>
+    <text class="attribute-text" x="1100" y="280">● emplacement: varchar(50)</text>
+    <text class="attribute-text" x="1100" y="300">● date_derniere_entree: timestamp</text>
+    <text class="attribute-text" x="1100" y="320">● date_derniere_sortie: timestamp</text>
+    <text class="attribute-text" x="1100" y="340">● derniere_mise_a_jour: timestamp</text>
+    
+    <text x="1310" y="415" text-anchor="middle" style="fill: #666; font-size: 11px; font-style: italic;">
+      RG1, RG6 | Suivi temps réel
+    </text>
+  </g>
+  
+  <!-- Classe Entrepot -->
+  <g id="entrepot">
+    <rect class="class-box" x="1600" y="100" width="350" height="320" rx="8"/>
+    <rect class="class-header" x="1600" y="100" width="350" height="40" rx="8"/>
+    <text class="class-title" x="1775" y="125" text-anchor="middle">Entrepot</text>
+    
+    <text class="section-title" x="1615" y="160">Attributs:</text>
+    <text class="attribute-text" x="1630" y="180">🔑 id_entrepot: int [PK]</text>
+    <text class="attribute-text" x="1630" y="200">● nom: varchar(100)</text>
+    <text class="attribute-text" x="1630" y="220">● adresse: text</text>
+    <text class="attribute-text" x="1630" y="240">● ville: varchar(100)</text>
+    <text class="attribute-text" x="1630" y="260">● code_postal: varchar(20)</text>
+    <text class="attribute-text" x="1630" y="280">● telephone: varchar(20)</text>
+    <text class="attribute-text" x="1630" y="300">● type_entrepot: enum</text>
+    <text class="attribute-text" x="1630" y="320">● capacite_m3: decimal(10,2)</text>
+    <text class="attribute-text" x="1630" y="340">🔗 responsable_id: int [FK]</text>
+    <text class="attribute-text" x="1630" y="360">● actif: boolean</text>
+    
+    <text x="1775" y="395" text-anchor="middle" style="fill: #666; font-size: 11px; font-style: italic;">
+      Gestion multi-sites | Page 12
+    </text>
+  </g>
+  
+  <!-- Classe Alerte -->
+  <g id="alerte">
+    <rect class="class-box" x="1070" y="490" width="480" height="380" rx="8"/>
+    <rect class="class-header" x="1070" y="490" width="480" height="40" rx="8"/>
+    <text class="class-title" x="1310" y="515" text-anchor="middle">Alerte</text>
+    
+    <text class="section-title" x="1085" y="550">Attributs:</text>
+    <text class="attribute-text" x="1100" y="570">🔑 id_alerte: int [PK]</text>
+    <text class="attribute-text" x="1100" y="590">🔗 id_produit: int [FK]</text>
+    <text class="attribute-text" x="1100" y="610">🔗 id_entrepot: int [FK]</text>
+    <text class="attribute-text" x="1100" y="630">● type_alerte: enum</text>
+    <text class="attribute-text" x="1100" y="650">● message: text</text>
+    <text class="attribute-text" x="1100" y="670">● quantite_actuelle: int</text>
+    <text class="attribute-text" x="1100" y="690">● quantite_suggeree: int</text>
+    <text class="attribute-text" x="1100" y="710">● priorite: enum</text>
+    <text class="attribute-text" x="1100" y="730">● statut: enum</text>
+    <text class="attribute-text" x="1100" y="750">● date_creation: timestamp</text>
+    <text class="attribute-text" x="1100" y="770">● date_resolution: timestamp</text>
+    <text class="attribute-text" x="1100" y="790">🔗 resolu_par: int [FK → Employe]</text>
+    
+    <text x="1310" y="845" text-anchor="middle" style="fill: #666; font-size: 11px; font-style: italic;">
+      RG1 | Alertes automatiques Page 8
+    </text>
+  </g>
+  
+  <!-- Classe Fournisseur -->
+  <g id="fournisseur">
+    <rect class="class-box" x="50" y="420" width="380" height="360" rx="8"/>
+    <rect class="class-header" x="50" y="420" width="380" height="40" rx="8"/>
+    <text class="class-title" x="240" y="445" text-anchor="middle">Fournisseur</text>
+    
+    <text class="section-title" x="65" y="480">Attributs:</text>
+    <text class="attribute-text" x="80" y="500">🔑 id_fournisseur: int [PK]</text>
+    <text class="attribute-text" x="80" y="520">● nom: varchar(200)</text>
+    <text class="attribute-text" x="80" y="540">● raison_sociale: varchar(200)</text>
+    <text class="attribute-text" x="80" y="560">● email: varchar(100)</text>
+    <text class="attribute-text" x="80" y="580">● telephone: varchar(20)</text>
+    <text class="attribute-text" x="80" y="600">● adresse: text</text>
+    <text class="attribute-text" x="80" y="620">● ville: varchar(100)</text>
+    <text class="attribute-text" x="80" y="640">● code_postal: varchar(20)</text>
+    <text class="attribute-text" x="80" y="660">● pays: varchar(50)</text>
+    <text class="attribute-text" x="80" y="680">● note_qualite: decimal(3,2)</text>
+    <text class="attribute-text" x="80" y="700">● delai_livraison_moyen_jours: int</text>
+    <text class="attribute-text" x="80" y="720">● conditions_paiement: text</text>
+    <text class="attribute-text" x="80" y="740">● actif: boolean</text>
+    
+    <text x="240" y="760" text-anchor="middle" style="fill: #666; font-size: 11px; font-style: italic;">
+      RG5 | Sélection selon critères Page 11
+    </text>
+  </g>
+  
+  <!-- Classe ProduitFournisseur -->
+  <g id="produit-fournisseur">
+    <rect class="class-box" x="500" y="600" width="480" height="280" rx="8"/>
+    <rect class="class-header" x="500" y="600" width="480" height="40" rx="8"/>
+    <text class="class-title" x="740" y="625" text-anchor="middle">ProduitFournisseur</text>
+    
+    <text class="section-title" x="515" y="660">Attributs:</text>
+    <text class="attribute-text" x="530" y="680">🔑 id: int [PK]</text>
+    <text class="attribute-text" x="530" y="700">🔗 id_produit: int [FK]</text>
+    <text class="attribute-text" x="530" y="720">🔗 id_fournisseur: int [FK]</text>
+    <text class="attribute-text" x="530" y="740">● prix_achat: decimal(10,2)</text>
+    <text class="attribute-text" x="530" y="760">● delai_livraison_jours: int</text>
+    <text class="attribute-text" x="530" y="780">● quantite_minimum_commande: int</text>
+    <text class="attribute-text" x="530" y="800">● fournisseur_principal: boolean</text>
+    <text class="attribute-text" x="530" y="820">● date_debut: timestamp</text>
+    <text class="attribute-text" x="530" y="840">● date_fin: timestamp</text>
+    
+    <text x="740" y="860" text-anchor="middle" style="fill: #666; font-size: 11px; font-style: italic;">
+      RG5 | Association Many-to-Many
+    </text>
+  </g>
+  
+  <!-- Classe Commande -->
+  <g id="commande">
+    <rect class="class-box" x="50" y="850" width="480" height="380" rx="8"/>
+    <rect class="class-header" x="50" y="850" width="480" height="40" rx="8"/>
+    <text class="class-title" x="290" y="875" text-anchor="middle">Commande</text>
+    
+    <text class="section-title" x="65" y="910">Attributs:</text>
+    <text class="attribute-text" x="80" y="930">🔑 id_commande: int [PK]</text>
+    <text class="attribute-text" x="80" y="950">● numero_commande: varchar(50)</text>
+    <text class="attribute-text" x="80" y="970">🔗 id_fournisseur: int [FK]</text>
+    <text class="attribute-text" x="80" y="990">🔗 id_entrepot: int [FK]</text>
+    <text class="attribute-text" x="80" y="1010">● date_commande: timestamp</text>
+    <text class="attribute-text" x="80" y="1030">● date_livraison_prevue: date</text>
+    <text class="attribute-text" x="80" y="1050">● date_livraison_reelle: date</text>
+    <text class="attribute-text" x="80" y="1070">● montant_total: decimal(12,2)</text>
+    <text class="attribute-text" x="80" y="1090">● statut: enum</text>
+    <text class="attribute-text" x="80" y="1110">🔗 creee_par: int [FK → Employe]</text>
+    <text class="attribute-text" x="80" y="1130">🔗 validee_par: int [FK → Employe]</text>
+    <text class="attribute-text" x="80" y="1150">● date_validation: timestamp</text>
+    <text class="attribute-text" x="80" y="1170">● notes: text</text>
+    
+    <text x="290" y="1210" text-anchor="middle" style="fill: #666; font-size: 11px; font-style: italic;">
+      RG2, RG3 | Validation + Prévisions
+    </text>
+  </g>
+  
+  <!-- Classe LigneCommande -->
+  <g id="ligne-commande">
+    <rect class="class-box" x="600" y="950" width="400" height="260" rx="8"/>
+    <rect class="class-header" x="600" y="950" width="400" height="40" rx="8"/>
+    <text class="class-title" x="800" y="975" text-anchor="middle">LigneCommande</text>
+    
+    <text class="section-title" x="615" y="1010">Attributs:</text>
+    <text class="attribute-text" x="630" y="1030">🔑 id_ligne: int [PK]</text>
+    <text class="attribute-text" x="630" y="1050">🔗 id_commande: int [FK]</text>
+    <text class="attribute-text" x="630" y="1070">🔗 id_produit: int [FK]</text>
+    <text class="attribute-text" x="630" y="1090">● quantite_commandee: int</text>
+    <text class="attribute-text" x="630" y="1110">● quantite_recue: int</text>
+    <text class="attribute-text" x="630" y="1130">● prix_unitaire: decimal(10,2)</text>
+    <text class="attribute-text" x="630" y="1150">● montant_ligne: decimal(12,2)</text>
+    
+    <text x="800" y="1190" text-anchor="middle" style="fill: #666; font-size: 11px; font-style: italic;">
+      Détail des commandes
+    </text>
+  </g>
+  
+  <!-- Classe Inventaire -->
+  <g id="inventaire">
+    <rect class="class-box" x="1100" y="950" width="420" height="340" rx="8"/>
+    <rect class="class-header" x="1100" y="950" width="420" height="40" rx="8"/>
+    <text class="class-title" x="1310" y="975" text-anchor="middle">Inventaire</text>
+    
+    <text class="section-title" x="1115" y="1010">Attributs:</text>
+    <text class="attribute-text" x="1130" y="1030">🔑 id_inventaire: int [PK]</text>
+    <text class="attribute-text" x="1130" y="1050">🔗 id_entrepot: int [FK]</text>
+    <text class="attribute-text" x="1130" y="1070">● date_inventaire: date</text>
+    <text class="attribute-text" x="1130" y="1090">● type_inventaire: enum</text>
+    <text class="attribute-text" x="1130" y="1110">● statut: enum</text>
+    <text class="attribute-text" x="1130" y="1130">🔗 responsable_id: int [FK]</text>
+    <text class="attribute-text" x="1130" y="1150">● date_creation: timestamp</text>
+    <text class="attribute-text" x="1130" y="1170">● date_validation: timestamp</text>
+    <text class="attribute-text" x="1130" y="1190">🔗 valide_par: int [FK]</text>
+    
+    <text x="1310" y="1270" text-anchor="middle" style="fill: #666; font-size: 11px; font-style: italic;">
+      RG6 | Inventaires réguliers Page 12
+    </text>
+  </g>
+  
+  <!-- Classe LigneInventaire -->
+  <g id="ligne-inventaire">
+    <rect class="class-box" x="1570" y="1000" width="400" height="280" rx="8"/>
+    <rect class="class-header" x="1570" y="1000" width="400" height="40" rx="8"/>
+    <text class="class-title" x="1770" y="1025" text-anchor="middle">LigneInventaire</text>
+    
+    <text class="section-title" x="1585" y="1060">Attributs:</text>
+    <text class="attribute-text" x="1600" y="1080">🔑 id_ligne: int [PK]</text>
+    <text class="attribute-text" x="1600" y="1100">🔗 id_inventaire: int [FK]</text>
+    <text class="attribute-text" x="1600" y="1120">🔗 id_produit: int [FK]</text>
+    <text class="attribute-text" x="1600" y="1140">● quantite_theorique: int</text>
+    <text class="attribute-text" x="1600" y="1160">● quantite_reelle: int</text>
+    <text class="attribute-text" x="1600" y="1180">● ecart: int</text>
+    <text class="attribute-text" x="1600" y="1200">● valeur_ecart: decimal(10,2)</text>
+    <text class="attribute-text" x="1600" y="1220">● commentaire: text</text>
+    
+    <text x="1770" y="1260" text-anchor="middle" style="fill: #666; font-size: 11px; font-style: italic;">
+      RG6 | Détection écarts
+    </text>
+  </g>
+  
+  <!-- Relations -->
+  <!-- Categorie → Produit -->
+  <path class="relation-line" d="M 430,240 L 500,240" marker-end="url(#arrowhead-green)"/>
+  <text class="relation-text" x="440" y="230">1</text>
+  <text class="relation-text" x="485" y="230">N</text>
+  
+  <!-- Produit → Stock -->
+  <path class="relation-line" d="M 1000,220 L 1070,220" marker-end="url(#arrowhead-green)"/>
+  <text class="relation-text" x="1010" y="210">1</text>
+  <text class="relation-text" x="1055" y="210">N</text>
+  
+  <!-- Stock → Entrepot -->
+  <path class="relation-line" d="M 1550,220 L 1600,220" marker-end="url(#arrowhead-green)"/>
+  <text class="relation-text" x="1560" y="210">N</text>
+  <text class="relation-text" x="1585" y="210">1</text>
+  
+  <!-- Produit → Alerte -->
+  <path class="relation-line" d="M 900,540 L 1100,680" marker-end="url(#arrowhead-green)"/>
+  <text class="relation-text" x="980" y="600">1</text>
+  <text class="relation-text" x="1085" y="675">N</text>
+  
+  <!-- Fournisseur → ProduitFournisseur -->
+  <path class="relation-line" d="M 430,600 L 500,720" marker-end="url(#arrowhead-green)"/>
+  <text class="relation-text" x="450" y="650">1</text>
+  <text class="relation-text" x="485" y="715">N</text>
+  
+  <!-- Produit → ProduitFournisseur -->
+  <path class="relation-line" d="M 750,540 L 740,600" marker-end="url(#arrowhead-green)"/>
+  <text class="relation-text" x="760" y="560">1</text>
+  <text class="relation-text" x="745" y="595">N</text>
+  
+  <!-- Fournisseur → Commande -->
+  <path class="relation-line" d="M 240,780 L 290,850" marker-end="url(#arrowhead-green)"/>
+  <text class="relation-text" x="255" y="810">1</text>
+  <text class="relation-text" x="285" y="845">N</text>
+  
+  <!-- Commande → LigneCommande -->
+  <path class="relation-line" d="M 530,1020 L 600,1070" marker-end="url(#arrowhead-green)"/>
+  <text class="relation-text" x="550" y="1040">1</text>
+  <text class="relation-text" x="585" y="1065">N</text>
+  
+  <!-- Produit → LigneCommande -->
+  <path class="relation-line" d="M 750,540 L 800,950" marker-end="url(#arrowhead-green)"/>
+  <text class="relation-text" x="770" y="720">1</text>
+  <text class="relation-text" x="795" y="945">N</text>
+  
+  <!-- Entrepot → Inventaire -->
+  <path class="relation-line" d="M 1600,420 L 1400,950" marker-end="url(#arrowhead-green)"/>
+  <text class="relation-text" x="1520" y="660">1</text>
+  <text class="relation-text" x="1410" y="945">N</text>
+  
+  <!-- Inventaire → LigneInventaire -->
+  <path class="relation-line" d="M 1520,1100 L 1570,1140" marker-end="url(#arrowhead-green)"/>
+  <text class="relation-text" x="1530" y="1115">1</text>
+  <text class="relation-text" x="1555" y="1135">N</text>
+  
+  <!-- Produit → LigneInventaire -->
+  <path class="relation-line" d="M 1000,320 L 1700,1000" marker-end="url(#arrowhead-green)"/>
+  <text class="relation-text" x="1250" y="600">1</text>
+  <text class="relation-text" x="1695" y="995">N</text>
+  
+  <!-- Légende -->
+  <g id="legend">
+    <rect x="50" y="1350" width="900" height="180" fill="white" stroke="#2e7d32" stroke-width="2" rx="8"/>
+    <text x="500" y="1385" text-anchor="middle" style="fill: #2e7d32; font-size: 20px; font-weight: bold;">Légende et Règles de Gestion</text>
+    
+    <text x="70" y="1420" class="attribute-text">
+      🔑 Clé Primaire (PK) | 🔗 Clé Étrangère (FK) | ● Attribut standard
+    </text>
+    
+    <text x="70" y="1450" style="fill: #333; font-size: 13px; font-weight: bold;">Règles de Gestion Appliquées:</text>
+    <text x="70" y="1475" style="fill: #333; font-size: 12px;">
+      <tspan x="70" dy="0">• RG1: Alerte automatique au seuil de réapprovisionnement (Page 8)</tspan>
+      <tspan x="70" dy="20">• RG2: Validation responsable avant envoi commande (Page 8)</tspan>
+      <tspan x="70" dy="20">• RG3: Prévisions basées sur historique et saisonnalité (Page 8)</tspan>
+      <tspan x="70" dy="20">• RG4: Méthode FIFO obligatoire pour produits périssables (Page 12)</tspan>
+    </text>
+  </g>
+  
+  <g id="legend2">
+    <rect x="1000" y="1350" width="950" height="180" fill="#e8f5e9" stroke="#4caf50" stroke-width="2" rx="8"/>
+    <text x="1475" y="1385" text-anchor="middle" style="fill: #2e7d32; font-size: 20px; font-weight: bold;">Règles de Gestion (suite)</text>
+    
+    <text x="1020" y="1420" style="fill: #333; font-size: 12px;">
+      <tspan x="1020" dy="0">• RG5: Sélection fournisseur selon qualité, prix, délai (Page 11)</tspan>
+      <tspan x="1020" dy="20">• RG6: Inventaires réguliers pour détecter écarts stock (Page 12)</tspan>
+      <tspan x="1020" dy="20">• Classes centrales: Produit (gère code-barre, seuils, FIFO)</tspan>
+      <tspan x="1020" dy="20">• Stock: Suivi temps réel par produit et entrepôt</tspan>
+      <tspan x="1020" dy="20">• Alerte: Notifications automatiques (seuil, rupture, péremption)</tspan>
+      <tspan x="1020" dy="20">• Commande: Workflow complet avec validation hiérarchique</tspan>
+    </text>
+  </g>
+  
+  <!-- Footer -->
+  <rect x="0" y="2520" width="2000" height="80" fill="#2e7d32"/>
+  <text x="1000" y="2550" text-anchor="middle" style="fill: white; font-size: 14px;">
+    Système de Gestion de Supermarché - Module Stocks et Fournisseurs
+  </text>
+  <text x="1000"

@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block title %}Caisse - POS{% endblock %}
+{% block content %}
+<div class="container-fluid">
+  <div class="row g-3">
+    <div class="col-12 col-lg-7">
+      <div class="card">
+        <div class="card-header d-flex align-items-center gap-2">
+          <strong>Recherche produit</strong>
+          <input id="pos-search" type="text" class="form-control form-control-sm" placeholder="Nom, code-barres...">
+        </div>
+        <div class="card-body">
+          <div id="pos-products" class="row row-cols-2 row-cols-md-3 g-2"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-lg-5">
+      <div class="card mb-3">
+        <div class="card-header"><strong>Panier</strong></div>
+        <div class="card-body">
+          <div id="pos-cart-empty" class="text-muted">Votre panier est vide.</div>
+          <ul id="pos-cart" class="list-group small"></ul>
+          <div class="d-flex justify-content-between mt-3">
+            <span>Total:</span>
+            <strong id="pos-total">0,00 €</strong>
+          </div>
+        </div>
+      </div>
+      <div class="d-grid gap-2">
+        <button id="pos-pay" class="btn btn-success">Encaisser</button>
+        <button id="pos-clear" class="btn btn-outline-secondary">Vider</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script src="{% static 'js/pos.js' %}"></script>
+{% endblock %}
