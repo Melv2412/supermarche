@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Commande - Formulaire{% endblock %}
+{% block content %}
+<div class="container py-3">
+  <div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <strong>Nouvelle commande</strong>
+      <a class="btn btn-sm btn-outline-secondary" href="#" onclick="Suppliers.gotoOrderList();return false;">Retour à la liste</a>
+    </div>
+    <div class="card-body">
+      <form id="order-form" novalidate>
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label">Fournisseur</label>
+            <select id="o-supplier" class="form-select" required></select>
+            <div class="invalid-feedback">Fournisseur requis.</div>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">Date</label>
+            <input id="o-date" type="date" class="form-control" required>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">Statut</label>
+            <select id="o-status" class="form-select">
+              <option value="pending">En attente</option>
+              <option value="confirmed">Confirmée</option>
+              <option value="shipped">Expédiée</option>
+              <option value="delivered">Livrée</option>
+              <option value="cancelled">Annulée</option>
+            </select>
+          </div>
+        </div>
+
+        <hr>
+        <div class="table-responsive">
+          <table class="table table-sm align-middle">
+            <thead><tr><th>Produit</th><th class="text-end">Qté</th><th class="text-end">PU</th><th class="text-end">Total</th><th></th></tr></thead>
+            <tbody id="o-lines"></tbody>
+            <tfoot>
+              <tr><th colspan="3" class="text-end">Total</th><th class="text-end" id="o-total">0,00 FCFA</th><th></th></tr>
+            </tfoot>
+          </table>
+        </div>
+        <div class="d-flex gap-2 mb-3">
+          <button class="btn btn-outline-secondary btn-sm" id="o-add-line" type="button">Ajouter une ligne</button>
+        </div>
+
+        <div class="d-flex justify-content-end gap-2">
+          <button class="btn btn-outline-secondary" type="reset">Réinitialiser</button>
+          <button class="btn btn-primary" type="submit">Enregistrer (simulation)</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script src="{% static 'js/suppliers.js' %}?v=2"></script>
+<script>Suppliers.initOrderForm();</script>
+{% endblock %}

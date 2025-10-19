@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}RH - Évaluations de performance{% endblock %}
+{% block content %}
+<div class="container-fluid">
+  <div class="d-flex flex-wrap gap-2 align-items-end mb-3">
+    <div class="flex-grow-1">
+      <label class="form-label small text-muted">Recherche</label>
+      <input id="pr-search" class="form-control form-control-sm" placeholder="Nom, période...">
+    </div>
+    <select id="pr-period" class="form-select form-select-sm" style="max-width:200px">
+      <option value="2025Q1">2025 Q1</option>
+      <option value="2025Q2">2025 Q2</option>
+      <option value="2025Q3" selected>2025 Q3</option>
+      <option value="2025Q4">2025 Q4</option>
+    </select>
+  </div>
+
+  <div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <strong>Évaluations</strong>
+      <span id="pr-count" class="badge text-bg-secondary">0</span>
+    </div>
+    <div class="table-responsive">
+      <table class="table table-sm align-middle m-0">
+        <thead>
+          <tr>
+            <th>Employé</th>
+            <th>Rôle</th>
+            <th>Score</th>
+            <th>Commentaires</th>
+          </tr>
+        </thead>
+        <tbody id="pr-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script src="{% static 'js/employees.js' %}?v=2"></script>
+<script>Employees.initPerformance();</script>
+{% endblock %}

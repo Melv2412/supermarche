@@ -1,39 +1,107 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block title %}Caisse - POS{% endblock %}
 {% block content %}
-<div class="container-fluid">
-  <div class="row g-3">
-    <div class="col-12 col-lg-7">
-      <div class="card">
-        <div class="card-header d-flex align-items-center gap-2">
-          <strong>Recherche produit</strong>
-          <input id="pos-search" type="text" class="form-control form-control-sm" placeholder="Nom, code-barres...">
+<div class="max-w-7xl mx-auto">
+  <!-- Header avec statut de la caisse -->
+  <div class="mb-6">
+    <div class="flex items-center justify-between">
+      <div>
+        <h1 class="text-3xl font-bold text-gray-800">Point de Vente</h1>
+        <p class="text-gray-600 mt-1">Interface de caisse moderne</p>
+      </div>
+      <div class="flex items-center space-x-4">
+        <div class="flex items-center space-x-2">
+          <div class="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+          <span class="text-sm text-gray-600">Caisse ouverte</span>
         </div>
-        <div class="card-body">
-          <div id="pos-products" class="row row-cols-2 row-cols-md-3 g-2"></div>
+        <div class="text-right">
+          <div class="text-sm text-gray-500">Caissier</div>
+          <div class="font-semibold text-gray-800" id="cashier-name">Utilisateur actuel</div>
         </div>
       </div>
     </div>
-    <div class="col-12 col-lg-5">
-      <div class="card mb-3">
-        <div class="card-header"><strong>Panier</strong></div>
-        <div class="card-body">
-          <div id="pos-cart-empty" class="text-muted">Votre panier est vide.</div>
-          <ul id="pos-cart" class="list-group small"></ul>
-          <div class="d-flex justify-content-between mt-3">
-            <span>Total:</span>
-            <strong id="pos-total">0,00 €</strong>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- Zone de recherche et produits -->
+    <div class="lg:col-span-2">
+      <div class="card-modern">
+        <div class="card-header-modern">
+          <div class="flex items-center justify-between">
+            <h2 class="text-xl font-semibold text-gray-800 flex items-center">
+              <svg class="w-6 h-6 mr-2 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+              </svg>
+              Recherche produit
+            </h2>
+            <div class="flex items-center space-x-2">
+              <div class="relative">
+                <input id="pos-search" type="text" class="input-modern pl-10" placeholder="Nom, code-barres...">
+                <svg class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="p-6">
+          <div id="pos-products" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Zone panier et paiement -->
+    <div class="space-y-6">
+      <!-- Panier -->
+      <div class="card-modern">
+        <div class="card-header-modern">
+          <h2 class="text-xl font-semibold text-gray-800 flex items-center">
+            <img src="{% static 'images/empty_bag.png' %}" alt="Panier" class="w-6 h-6 mr-2">
+            Panier
+          </h2>
+        </div>
+        <div class="p-6">
+          <div id="pos-cart-empty" class="text-center py-16 text-gray-500">
+            <div class="w-32 h-32 mx-auto mb-6 flex items-center justify-center">
+              <img src="{% static 'images/empty_bag.png' %}" alt="Panier vide" class="w-full h-full object-contain opacity-60">
+            </div>
+            <h3 class="text-xl font-semibold text-gray-700 mb-2">Votre panier est vide</h3>
+            <p class="text-gray-500 mb-6">Ajoutez des produits pour commencer vos achats</p>
+            <button class="btn-secondary text-sm" onclick="document.getElementById('pos-search').focus()">
+              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+              </svg>
+              Rechercher des produits
+            </button>
+          </div>
+          <div id="pos-cart" class="space-y-3 max-h-96 overflow-y-auto"></div>
+          
+          <!-- Total -->
+          <div class="mt-6 pt-4 border-t border-gray-200">
+            <div class="flex items-center justify-between text-lg font-semibold">
+              <span class="text-gray-700">Total:</span>
+              <span id="pos-total" class="text-2xl text-primary-600">0 FCFA</span>
+            </div>
           </div>
         </div>
       </div>
-      <div class="d-grid gap-2">
-        <button id="pos-pay" class="btn btn-success">Encaisser</button>
-        <button id="pos-clear" class="btn btn-outline-secondary">Vider</button>
+
+      <!-- Actions -->
+      <div class="space-y-3">
+        <button id="pos-pay" class="w-full btn-primary text-lg py-4 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+          <img src="{% static 'images/empty_bag.png' %}" alt="Encaisser" class="w-6 h-6 mr-2">
+          Encaisser
+        </button>
+        <button id="pos-clear" class="w-full btn-secondary">
+          <img src="{% static 'images/empty_bag.png' %}" alt="Vider le panier" class="w-5 h-5 mr-2">
+          Vider le panier
+        </button>
       </div>
     </div>
   </div>
 </div>
 {% endblock %}
 {% block extra_js %}
-<script src="{% static 'js/pos.js' %}"></script>
+<script src="{% static 'js/pos.js' %}?v=2"></script>
 {% endblock %}

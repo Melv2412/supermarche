@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}RH - Planification des shifts{% endblock %}
+{% block content %}
+<div class="container-fluid">
+  <div class="alert alert-info small">Simulation front: glisser-déposer non implémenté, ajout/suppression via boutons.</div>
+  <div class="row g-3">
+    <div class="col-12 col-lg-7">
+      <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <strong>Shifts du jour</strong>
+          <div>
+            <input id="sh-date" type="date" class="form-control form-control-sm" />
+          </div>
+        </div>
+        <ul id="sh-list" class="list-group list-group-flush"></ul>
+      </div>
+    </div>
+    <div class="col-12 col-lg-5">
+      <div class="card">
+        <div class="card-header"><strong>Nouveau shift</strong></div>
+        <div class="card-body">
+          <div class="row g-2">
+            <div class="col-12">
+              <label class="form-label">Employé</label>
+              <select id="sh-emp" class="form-select"></select>
+            </div>
+            <div class="col-6">
+              <label class="form-label">Début</label>
+              <input id="sh-start" type="time" class="form-control" value="09:00">
+            </div>
+            <div class="col-6">
+              <label class="form-label">Fin</label>
+              <input id="sh-end" type="time" class="form-control" value="17:00">
+            </div>
+            <div class="col-12">
+              <label class="form-label">Poste</label>
+              <select id="sh-role" class="form-select">
+                <option>Caissier</option>
+                <option>Rayon</option>
+                <option>Logistique</option>
+                <option>Manager</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer d-flex justify-content-end gap-2">
+          <button id="sh-add" class="btn btn-primary">Ajouter</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script src="{% static 'js/employees.js' %}?v=2"></script>
+<script>Employees.initShiftPlanning();</script>
+{% endblock %}

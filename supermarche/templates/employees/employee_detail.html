@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Employé - Détail{% endblock %}
+{% block content %}
+<div class="container-fluid">
+  <div class="card mb-3">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <strong id="emp-name">Employé</strong>
+      <a href="#" class="btn btn-sm btn-outline-secondary" onclick="Employees.gotoList();return false;">Retour</a>
+    </div>
+    <div class="card-body">
+      <div class="row g-3">
+        <div class="col-md-4"><div class="text-muted small">Email</div><div id="emp-email">-</div></div>
+        <div class="col-md-4"><div class="text-muted small">Rôle</div><div id="emp-role">-</div></div>
+        <div class="col-md-4"><div class="text-muted small">Statut</div><div id="emp-status">-</div></div>
+        <div class="col-12"><div class="text-muted small">Notes</div><div id="emp-notes">-</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-3">
+    <div class="col-12 col-lg-6">
+      <div class="card">
+        <div class="card-header"><strong>Planning (semaine)</strong></div>
+        <div class="card-body">
+          <div id="emp-week" class="small text-muted">-</div>
+          <ul id="emp-shifts" class="list-group list-group-flush small"></ul>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-lg-6">
+      <div class="card">
+        <div class="card-header"><strong>Congés</strong></div>
+        <div class="table-responsive">
+          <table class="table table-sm m-0">
+            <thead><tr><th>Période</th><th>Type</th><th>Statut</th></tr></thead>
+            <tbody id="emp-leaves"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script src="{% static 'js/employees.js' %}?v=2"></script>
+<script>Employees.initDetail();</script>
+{% endblock %}

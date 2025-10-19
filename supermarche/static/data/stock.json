@@ -1,0 +1,8 @@
+[
+  { "id": 101, "name": "Farine T45 1kg", "category": "Épicerie", "stock": 50, "threshold": 100 },
+  { "id": 102, "name": "Lait demi-écrémé 1L", "category": "Frais", "stock": 200, "threshold": 80 },
+  { "id": 103, "name": "Beurre doux 250g", "category": "Frais", "stock": 15, "threshold": 30 },
+  { "id": 104, "name": "Pâtes Spaghetti 500g", "category": "Épicerie", "stock": 8, "threshold": 25 },
+  { "id": 105, "name": "Riz basmati 1kg", "category": "Épicerie", "stock": 0, "threshold": 20 },
+  { "id": 106, "name": "Pommes 1kg", "category": "Fruits & Légumes", "stock": 32, "threshold": 20 }
+]

@@ -1,9 +1,30 @@
-<header class="py-3 border-bottom mb-3">
-  <div class="d-flex align-items-center justify-content-between">
-    <h1 class="h4 m-0">🏪 Supermarché</h1>
-    <div class="d-flex gap-2">
-      <a class="btn btn-outline-primary btn-sm" href="#">Accueil</a>
-      <a class="btn btn-primary btn-sm" href="#">Ouvrir la caisse</a>
+{% load static %}
+<header class="bg-white shadow-lg border-b border-gray-200 px-6 py-4">
+  <div class="flex items-center justify-between">
+    <div class="flex items-center space-x-4">
+      <div class="w-10 h-10 bg-gradient-to-r from-primary-500 to-primary-600 rounded-xl flex items-center justify-center">
+        <span class="text-white text-xl">🏪</span>
+      </div>
+      <div>
+        <h1 class="text-2xl font-bold text-gray-800">Supermarché</h1>
+        <p class="text-sm text-gray-500">Système de gestion moderne</p>
+      </div>
+    </div>
+    <div class="flex items-center space-x-3">
+      <div class="hidden md:flex items-center space-x-2 text-sm text-gray-600">
+        <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+        <span>En ligne</span>
+      </div>
+      <a href="/" class="btn-secondary">
+        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+        </svg>
+        Accueil
+      </a>
+      <a href="/sales/pos/" class="btn-primary">
+        <img src="{% static 'images/empty_bag.png' %}" alt="Caisse" class="w-4 h-4 mr-2">
+        Ouvrir la caisse
+      </a>
     </div>
   </div>
 </header>

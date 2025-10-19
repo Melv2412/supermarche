@@ -1,0 +1,7 @@
+[
+  { "id": 1, "name": "Jean Dupont", "email": "jean.dupont@example.com", "points": 820, "active": true },
+  { "id": 2, "name": "Sarah Martin", "email": "sarah.martin@example.com", "points": 1200, "active": true },
+  { "id": 3, "name": "Ali Ben", "email": "ali.ben@example.com", "points": 150, "active": false },
+  { "id": 4, "name": "Emma Leroy", "email": "emma.leroy@example.com", "points": 430, "active": true },
+  { "id": 5, "name": "Paul Moreau", "email": "paul.moreau@example.com", "points": 980, "active": true }
+]

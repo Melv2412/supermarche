@@ -1,0 +1,5 @@
+[
+  { "id": 1, "name": "AgriFrais SARL", "email": "contact@agrifrais.fr", "phone": "+33 1 23 45 67 89", "categories": ["Fruits & Légumes"], "address": "12 Rue des Pommiers, 75012 Paris", "notes": "Fournisseur local prioritaire" },
+  { "id": 2, "name": "DeliPro Distribution", "email": "sales@delipro.com", "phone": "+33 4 56 78 90 12", "categories": ["Épicerie", "Boissons"], "address": "8 Avenue du Marché, 69002 Lyon", "notes": "Tarifs dégressifs volume" },
+  { "id": 3, "name": "LactaNord", "email": "support@lactanord.fr", "phone": "+33 3 22 11 44 55", "categories": ["Frais"], "address": "Parc Agro 2, 59000 Lille", "notes": "Chaîne du froid stricte" }
+]

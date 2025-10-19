@@ -1,0 +1,7 @@
+[
+  { "name": "Épicerie", "desc": "Produits secs, conserves, pâtes, riz, sucre" },
+  { "name": "Frais", "desc": "Laitages, fromages, charcuterie" },
+  { "name": "Fruits & Légumes", "desc": "Produits frais de saison" },
+  { "name": "Boissons", "desc": "Eaux, sodas, jus, boissons chaudes" },
+  { "name": "Hygiène", "desc": "Hygiène corporelle et entretien" }
+]

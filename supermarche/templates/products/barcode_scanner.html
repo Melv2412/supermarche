@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Scanner Code-barres{% endblock %}
+{% block content %}
+<div class="container py-3">
+  <div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <strong>Scanner (simulation front)</strong>
+      <a class="btn btn-sm btn-outline-secondary" href="#" onclick="Products.gotoList();return false;">Retour produits</a>
+    </div>
+    <div class="card-body">
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label">Entrer un code-barres</label>
+          <input id="scan-input" type="text" class="form-control" placeholder="EAN/UPC...">
+          <div class="form-text">Simulation sans caméra. Saisie manuelle.</div>
+        </div>
+        <div class="col-md-6 d-flex align-items-end">
+          <button id="scan-btn" class="btn btn-primary">Chercher</button>
+        </div>
+      </div>
+      <hr>
+      <div id="scan-result" class="text-muted">Aucun résultat.</div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script src="{% static 'js/products.js' %}?v=2"></script>
+<script>Products.initScanner();</script>
+{% endblock %}

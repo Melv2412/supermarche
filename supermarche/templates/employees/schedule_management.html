@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}RH - Gestion des plannings{% endblock %}
+{% block content %}
+<div class="container-fluid">
+  <div class="d-flex flex-wrap gap-2 align-items-end mb-3">
+    <div class="flex-grow-1">
+      <label class="form-label small text-muted">Recherche</label>
+      <input id="sch-search" class="form-control form-control-sm" placeholder="Nom, rôle...">
+    </div>
+    <select id="sch-week" class="form-select form-select-sm" style="max-width:180px">
+      <option value="this" selected>Semaine en cours</option>
+      <option value="next">Semaine prochaine</option>
+    </select>
+  </div>
+
+  <div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <strong>Planning hebdomadaire</strong>
+      <span id="sch-count" class="badge text-bg-secondary">0</span>
+    </div>
+    <div class="table-responsive">
+      <table class="table table-sm align-middle m-0">
+        <thead>
+          <tr>
+            <th>Employé</th>
+            <th>Rôle</th>
+            <th>Lun</th>
+            <th>Mar</th>
+            <th>Mer</th>
+            <th>Jeu</th>
+            <th>Ven</th>
+            <th>Sam</th>
+            <th>Dim</th>
+          </tr>
+        </thead>
+        <tbody id="sch-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script src="{% static 'js/employees.js' %}?v=2"></script>
+<script>Employees.initSchedule();</script>
+{% endblock %}

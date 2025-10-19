@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Reporting - Dashboard{% endblock %}
+{% block content %}
+<div class="container-fluid">
+  <div class="row g-3 mb-3">
+    <div class="col-6 col-lg-3"><div class="card"><div class="card-body">
+      <div class="text-muted small">Ventes (période)</div>
+      <div id="kpi-period-sales" class="h4 m-0">0 FCFA</div>
+    </div></div></div>
+    <div class="col-6 col-lg-3"><div class="card"><div class="card-body">
+      <div class="text-muted small">Marge</div>
+      <div id="kpi-margin" class="h4 m-0">0 FCFA</div>
+    </div></div></div>
+    <div class="col-6 col-lg-3"><div class="card"><div class="card-body">
+      <div class="text-muted small">Tickets</div>
+      <div id="kpi-tickets" class="h4 m-0">0</div>
+    </div></div></div>
+    <div class="col-6 col-lg-3"><div class="card"><div class="card-body">
+      <div class="text-muted small">Panier moyen</div>
+      <div id="kpi-avg" class="h4 m-0">0 FCFA</div>
+    </div></div></div>
+  </div>
+
+  <div class="d-flex flex-wrap gap-2 align-items-end mb-3">
+    <div>
+      <label class="form-label small text-muted">Période</label>
+      <select id="period" class="form-select form-select-sm">
+        <option value="7">7 jours</option>
+        <option value="30" selected>30 jours</option>
+        <option value="90">90 jours</option>
+      </select>
+    </div>
+    <button id="refresh" class="btn btn-outline-secondary btn-sm">Actualiser</button>
+  </div>
+
+  <div class="row g-3">
+    <div class="col-12 col-lg-7">
+      <div class="card">
+        <div class="card-header"><strong>Ventes par jour</strong></div>
+        <div class="card-body">
+          <canvas id="chart-daily" height="120"></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-lg-5">
+      <div class="card mb-3">
+        <div class="card-header"><strong>Ventes par catégorie</strong></div>
+        <div class="card-body">
+          <canvas id="chart-categories" height="150"></canvas>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><strong>Moyens de paiement</strong></div>
+        <div class="card-body">
+          <canvas id="chart-payments" height="150"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script src="{% static 'js/reporting.js' %}?v=2"></script>
+<script>Reporting.init();</script>
+{% endblock %}

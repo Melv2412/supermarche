@@ -1,0 +1,6 @@
+[
+  { "title": "Accueil et relation client", "category": "Service", "duration": "2h", "level": "Débutant" },
+  { "title": "Sécurité alimentaire HACCP", "category": "Qualité", "duration": "3h", "level": "Intermédiaire" },
+  { "title": "Utilisation caisse POS", "category": "Opérations", "duration": "1h", "level": "Débutant" },
+  { "title": "Gestion des stocks avancée", "category": "Logistique", "duration": "2h30", "level": "Avancé" }
+]

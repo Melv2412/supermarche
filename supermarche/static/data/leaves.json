@@ -1,0 +1,6 @@
+[
+  { "id": 1, "from": "2025-11-02", "to": "2025-11-05", "type": "Congés payés", "status": "approved", "note": "Validé par manager" },
+  { "id": 2, "from": "2025-11-10", "to": "2025-11-12", "type": "RTT",           "status": "pending",  "note": "En attente" },
+  { "id": 3, "from": "2025-11-15", "to": "2025-11-16", "type": "Maladie",       "status": "approved", "note": "Certificat reçu" },
+  { "id": 5, "from": "2025-11-20", "to": "2025-11-22", "type": "Congés payés", "status": "rejected", "note": "Conflit planning" }
+]

@@ -321,7 +321,7 @@
     <text x="860" y="1180" style="fill:#475569; font:12px Arial;">✓ Application lors du scan de la carte client en caisse</text>
     
     <text x="840" y="1210" style="fill:#0e7490; font:bold 14px Arial;">RG8 - Promotions avec seuil minimum :</text>
-    <text x="860" y="1230" style="fill:#475569; font:12px Arial;">✓ Promotion.seuilMinimum (ex: 100€) + verifierEligibilite()</text>
+    <text x="860" y="1230" style="fill:#475569; font:12px Arial;">✓ Promotion.seuilMinimum (ex: 100 FCFA) + verifierEligibilite()</text>
     <text x="860" y="1245" style="fill:#475569; font:12px Arial;">✓ Vérification automatique avant application de la promo</text>
     
     <text x="840" y="1275" style="fill:#0e7490; font:bold 14px Arial;">RG9 - Rapport quotidien automatique :</text>
