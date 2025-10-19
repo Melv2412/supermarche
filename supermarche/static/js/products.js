@@ -6,11 +6,11 @@ window.Products = (function(){
     return amount + ' FCFA';
   }
 
-  function gotoList(){ window.location.href = '/products/list/'; }
-  function gotoForm(){ window.location.href = '/products/new/'; }
+  function gotoList(){ window.location.href = '/products/'; }
+  function gotoForm(){ window.location.href = '/products/create/'; }
   function gotoCategoryList(){ window.location.href = '/products/categories/'; }
-  function gotoCategoryForm(){ window.location.href = '/products/categories/new/'; }
-  function gotoScanner(){ window.location.href = '/products/scanner/'; }
+  function gotoCategoryForm(){ window.location.href = '/products/categories/create/'; }
+  function gotoScanner(){ window.location.href = '/products/barcode/'; }
 
   function renderCategories(selectEl){
     const set = new Set(state.items.map(i => i.category).filter(Boolean));

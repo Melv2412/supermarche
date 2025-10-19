@@ -5,7 +5,7 @@ window.Employees = (function(){
   // navigation
   function gotoList(){ window.location.href = '/employees/'; }
   function gotoDetail(id){ window.location.href = `/employees/detail/?id=${id||1}`; }
-  function gotoForm(){ window.location.href = '/employees/new/'; }
+  function gotoForm(){ window.location.href = '/employees/create/'; }
 
   async function loadEmployees(){ const r = await fetch('/static/data/employees.json'); return await r.json(); }
   async function loadSchedules(){ const r = await fetch('/static/data/schedules.json'); return await r.json(); }

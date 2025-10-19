@@ -10,11 +10,11 @@ window.Suppliers = (function(){
   };
 
   function gotoSupplierList(){ window.location.href = '/suppliers/'; }
-  function gotoSupplierDetail(id){ window.location.href = `/suppliers/${id}/`; }
-  function gotoSupplierForm(){ window.location.href = '/suppliers/new/'; }
+  function gotoSupplierDetail(id){ window.location.href = `/suppliers/detail/?id=${id||1}`; }
+  function gotoSupplierForm(){ window.location.href = '/suppliers/create/'; }
   function gotoOrderList(){ window.location.href = '/suppliers/orders/'; }
-  function gotoOrderDetail(id){ window.location.href = `/suppliers/orders/${id}/`; }
-  function gotoOrderForm(){ window.location.href = '/suppliers/orders/new/'; }
+  function gotoOrderDetail(id){ window.location.href = `/suppliers/orders/detail/?id=${id||1}`; }
+  function gotoOrderForm(){ window.location.href = '/suppliers/orders/create/'; }
 
   async function loadSuppliers(){
     const res = await fetch('/static/data/suppliers.json');

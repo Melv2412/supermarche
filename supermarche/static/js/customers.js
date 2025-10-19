@@ -5,7 +5,7 @@ window.Customers = (function(){
     hist: { q: ()=>document.getElementById('hist-search'), type: ()=>document.getElementById('hist-type'), tbody: ()=>document.getElementById('hist-tbody'), count: ()=>document.getElementById('hist-count') }
   };
 
-  function gotoHistory(){ window.location.href = '/customers/history/'; }
+  function gotoHistory(){ window.location.href = '/customers/points/'; }
 
   async function loadCustomers(){
     const res = await fetch('/static/data/customers.json');
