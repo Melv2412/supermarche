@@ -1,52 +1,161 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}Clients - Fidélité{% endblock %}
+{% block title %}Mon Espace Client{% endblock %}
 {% block content %}
 <div class="container-fluid">
-  <div class="row g-3 mb-3">
-    <div class="col-6 col-lg-3"><div class="card"><div class="card-body">
-      <div class="text-muted small">Clients inscrits</div>
-      <div id="kpi-customers" class="h4 m-0">0</div>
-    </div></div></div>
-    <div class="col-6 col-lg-3"><div class="card"><div class="card-body">
-      <div class="text-muted small">Points totaux</div>
-      <div id="kpi-points" class="h4 m-0">0</div>
-    </div></div></div>
-    <div class="col-6 col-lg-3"><div class="card"><div class="card-body">
-      <div class="text-muted small">Points moyens</div>
-      <div id="kpi-avg" class="h4 m-0">0</div>
-    </div></div></div>
-    <div class="col-6 col-lg-3"><div class="card"><div class="card-body">
-      <div class="text-muted small">Clients actifs</div>
-      <div id="kpi-active" class="h4 m-0">0</div>
-    </div></div></div>
-  </div>
-
-  <div class="d-flex flex-wrap gap-2 align-items-end mb-3">
-    <div class="flex-grow-1">
-      <label class="form-label small text-muted">Recherche</label>
-      <input id="cust-search" class="form-control form-control-sm" placeholder="Nom, email...">
+  <!-- En-tête personnel -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="card bg-primary text-white">
+        <div class="card-body">
+          <div class="row align-items-center">
+            <div class="col-md-8">
+              <h1 class="h3 mb-2">Bonjour, <span id="client-name">Jean Dupont</span></h1>
+              <p class="mb-0 opacity-75" id="client-email">jean.dupont@example.com</p>
+            </div>
+            <div class="col-md-4 text-md-end">
+              <div class="h2 mb-0" id="client-points">820</div>
+              <small class="opacity-75">points de fidélité</small>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    <a href="#" class="btn btn-outline-secondary btn-sm" onclick="Customers.gotoHistory();return false;">Historique des points</a>
   </div>
 
+  <!-- Mes statistiques personnelles -->
+  <div class="row g-3 mb-4">
+    <div class="col-6 col-lg-3">
+      <div class="card text-center">
+        <div class="card-body">
+          <div class="text-muted small">Mes Points</div>
+          <div id="my-points" class="h4 m-0 text-primary">820</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="card text-center">
+        <div class="card-body">
+          <div class="text-muted small">Achats ce mois</div>
+          <div id="my-purchases-month" class="h4 m-0 text-success">3</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="card text-center">
+        <div class="card-body">
+          <div class="text-muted small">Dépenses ce mois</div>
+          <div id="my-spending-month" class="h4 m-0 text-info">12 500 FCFA</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="card text-center">
+        <div class="card-body">
+          <div class="text-muted small">Niveau de fidélité</div>
+          <div id="my-level" class="h4 m-0 text-warning">Bronze</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <!-- Mes offres personnalisées -->
+    <div class="col-lg-6 mb-4">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0">🎁 Mes Offres Spéciales</h5>
+        </div>
+        <div class="card-body">
+          <div class="alert alert-success">
+            <strong>10% de réduction</strong> sur tous les fruits
+            <br><small class="text-muted">Valable jusqu'au 31/01/2024</small>
+          </div>
+          <div class="alert alert-info">
+            <strong>50 points bonus</strong> pour tout achat > 5000 FCFA
+            <br><small class="text-muted">Offre permanente</small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mes derniers achats -->
+    <div class="col-lg-6 mb-4">
   <div class="card">
     <div class="card-header d-flex justify-content-between align-items-center">
-      <strong>Clients</strong>
-      <span id="cust-count" class="badge text-bg-secondary">0</span>
+          <h5 class="mb-0">🛒 Mes Derniers Achats</h5>
+          <a href="#" class="btn btn-sm btn-outline-primary" onclick="Customers.gotoHistory();return false;">Voir tout</a>
+        </div>
+        <div class="card-body">
+          <div id="my-recent-purchases">
+            <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+              <div>
+                <div class="fw-bold">15/01/2024</div>
+                <small class="text-muted">Fruits et légumes</small>
+              </div>
+              <div class="text-end">
+                <div class="fw-bold">2 500 FCFA</div>
+                <small class="text-success">+25 points</small>
+              </div>
+            </div>
+            <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+              <div>
+                <div class="fw-bold">10/01/2024</div>
+                <small class="text-muted">Épicerie</small>
+              </div>
+              <div class="text-end">
+                <div class="fw-bold">1 800 FCFA</div>
+                <small class="text-success">+18 points</small>
+              </div>
+            </div>
+            <div class="d-flex justify-content-between align-items-center py-2">
+              <div>
+                <div class="fw-bold">05/01/2024</div>
+                <small class="text-muted">Boucherie</small>
+              </div>
+              <div class="text-end">
+                <div class="fw-bold">3 200 FCFA</div>
+                <small class="text-success">+32 points</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="table-responsive">
-      <table class="table table-sm align-middle m-0">
-        <thead>
-          <tr>
-            <th>Nom</th>
-            <th>Email</th>
-            <th class="text-end">Points</th>
-            <th>Statut</th>
-          </tr>
-        </thead>
-        <tbody id="cust-tbody"></tbody>
-      </table>
+  </div>
+
+  <!-- Actions rapides -->
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0">⚡ Actions Rapides</h5>
+        </div>
+        <div class="card-body">
+          <div class="row g-3">
+            <div class="col-md-3">
+              <button class="btn btn-outline-primary w-100" onclick="Customers.gotoHistory();return false;">
+                <i class="fas fa-history me-2"></i>Historique des points
+              </button>
+            </div>
+            <div class="col-md-3">
+              <button class="btn btn-outline-success w-100" onclick="alert('Fonctionnalité à venir');return false;">
+                <i class="fas fa-gift me-2"></i>Utiliser mes points
+              </button>
+            </div>
+            <div class="col-md-3">
+              <button class="btn btn-outline-info w-100" onclick="alert('Fonctionnalité à venir');return false;">
+                <i class="fas fa-user-edit me-2"></i>Modifier mon profil
+              </button>
+            </div>
+            <div class="col-md-3">
+              <button class="btn btn-outline-warning w-100" onclick="alert('Fonctionnalité à venir');return false;">
+                <i class="fas fa-bell me-2"></i>Préférences
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

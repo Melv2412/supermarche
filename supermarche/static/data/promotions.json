@@ -1,0 +1,41 @@
+[
+  {
+    "id_promotion": 1,
+    "code": "PROMO10",
+    "nom": "Réduction 10%",
+    "type_remise": "pourcentage",
+    "valeur_remise": 10.00,
+    "seuil_minimum": 50.00,
+    "date_debut": "2025-01-01T00:00:00Z",
+    "date_fin": "2025-01-31T23:59:59Z",
+    "est_active": true,
+    "id_produit": null,
+    "id_categorie": 1
+  },
+  {
+    "id_promotion": 2,
+    "code": "FARINE20",
+    "nom": "Farine -20%",
+    "type_remise": "pourcentage",
+    "valeur_remise": 20.00,
+    "seuil_minimum": 0.00,
+    "date_debut": "2025-01-15T00:00:00Z",
+    "date_fin": "2025-01-25T23:59:59Z",
+    "est_active": true,
+    "id_produit": 3,
+    "id_categorie": null
+  },
+  {
+    "id_promotion": 3,
+    "code": "FIDELITE5",
+    "nom": "Remise fidélité 5%",
+    "type_remise": "pourcentage",
+    "valeur_remise": 5.00,
+    "seuil_minimum": 0.00,
+    "date_debut": "2025-01-01T00:00:00Z",
+    "date_fin": "2025-12-31T23:59:59Z",
+    "est_active": true,
+    "id_produit": null,
+    "id_categorie": null
+  }
+]

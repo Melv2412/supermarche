@@ -4,8 +4,11 @@ from django.views.generic import TemplateView
 app_name = 'employees'
 
 urlpatterns = [
+    # Dashboard RH
+    path('', TemplateView.as_view(template_name='employees/rh_dashboard.html'), name='rh_dashboard'),
+    
     # URLs pour la gestion des employés
-    path('', TemplateView.as_view(template_name='employees/employee_list.html'), name='employee_list'),
+    path('list/', TemplateView.as_view(template_name='employees/employee_list.html'), name='employee_list'),
     path('create/', TemplateView.as_view(template_name='employees/employee_form.html'), name='employee_form'),
     path('detail/', TemplateView.as_view(template_name='employees/employee_detail.html'), name='employee_detail'),
     path('schedule/', TemplateView.as_view(template_name='employees/schedule_management.html'), name='schedule_management'),

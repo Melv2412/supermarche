@@ -1,0 +1,95 @@
+[
+  {
+    "id_transaction": 1,
+    "numero_ticket": "TKT-20250122-001",
+    "date_transaction": "2025-01-22T14:30:00Z",
+    "montant_brut": 15.47,
+    "montant_remises": 1.50,
+    "montant_net": 13.97,
+    "montant_tva": 2.79,
+    "statut": "terminee",
+    "id_caisse": 1,
+    "id_client": 1,
+    "id_caissier": 1,
+    "lignes": [
+      {
+        "id_ligne": 1,
+        "id_produit": 1,
+        "quantite": 2,
+        "prix_unitaire": 1.49,
+        "prix_promotion": 1.49,
+        "sous_total": 2.98,
+        "remise_appliquee": 0.00
+      },
+      {
+        "id_ligne": 2,
+        "id_produit": 2,
+        "quantite": 1,
+        "prix_unitaire": 0.98,
+        "prix_promotion": 0.98,
+        "sous_total": 0.98,
+        "remise_appliquee": 0.00
+      },
+      {
+        "id_ligne": 3,
+        "id_produit": 3,
+        "quantite": 3,
+        "prix_unitaire": 0.89,
+        "prix_promotion": 0.79,
+        "sous_total": 2.37,
+        "remise_appliquee": 0.30
+      }
+    ],
+    "modes_paiement": [
+      {
+        "id_mode": 1,
+        "type": "especes",
+        "montant": 13.97,
+        "reference": null,
+        "statut": "valide"
+      }
+    ]
+  },
+  {
+    "id_transaction": 2,
+    "numero_ticket": "TKT-20250122-002",
+    "date_transaction": "2025-01-22T15:45:00Z",
+    "montant_brut": 8.96,
+    "montant_remises": 0.00,
+    "montant_net": 8.96,
+    "montant_tva": 1.79,
+    "statut": "terminee",
+    "id_caisse": 1,
+    "id_client": 2,
+    "id_caissier": 1,
+    "lignes": [
+      {
+        "id_ligne": 4,
+        "id_produit": 4,
+        "quantite": 1,
+        "prix_unitaire": 2.79,
+        "prix_promotion": 2.79,
+        "sous_total": 2.79,
+        "remise_appliquee": 0.00
+      },
+      {
+        "id_ligne": 5,
+        "id_produit": 5,
+        "quantite": 2,
+        "prix_unitaire": 1.19,
+        "prix_promotion": 1.19,
+        "sous_total": 2.38,
+        "remise_appliquee": 0.00
+      }
+    ],
+    "modes_paiement": [
+      {
+        "id_mode": 2,
+        "type": "carte",
+        "montant": 8.96,
+        "reference": "CARD-123456789",
+        "statut": "valide"
+      }
+    ]
+  }
+]

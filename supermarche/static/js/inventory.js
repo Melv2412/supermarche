@@ -1,90 +1,268 @@
-(function(){
-  const state = { items: [], filtered: [], categories: [] };
-  const els = {
-    cat: document.getElementById('filter-category'),
-    thr: document.getElementById('filter-threshold'),
-    q: document.getElementById('filter-search'),
-    reset: document.getElementById('filter-reset'),
-    tbody: document.getElementById('stock-tbody'),
-    kpiLow: document.getElementById('kpi-low'),
-    kpiOut: document.getElementById('kpi-out'),
-    count: document.getElementById('count'),
+window.Inventory = (function(){
+  const fmt = (v)=> (v||0).toLocaleString('fr-FR');
+  const formatPrice = (v) => {
+    const amount = (v || 0).toLocaleString('fr-FR', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+    return amount + ' FCFA';
   };
 
-  function statusBadge(stock, threshold){
-    if(stock <= 0) return '<span class="badge text-bg-danger">Rupture</span>';
-    if(stock <= threshold) return '<span class="badge text-bg-warning text-dark">Faible</span>';
-    return '<span class="badge text-bg-success">OK</span>';
+  // Navigation
+  function gotoStockDashboard(){ window.location.href = '/inventory/'; }
+  function gotoStockList(){ window.location.href = '/inventory/stock/'; }
+  function gotoAlerts(){ window.location.href = '/inventory/alerts/'; }
+  function gotoInventory(){ window.location.href = '/inventory/inventory/'; }
+
+  // Load data
+  async function loadProducts(){ 
+    const res = await fetch('/static/data/products.json'); 
+    return await res.json(); 
+  }
+  async function loadStock(){ 
+    const res = await fetch('/static/data/stock.json'); 
+    return await res.json(); 
+  }
+  async function loadCategories(){ 
+    const res = await fetch('/static/data/categories.json'); 
+    return await res.json(); 
+  }
+  async function loadEntrepots(){ 
+    const res = await fetch('/static/data/entrepots.json'); 
+    return await res.json(); 
+  }
+  async function loadAlertes(){ 
+    const res = await fetch('/static/data/alertes.json'); 
+    return await res.json(); 
   }
 
-  function renderCategories(){
-    // unique categories
-    const set = new Set(state.items.map(i => i.category).filter(Boolean));
-    state.categories = Array.from(set).sort();
-    state.categories.forEach(c => {
-      const opt = document.createElement('option');
-      opt.value = c; opt.textContent = c;
-      els.cat.appendChild(opt);
-    });
-  }
-
-  function applyFilters(){
-    const cat = els.cat.value || '';
-    const thr = Number(els.thr.value || 0);
-    const q = (els.q.value || '').toLowerCase();
-    state.filtered = state.items.filter(i => {
-      const okCat = !cat || i.category === cat;
-      const okThr = i.threshold >= 0 ? i.threshold >= 0 : true; // threshold exists
-      const okText = i.name.toLowerCase().includes(q);
-      return okCat && okThr && okText;
-    }).map(i => ({...i, threshold: Math.max(thr, i.threshold)}));
-    renderTable();
-    renderKPIs();
-  }
-
-  function renderTable(){
-    els.tbody.innerHTML = '';
-    state.filtered.forEach(i => {
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td>${i.name}</td>
-        <td>${i.category || '-'}</td>
-        <td class="text-end">${i.stock}</td>
-        <td class="text-end">${i.threshold}</td>
-        <td>${statusBadge(i.stock, i.threshold)}</td>`;
-      els.tbody.appendChild(tr);
-    });
-    els.count.textContent = state.filtered.length;
-  }
-
-  function renderKPIs(){
-    const low = state.filtered.filter(i => i.stock > 0 && i.stock <= i.threshold).length;
-    const out = state.filtered.filter(i => i.stock <= 0).length;
-    els.kpiLow.textContent = low;
-    els.kpiOut.textContent = out;
-  }
-
-  function wire(){
-    els.cat.addEventListener('change', applyFilters);
-    els.thr.addEventListener('input', applyFilters);
-    els.q.addEventListener('input', applyFilters);
-    els.reset.addEventListener('click', () => {
-      els.cat.value = '';
-      els.thr.value = 10;
-      els.q.value = '';
-      applyFilters();
-    });
-  }
-
-  async function load(){
+  // Stock Dashboard
+  async function initStockDashboard(){
     try{
-      const res = await fetch('/static/data/stock.json');
-      state.items = await res.json();
-      renderCategories();
-      applyFilters();
-      wire();
-    }catch(e){ console.error('Erreur chargement stock:', e); }
+      const [products, stock, categories, entrepots, alertes] = await Promise.all([
+        loadProducts(), loadStock(), loadCategories(), loadEntrepots(), loadAlertes()
+      ]);
+
+      // Merge data
+      const stockWithProducts = stock.map(s => {
+        const product = products.find(p => p.id_produit === s.id_produit);
+        const category = categories.find(c => c.id_categorie === product?.id_categorie);
+        const entrepot = entrepots.find(e => e.id_entrepot === s.id_entrepot);
+        return {
+          ...s,
+          product: product,
+          category: category,
+          entrepot: entrepot
+        };
+      });
+
+      // KPIs
+      const totalProducts = products.length;
+      const totalStock = stock.reduce((sum, s) => sum + s.quantite_disponible, 0);
+      const lowStock = stockWithProducts.filter(s => s.quantite_disponible <= s.product?.seuil_reapprovisionnement).length;
+      const outOfStock = stockWithProducts.filter(s => s.quantite_disponible === 0).length;
+      const totalValue = stockWithProducts.reduce((sum, s) => sum + (s.quantite_disponible * s.product?.prix_achat), 0);
+
+      // Update KPI elements
+      document.getElementById('kpi-total-products')?.textContent = fmt(totalProducts);
+      document.getElementById('kpi-total-stock')?.textContent = fmt(totalStock);
+      document.getElementById('kpi-low-stock')?.textContent = fmt(lowStock);
+      document.getElementById('kpi-out-stock')?.textContent = fmt(outOfStock);
+      document.getElementById('kpi-total-value')?.textContent = formatPrice(totalValue);
+
+      // Render stock table
+      renderStockTable(stockWithProducts);
+
+      // Render alerts
+      renderAlerts(alertes, products);
+
+    }catch(e){ console.error('Stock dashboard error:', e); }
   }
 
-  document.addEventListener('DOMContentLoaded', load);
+  function renderStockTable(stockWithProducts){
+    const tbody = document.getElementById('stock-tbody');
+    if(!tbody) return;
+    
+    tbody.innerHTML = '';
+    stockWithProducts.forEach(s => {
+      const tr = document.createElement('tr');
+      const stockClass = s.quantite_disponible === 0 ? 'table-danger' : 
+                        s.quantite_disponible <= s.product?.seuil_reapprovisionnement ? 'table-warning' : '';
+      
+      tr.className = stockClass;
+      tr.innerHTML = `
+        <td>${s.product?.nom || '-'}</td>
+        <td>${s.category?.nom || '-'}</td>
+        <td class="text-center">${fmt(s.quantite_disponible)}</td>
+        <td class="text-center">${fmt(s.quantite_reservee)}</td>
+        <td class="text-center">${fmt(s.product?.seuil_reapprovisionnement || 0)}</td>
+        <td>${s.emplacement || '-'}</td>
+        <td>${s.entrepot?.nom || '-'}</td>
+        <td class="text-end">${formatPrice(s.quantite_disponible * s.product?.prix_achat || 0)}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  function renderAlerts(alertes, products){
+    const tbody = document.getElementById('alerts-tbody');
+    if(!tbody) return;
+    
+    tbody.innerHTML = '';
+    alertes.forEach(a => {
+      const product = products.find(p => p.id_produit === a.id_produit);
+      const tr = document.createElement('tr');
+      const priorityClass = a.priorite === 'haute' ? 'table-danger' : 
+                           a.priorite === 'moyenne' ? 'table-warning' : 'table-info';
+      
+      tr.className = priorityClass;
+      tr.innerHTML = `
+        <td>${product?.nom || '-'}</td>
+        <td><span class="badge bg-${a.priorite === 'haute' ? 'danger' : a.priorite === 'moyenne' ? 'warning' : 'info'}">${a.type_alerte}</span></td>
+        <td class="text-center">${fmt(a.quantite_actuelle)}</td>
+        <td class="text-center">${fmt(a.quantite_suggeree)}</td>
+        <td>${a.message}</td>
+        <td class="text-center">${new Date(a.date_creation).toLocaleDateString('fr-FR')}</td>
+        <td class="text-center">
+          <button class="btn btn-sm btn-outline-primary" onclick="Inventory.resolveAlert(${a.id_alerte})">
+            Résoudre
+          </button>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  function resolveAlert(alertId){
+    if(confirm('Marquer cette alerte comme résolue ?')){
+      // Simulation - en réalité, on ferait un appel API
+      console.log('Résolution alerte:', alertId);
+      alert('Alerte résolue (simulation)');
+      // Recharger la page pour voir les changements
+      window.location.reload();
+    }
+  }
+
+  // Stock List with filters
+  async function initStockList(){
+    try{
+      const [products, stock, categories, entrepots] = await Promise.all([
+        loadProducts(), loadStock(), loadCategories(), loadEntrepots()
+      ]);
+
+      const stockWithProducts = stock.map(s => {
+        const product = products.find(p => p.id_produit === s.id_produit);
+        const category = categories.find(c => c.id_categorie === product?.id_categorie);
+        const entrepot = entrepots.find(e => e.id_entrepot === s.id_entrepot);
+        return { ...s, product, category, entrepot };
+      });
+
+      const searchEl = document.getElementById('stock-search');
+      const categoryEl = document.getElementById('stock-category');
+      const entrepotEl = document.getElementById('stock-entrepot');
+      const statusEl = document.getElementById('stock-status');
+
+      // Fill filters
+      categories.forEach(c => {
+        const opt = document.createElement('option');
+        opt.value = c.id_categorie;
+        opt.textContent = c.nom;
+        categoryEl?.appendChild(opt);
+      });
+
+      entrepots.forEach(e => {
+        const opt = document.createElement('option');
+        opt.value = e.id_entrepot;
+        opt.textContent = e.nom;
+        entrepotEl?.appendChild(opt);
+      });
+
+      function render(){
+        const search = (searchEl?.value || '').toLowerCase();
+        const category = categoryEl?.value || '';
+        const entrepot = entrepotEl?.value || '';
+        const status = statusEl?.value || '';
+
+        const filtered = stockWithProducts.filter(s => {
+          const okSearch = !search || (s.product?.nom || '').toLowerCase().includes(search);
+          const okCategory = !category || s.product?.id_categorie == category;
+          const okEntrepot = !entrepot || s.id_entrepot == entrepot;
+          const okStatus = !status || 
+            (status === 'rupture' && s.quantite_disponible === 0) ||
+            (status === 'faible' && s.quantite_disponible <= s.product?.seuil_reapprovisionnement) ||
+            (status === 'normal' && s.quantite_disponible > s.product?.seuil_reapprovisionnement);
+          
+          return okSearch && okCategory && okEntrepot && okStatus;
+        });
+
+        renderStockTable(filtered);
+        document.getElementById('stock-count')?.textContent = fmt(filtered.length);
+      }
+
+      searchEl?.addEventListener('input', render);
+      categoryEl?.addEventListener('change', render);
+      entrepotEl?.addEventListener('change', render);
+      statusEl?.addEventListener('change', render);
+      
+      render();
+    }catch(e){ console.error('Stock list error:', e); }
+  }
+
+  // Inventory management
+  async function initInventory(){
+    try{
+      const [products, stock, categories] = await Promise.all([
+        loadProducts(), loadStock(), loadCategories()
+      ]);
+
+      const inventoryData = products.map(p => {
+        const stockItem = stock.find(s => s.id_produit === p.id_produit);
+        const category = categories.find(c => c.id_categorie === p.id_categorie);
+        return {
+          ...p,
+          category,
+          stock: stockItem,
+          quantite_theorique: stockItem?.quantite_disponible || 0,
+          quantite_reelle: 0, // À saisir lors de l'inventaire
+          ecart: 0,
+          valeur_ecart: 0
+        };
+      });
+
+      const tbody = document.getElementById('inventory-tbody');
+      if(!tbody) return;
+
+      tbody.innerHTML = '';
+      inventoryData.forEach(item => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${item.nom}</td>
+          <td>${item.category?.nom || '-'}</td>
+          <td class="text-center">${fmt(item.quantite_theorique)}</td>
+          <td class="text-center">
+            <input type="number" class="form-control form-control-sm" 
+                   value="${item.quantite_reelle}" 
+                   onchange="Inventory.updateInventory(${item.id_produit}, this.value)"
+                   min="0">
+          </td>
+          <td class="text-center" id="ecart-${item.id_produit}">0</td>
+          <td class="text-end" id="valeur-ecart-${item.id_produit}">0 FCFA</td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+    }catch(e){ console.error('Inventory error:', e); }
+  }
+
+  function updateInventory(productId, quantiteReelle){
+    const quantiteTheorique = document.querySelector(`input[onchange*="${productId}"]`)?.value || 0;
+    const ecart = parseInt(quantiteReelle) - parseInt(quantiteTheorique);
+    const valeurEcart = ecart * 10; // Prix moyen pour simulation
+    
+    document.getElementById(`ecart-${productId}`).textContent = fmt(ecart);
+    document.getElementById(`valeur-ecart-${productId}`).textContent = formatPrice(valeurEcart);
+  }
+
+  return {
+    gotoStockDashboard, gotoStockList, gotoAlerts, gotoInventory,
+    initStockDashboard, initStockList, initInventory,
+    resolveAlert, updateInventory
+  };
 })();

@@ -585,3 +585,7 @@
 /* Image utilities */
 .object-contain { object-fit: contain; }
 .opacity-60 { opacity: 0.6; }
+
+/* Import additional CSS files */
+@import url('tables.css');
+@import url('pages.css');

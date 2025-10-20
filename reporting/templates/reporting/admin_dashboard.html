@@ -1,0 +1,186 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Admin - Dashboard{% endblock %}
+{% block content %}
+<div class="container-fluid">
+  <!-- En-tête Admin -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="card bg-gradient text-white" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+        <div class="card-body">
+          <h1 class="h3 mb-2">👑 Dashboard Administrateur</h1>
+          <p class="mb-0 opacity-75">Vue d'ensemble complète du supermarché</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- KPIs Principaux -->
+  <div class="row g-3 mb-4">
+    <div class="col-6 col-lg-3">
+      <div class="card text-center">
+        <div class="card-body">
+          <div class="text-muted small">Chiffre d'Affaires</div>
+          <div id="revenue" class="h4 m-0 text-success">0 FCFA</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="card text-center">
+        <div class="card-body">
+          <div class="text-muted small">Produits en Stock</div>
+          <div id="products-stock" class="h4 m-0 text-primary">0</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="card text-center">
+        <div class="card-body">
+          <div class="text-muted small">Clients Actifs</div>
+          <div id="active-customers" class="h4 m-0 text-info">0</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="card text-center">
+        <div class="card-body">
+          <div class="text-muted small">Employés</div>
+          <div id="total-employees" class="h4 m-0 text-warning">0</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <!-- Modules Principaux -->
+    <div class="col-lg-8 mb-4">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0">🏪 Modules Principaux</h5>
+        </div>
+        <div class="card-body">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <a href="/sales/pos/" class="btn btn-outline-primary w-100 p-3 text-start">
+                <div class="d-flex align-items-center">
+                  <img src="{% static 'images/empty_bag.png' %}" alt="Caisse" class="w-8 h-8 me-3">
+                  <div>
+                    <div class="fw-bold">Caisse & Ventes</div>
+                    <small class="text-muted">Gestion des ventes et POS</small>
+                  </div>
+                </div>
+              </a>
+            </div>
+            <div class="col-md-6">
+              <a href="/products/" class="btn btn-outline-success w-100 p-3 text-start">
+                <div class="d-flex align-items-center">
+                  <svg class="w-8 h-8 me-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                  </svg>
+                  <div>
+                    <div class="fw-bold">Produits & Stocks</div>
+                    <small class="text-muted">Gestion des produits et inventaire</small>
+                  </div>
+                </div>
+              </a>
+            </div>
+            <div class="col-md-6">
+              <a href="/customers/management/" class="btn btn-outline-info w-100 p-3 text-start">
+                <div class="d-flex align-items-center">
+                  <svg class="w-8 h-8 me-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+                  </svg>
+                  <div>
+                    <div class="fw-bold">Gestion Clients</div>
+                    <small class="text-muted">Clients et programme de fidélité</small>
+                  </div>
+                </div>
+              </a>
+            </div>
+            <div class="col-md-6">
+              <a href="/employees/" class="btn btn-outline-warning w-100 p-3 text-start">
+                <div class="d-flex align-items-center">
+                  <svg class="w-8 h-8 me-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                  </svg>
+                  <div>
+                    <div class="fw-bold">Ressources Humaines</div>
+                    <small class="text-muted">Gestion des employés</small>
+                  </div>
+                </div>
+              </a>
+            </div>
+            <div class="col-md-6">
+              <a href="/suppliers/" class="btn btn-outline-secondary w-100 p-3 text-start">
+                <div class="d-flex align-items-center">
+                  <svg class="w-8 h-8 me-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                  </svg>
+                  <div>
+                    <div class="fw-bold">Fournisseurs</div>
+                    <small class="text-muted">Gestion des fournisseurs</small>
+                  </div>
+                </div>
+              </a>
+            </div>
+            <div class="col-md-6">
+              <a href="/reporting/" class="btn btn-outline-dark w-100 p-3 text-start">
+                <div class="d-flex align-items-center">
+                  <svg class="w-8 h-8 me-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                  </svg>
+                  <div>
+                    <div class="fw-bold">Reporting & Analytics</div>
+                    <small class="text-muted">Rapports et analyses</small>
+                  </div>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Alertes et Notifications -->
+    <div class="col-lg-4 mb-4">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0">🚨 Alertes</h5>
+        </div>
+        <div class="card-body">
+          <div class="alert alert-warning">
+            <strong>Stock faible</strong><br>
+            <small>5 produits en rupture de stock</small>
+          </div>
+          <div class="alert alert-info">
+            <strong>Nouveaux employés</strong><br>
+            <small>2 employés à former cette semaine</small>
+          </div>
+          <div class="alert alert-success">
+            <strong>Objectifs atteints</strong><br>
+            <small>Ventes du mois : +15%</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Graphiques -->
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0">📊 Vue d'Ensemble</h5>
+        </div>
+        <div class="card-body">
+          <canvas id="admin-chart" height="100"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script src="{% static 'js/reporting.js' %}?v=2"></script>
+<script>Reporting.initAdminDashboard();</script>
+{% endblock %}

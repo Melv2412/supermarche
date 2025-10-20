@@ -9,7 +9,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{% static 'css/style.css' %}?v=5">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}?v=6">
+  <link rel="stylesheet" href="{% static 'css/tables.css' %}?v=1">
+  <link rel="stylesheet" href="{% static 'css/pages.css' %}?v=1">
+  <link rel="stylesheet" href="{% static 'css/dashboards.css' %}?v=1">
   {% block extra_css %}{% endblock %}
 </head>
 <body class="bg-gray-50 font-sans">
@@ -19,7 +22,7 @@
       <aside class="w-64 sidebar-modern min-h-screen">
         {% include 'sidebar.html' %}
       </aside>
-      <main class="flex-1 p-6 animate-fade-in">
+      <main class="flex-1 page-container animate-fade-in">
         {% block content %}{% endblock %}
       </main>
     </div>

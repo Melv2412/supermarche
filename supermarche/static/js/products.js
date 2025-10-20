@@ -12,18 +12,28 @@ window.Products = (function(){
   function gotoCategoryForm(){ window.location.href = '/products/categories/create/'; }
   function gotoScanner(){ window.location.href = '/products/barcode/'; }
 
-  function renderCategories(selectEl){
-    const set = new Set(state.items.map(i => i.category).filter(Boolean));
-    const cats = Array.from(set).sort();
-    cats.forEach(c => { const opt = document.createElement('option'); opt.value=c; opt.textContent=c; selectEl.appendChild(opt); });
+  async function loadCategories(){
+    try{
+      const res = await fetch('/static/data/categories.json');
+      return await res.json();
+    }catch(e){ console.error('Categories load error:', e); return []; }
+  }
+
+  function renderCategories(selectEl, categories){
+    categories.forEach(c => { 
+      const opt = document.createElement('option'); 
+      opt.value = c.id_categorie; 
+      opt.textContent = c.nom; 
+      selectEl.appendChild(opt); 
+    });
   }
 
   function applyFilters(){
     const cat = document.getElementById('prod-category')?.value || '';
     const q = (document.getElementById('prod-search')?.value || '').toLowerCase();
     state.filtered = state.items.filter(i => {
-      const okCat = !cat || i.category === cat;
-      const okQ = (i.name+' '+(i.barcode||'')).toLowerCase().includes(q);
+      const okCat = !cat || i.id_categorie == cat;
+      const okQ = (i.nom+' '+(i.code_barre||'')).toLowerCase().includes(q);
       return okCat && okQ;
     });
     state.page = 1;
@@ -42,10 +52,14 @@ window.Products = (function(){
     slice.forEach(p => {
       const tr = document.createElement('tr');
       tr.innerHTML = `
-        <td>${p.name}</td>
-        <td>${p.category||'-'}</td>
-        <td>${p.barcode||'-'}</td>
-        <td class="text-end">${formatPrice(p.price)}</td>`;
+        <td>${p.nom}</td>
+        <td>${p.id_categorie||'-'}</td>
+        <td>${p.code_barre||'-'}</td>
+        <td class="text-end">${formatPrice(p.prix_unitaire)}</td>
+        <td class="text-end">${formatPrice(p.prix_achat)}</td>
+        <td class="text-center">${p.seuil_reapprovisionnement||'-'}</td>
+        <td class="text-center">${p.est_perissable ? 'Oui' : 'Non'}</td>
+        <td class="text-center">${p.actif ? 'Actif' : 'Inactif'}</td>`;
       tbody.appendChild(tr);
     });
 
@@ -62,9 +76,12 @@ window.Products = (function(){
 
   async function initList(){
     try{
-      const res = await fetch('/static/data/products.json');
-      state.items = await res.json();
-      renderCategories(document.getElementById('prod-category'));
+      const [products, categories] = await Promise.all([
+        fetch('/static/data/products.json').then(r => r.json()),
+        loadCategories()
+      ]);
+      state.items = products;
+      renderCategories(document.getElementById('prod-category'), categories);
       state.filtered = state.items.slice();
       applyFilters();
       document.getElementById('prod-category')?.addEventListener('change', applyFilters);
@@ -82,25 +99,38 @@ window.Products = (function(){
     const cat = document.getElementById('f-category');
     const barcode = document.getElementById('f-barcode');
     const price = document.getElementById('f-price');
-    const vat = document.getElementById('f-vat');
+    const priceAchat = document.getElementById('f-price-achat');
+    const seuil = document.getElementById('f-seuil');
+    const perissable = document.getElementById('f-perissable');
     const desc = document.getElementById('f-desc');
 
     const okName = name.value.trim().length>0;
     const okCat = cat.value.trim().length>0;
     const okPrice = Number(price.value)>=0;
+    const okPriceAchat = Number(priceAchat.value)>=0;
+    const okSeuil = Number(seuil.value)>=0;
+    
     setValidity(name, okName);
     setValidity(cat, okCat);
     setValidity(price, okPrice);
+    setValidity(priceAchat, okPriceAchat);
+    setValidity(seuil, okSeuil);
 
-    if(!(okName && okCat && okPrice)) return;
+    if(!(okName && okCat && okPrice && okPriceAchat && okSeuil)) return;
 
-    const totalTTC = Number(price.value) * (1 + (Number(vat.value||0)/100));
+    const marge = Number(price.value) - Number(priceAchat.value);
+    const margePercent = Number(priceAchat.value) > 0 ? ((marge / Number(priceAchat.value)) * 100).toFixed(1) : 0;
+    
     const html = `
       <div class="row g-2">
         <div class="col-md-6"><strong>${name.value}</strong></div>
-        <div class="col-md-3 text-muted small">${cat.value}</div>
-        <div class="col-md-3 text-end">${formatPrice(totalTTC)}</div>
+        <div class="col-md-3 text-muted small">Catégorie: ${cat.value}</div>
+        <div class="col-md-3 text-end">${formatPrice(Number(price.value))}</div>
         <div class="col-12 text-muted small">Code-barres: ${barcode.value||'-'}</div>
+        <div class="col-6">Prix d'achat: ${formatPrice(Number(priceAchat.value))}</div>
+        <div class="col-6">Marge: ${formatPrice(marge)} (${margePercent}%)</div>
+        <div class="col-6">Seuil: ${seuil.value} unités</div>
+        <div class="col-6">Périssable: ${perissable.checked ? 'Oui' : 'Non'}</div>
         <div class="col-12">${(desc.value||'').replace(/\n/g,'<br>')}</div>
       </div>`;
     document.getElementById('preview').innerHTML = html;
@@ -108,12 +138,9 @@ window.Products = (function(){
 
   async function initForm(){
     try{
-      // categories depuis produits existants
-      const res = await fetch('/static/data/products.json');
-      const items = await res.json();
+      const categories = await loadCategories();
       const sel = document.getElementById('f-category');
-      const set = new Set(items.map(i => i.category).filter(Boolean));
-      Array.from(set).sort().forEach(c => { const opt = document.createElement('option'); opt.value=c; opt.textContent=c; sel.appendChild(opt); });
+      renderCategories(sel, categories);
     }catch(e){ console.warn('Catégories non chargées:', e); }
 
     const form = document.getElementById('product-form');
@@ -123,18 +150,17 @@ window.Products = (function(){
   // Categories
   async function initCategoryList(){
     try{
-      const res = await fetch('/static/data/categories.json');
-      const cats = await res.json();
+      const cats = await loadCategories();
       const qEl = document.getElementById('cat-search');
       const tbody = document.getElementById('cat-tbody');
       const count = document.getElementById('cat-count');
       function render(){
         const q = (qEl.value||'').toLowerCase();
-        const filtered = cats.filter(c => c.name.toLowerCase().includes(q));
+        const filtered = cats.filter(c => c.nom.toLowerCase().includes(q));
         tbody.innerHTML = '';
         filtered.forEach(c => {
           const tr = document.createElement('tr');
-          tr.innerHTML = `<td>${c.name}</td><td class="text-muted small">${c.desc||''}</td>`;
+          tr.innerHTML = `<td>${c.nom}</td><td class="text-muted small">${c.description||''}</td>`;
           tbody.appendChild(tr);
         });
         count.textContent = filtered.length;
@@ -159,17 +185,27 @@ window.Products = (function(){
   // Scanner
   async function initScanner(){
     try{
-      const res = await fetch('/static/data/products.json');
-      const items = await res.json();
+      const [products, categories] = await Promise.all([
+        fetch('/static/data/products.json').then(r => r.json()),
+        loadCategories()
+      ]);
       const input = document.getElementById('scan-input');
       const btn = document.getElementById('scan-btn');
       const out = document.getElementById('scan-result');
       function search(){
         const code = (input.value||'').trim();
         if(!code){ out.textContent = 'Aucun résultat.'; return; }
-        const p = items.find(x => (x.barcode||'') === code);
+        const p = products.find(x => (x.code_barre||'') === code);
         if(!p){ out.textContent = 'Produit introuvable.'; return; }
-        out.innerHTML = `<div class="row g-2"><div class="col-md-6"><strong>${p.name}</strong></div><div class="col-md-3 text-muted small">${p.category||'-'}</div><div class="col-md-3 text-end">${formatPrice(p.price)}</div><div class="col-12 text-muted small">Code-barres: ${p.barcode||'-'}</div></div>`;
+        const cat = categories.find(c => c.id_categorie === p.id_categorie);
+        out.innerHTML = `<div class="row g-2">
+          <div class="col-md-6"><strong>${p.nom}</strong></div>
+          <div class="col-md-3 text-muted small">${cat?.nom||'-'}</div>
+          <div class="col-md-3 text-end">${formatPrice(p.prix_unitaire)}</div>
+          <div class="col-12 text-muted small">Code-barres: ${p.code_barre||'-'}</div>
+          <div class="col-6">Prix achat: ${formatPrice(p.prix_achat)}</div>
+          <div class="col-6">Seuil: ${p.seuil_reapprovisionnement}</div>
+        </div>`;
       }
       btn.addEventListener('click', (e)=>{ e.preventDefault(); search(); });
     }catch(e){ console.error('Scanner error:', e); }

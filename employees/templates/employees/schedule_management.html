@@ -2,41 +2,104 @@
 {% load static %}
 {% block title %}RH - Gestion des plannings{% endblock %}
 {% block content %}
-<div class="container-fluid">
-  <div class="d-flex flex-wrap gap-2 align-items-end mb-3">
-    <div class="flex-grow-1">
-      <label class="form-label small text-muted">Recherche</label>
-      <input id="sch-search" class="form-control form-control-sm" placeholder="Nom, rôle...">
+<div class="page-header">
+  <h1 class="page-title">📅 Gestion des Plannings</h1>
+  <p class="page-subtitle">Planification hebdomadaire des employés</p>
+</div>
+
+<div class="table-container">
+  <div class="table-filters">
+    <div class="filter-group">
+      <label for="sch-search" class="form-label">Recherche</label>
+      <input id="sch-search" class="filter-input" placeholder="Nom, rôle...">
     </div>
-    <select id="sch-week" class="form-select form-select-sm" style="max-width:180px">
-      <option value="this" selected>Semaine en cours</option>
-      <option value="next">Semaine prochaine</option>
-    </select>
+    <div class="filter-group">
+      <label for="sch-week" class="form-label">Période</label>
+      <select id="sch-week" class="filter-select">
+        <option value="this" selected>Semaine en cours</option>
+        <option value="next">Semaine prochaine</option>
+      </select>
+    </div>
   </div>
 
-  <div class="card">
-    <div class="card-header d-flex justify-content-between align-items-center">
-      <strong>Planning hebdomadaire</strong>
-      <span id="sch-count" class="badge text-bg-secondary">0</span>
-    </div>
-    <div class="table-responsive">
-      <table class="table table-sm align-middle m-0">
-        <thead>
-          <tr>
-            <th>Employé</th>
-            <th>Rôle</th>
-            <th>Lun</th>
-            <th>Mar</th>
-            <th>Mer</th>
-            <th>Jeu</th>
-            <th>Ven</th>
-            <th>Sam</th>
-            <th>Dim</th>
-          </tr>
-        </thead>
-        <tbody id="sch-tbody"></tbody>
-      </table>
-    </div>
+  <div class="table-header">
+    <h3>Planning hebdomadaire</h3>
+    <span id="sch-count" class="table-count">0</span>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table-modern">
+      <thead>
+        <tr>
+          <th>Employé</th>
+          <th>Rôle</th>
+          <th>Lun</th>
+          <th>Mar</th>
+          <th>Mer</th>
+          <th>Jeu</th>
+          <th>Ven</th>
+          <th>Sam</th>
+          <th>Dim</th>
+        </tr>
+      </thead>
+      <tbody id="sch-tbody">
+        <tr>
+          <td class="cell-employee">Sarah Chevalier</td>
+          <td class="cell-role">Caissier</td>
+          <td><span class="cell-time">09:00-17:00</span></td>
+          <td><span class="cell-time">09:00-17:00</span></td>
+          <td><span class="cell-time">09:00-17:00</span></td>
+          <td class="cell-empty">-</td>
+          <td><span class="cell-time">09:00-17:00</span></td>
+          <td class="cell-empty">-</td>
+          <td class="cell-empty">-</td>
+        </tr>
+        <tr>
+          <td class="cell-employee">Ali Kaba</td>
+          <td class="cell-role">Rayon</td>
+          <td class="cell-empty">-</td>
+          <td><span class="cell-time">13:00-21:00</span></td>
+          <td><span class="cell-time">13:00-21:00</span></td>
+          <td><span class="cell-time">13:00-21:00</span></td>
+          <td class="cell-empty">-</td>
+          <td><span class="cell-time">09:00-17:00</span></td>
+          <td class="cell-empty">-</td>
+        </tr>
+        <tr>
+          <td class="cell-employee">Emma Blanc</td>
+          <td class="cell-role">Logistique</td>
+          <td><span class="cell-time">06:00-14:00</span></td>
+          <td><span class="cell-time">06:00-14:00</span></td>
+          <td class="cell-empty">-</td>
+          <td><span class="cell-time">06:00-14:00</span></td>
+          <td><span class="cell-time">06:00-14:00</span></td>
+          <td class="cell-empty">-</td>
+          <td class="cell-empty">-</td>
+        </tr>
+        <tr>
+          <td class="cell-employee">Paul Garnier</td>
+          <td class="cell-role">Manager</td>
+          <td><span class="cell-time">10:00-18:00</span></td>
+          <td><span class="cell-time">10:00-18:00</span></td>
+          <td><span class="cell-time">10:00-18:00</span></td>
+          <td><span class="cell-time">10:00-18:00</span></td>
+          <td class="cell-empty">-</td>
+          <td class="cell-empty">-</td>
+          <td class="cell-empty">-</td>
+        </tr>
+        <tr>
+          <td class="cell-employee">Noa Petit</td>
+          <td class="cell-role">Caissier</td>
+          <td class="cell-empty">-</td>
+          <td class="cell-empty">-</td>
+          <td><span class="cell-time">12:00-20:00</span></td>
+          <td><span class="cell-time">12:00-20:00</span></td>
+          <td><span class="cell-time">12:00-20:00</span></td>
+          <td class="cell-empty">-</td>
+          <td class="cell-empty">-</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </div>
 {% endblock %}

@@ -2,41 +2,129 @@
 {% load static %}
 {% block title %}Employés - Liste{% endblock %}
 {% block content %}
-<div class="container-fluid">
-  <div class="d-flex flex-wrap gap-2 align-items-end mb-3">
-    <div class="flex-grow-1">
-      <label class="form-label small text-muted">Recherche</label>
-      <input id="emp-search" class="form-control form-control-sm" placeholder="Nom, email, poste...">
+<div class="page-header">
+  <h1 class="page-title">👥 Gestion des Employés</h1>
+  <p class="page-subtitle">Liste et gestion du personnel</p>
+</div>
+
+<div class="action-buttons">
+  <a href="#" class="action-btn action-btn-primary" onclick="Employees.gotoForm();return false;">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+    </svg>
+    Nouvel Employé
+  </a>
+  <a href="/employees/schedule/" class="action-btn action-btn-secondary">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+    </svg>
+    Planning
+  </a>
+  <a href="/employees/shifts/" class="action-btn action-btn-secondary">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+    </svg>
+    Équipes
+  </a>
+</div>
+
+<div class="table-container">
+  <div class="table-filters">
+    <div class="filter-group">
+      <label for="emp-search" class="form-label">Recherche</label>
+      <input id="emp-search" class="filter-input" placeholder="Nom, email, poste...">
     </div>
-    <select id="emp-role" class="form-select form-select-sm" style="max-width:200px">
-      <option value="">Tous les rôles</option>
-      <option>Caissier</option>
-      <option>Rayon</option>
-      <option>Logistique</option>
-      <option>Manager</option>
-    </select>
-    <a href="#" class="btn btn-primary btn-sm" onclick="Employees.gotoForm();return false;">Nouvel employé</a>
+    <div class="filter-group">
+      <label for="emp-role" class="form-label">Rôle</label>
+      <select id="emp-role" class="filter-select">
+        <option value="">Tous les rôles</option>
+        <option>Caissier</option>
+        <option>Rayon</option>
+        <option>Logistique</option>
+        <option>Manager</option>
+      </select>
+    </div>
   </div>
 
-  <div class="card">
-    <div class="card-header d-flex justify-content-between align-items-center">
-      <strong>Employés</strong>
-      <span id="emp-count" class="badge text-bg-secondary">0</span>
-    </div>
-    <div class="table-responsive">
-      <table class="table table-sm align-middle m-0">
-        <thead>
-          <tr>
-            <th>Nom</th>
-            <th>Email</th>
-            <th>Rôle</th>
-            <th>Statut</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody id="emp-tbody"></tbody>
-      </table>
-    </div>
+  <div class="table-header">
+    <h3>Liste des Employés</h3>
+    <span id="emp-count" class="table-count">0</span>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table-modern">
+      <thead>
+        <tr>
+          <th>Nom</th>
+          <th>Email</th>
+          <th>Rôle</th>
+          <th>Statut</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="emp-tbody">
+        <tr>
+          <td class="cell-employee">Sarah Chevalier</td>
+          <td>sarah.chevalier@example.com</td>
+          <td class="cell-role">Caissier</td>
+          <td><span class="cell-status active">Actif</span></td>
+          <td>
+            <div class="table-actions">
+              <a href="#" class="btn-action btn-view">Voir</a>
+              <a href="#" class="btn-action btn-edit">Modifier</a>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="cell-employee">Ali Kaba</td>
+          <td>ali.kaba@example.com</td>
+          <td class="cell-role">Rayon</td>
+          <td><span class="cell-status active">Actif</span></td>
+          <td>
+            <div class="table-actions">
+              <a href="#" class="btn-action btn-view">Voir</a>
+              <a href="#" class="btn-action btn-edit">Modifier</a>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="cell-employee">Emma Blanc</td>
+          <td>emma.blanc@example.com</td>
+          <td class="cell-role">Logistique</td>
+          <td><span class="cell-status active">Actif</span></td>
+          <td>
+            <div class="table-actions">
+              <a href="#" class="btn-action btn-view">Voir</a>
+              <a href="#" class="btn-action btn-edit">Modifier</a>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="cell-employee">Paul Garnier</td>
+          <td>paul.garnier@example.com</td>
+          <td class="cell-role">Manager</td>
+          <td><span class="cell-status active">Actif</span></td>
+          <td>
+            <div class="table-actions">
+              <a href="#" class="btn-action btn-view">Voir</a>
+              <a href="#" class="btn-action btn-edit">Modifier</a>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="cell-employee">Noa Petit</td>
+          <td>noa.petit@example.com</td>
+          <td class="cell-role">Caissier</td>
+          <td><span class="cell-status inactive">Inactif</span></td>
+          <td>
+            <div class="table-actions">
+              <a href="#" class="btn-action btn-view">Voir</a>
+              <a href="#" class="btn-action btn-edit">Modifier</a>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </div>
 {% endblock %}

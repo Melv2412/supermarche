@@ -1,8 +1,68 @@
 [
-  { "id": 101, "name": "Farine T45 1kg", "category": "Épicerie", "stock": 50, "threshold": 100 },
-  { "id": 102, "name": "Lait demi-écrémé 1L", "category": "Frais", "stock": 200, "threshold": 80 },
-  { "id": 103, "name": "Beurre doux 250g", "category": "Frais", "stock": 15, "threshold": 30 },
-  { "id": 104, "name": "Pâtes Spaghetti 500g", "category": "Épicerie", "stock": 8, "threshold": 25 },
-  { "id": 105, "name": "Riz basmati 1kg", "category": "Épicerie", "stock": 0, "threshold": 20 },
-  { "id": 106, "name": "Pommes 1kg", "category": "Fruits & Légumes", "stock": 32, "threshold": 20 }
+  {
+    "id_stock": 1,
+    "id_produit": 1,
+    "id_entrepot": 1,
+    "quantite_disponible": 8,
+    "quantite_reservee": 2,
+    "emplacement": "A-12-3",
+    "date_derniere_entree": "2025-01-20T14:30:00Z",
+    "date_derniere_sortie": "2025-01-22T09:15:00Z",
+    "derniere_mise_a_jour": "2025-01-22T09:15:00Z"
+  },
+  {
+    "id_stock": 2,
+    "id_produit": 2,
+    "id_entrepot": 1,
+    "quantite_disponible": 200,
+    "quantite_reservee": 0,
+    "emplacement": "F-05-1",
+    "date_derniere_entree": "2025-01-22T08:00:00Z",
+    "date_derniere_sortie": "2025-01-22T16:45:00Z",
+    "derniere_mise_a_jour": "2025-01-22T16:45:00Z"
+  },
+  {
+    "id_stock": 3,
+    "id_produit": 3,
+    "id_entrepot": 1,
+    "quantite_disponible": 50,
+    "quantite_reservee": 5,
+    "emplacement": "A-08-2",
+    "date_derniere_entree": "2025-01-18T11:20:00Z",
+    "date_derniere_sortie": "2025-01-22T10:30:00Z",
+    "derniere_mise_a_jour": "2025-01-22T10:30:00Z"
+  },
+  {
+    "id_stock": 4,
+    "id_produit": 4,
+    "id_entrepot": 1,
+    "quantite_disponible": 15,
+    "quantite_reservee": 0,
+    "emplacement": "A-15-1",
+    "date_derniere_entree": "2025-01-19T15:45:00Z",
+    "date_derniere_sortie": "2025-01-21T14:20:00Z",
+    "derniere_mise_a_jour": "2025-01-21T14:20:00Z"
+  },
+  {
+    "id_stock": 5,
+    "id_produit": 5,
+    "id_entrepot": 1,
+    "quantite_disponible": 25,
+    "quantite_reservee": 3,
+    "emplacement": "A-10-2",
+    "date_derniere_entree": "2025-01-17T09:30:00Z",
+    "date_derniere_sortie": "2025-01-22T11:15:00Z",
+    "derniere_mise_a_jour": "2025-01-22T11:15:00Z"
+  },
+  {
+    "id_stock": 6,
+    "id_produit": 6,
+    "id_entrepot": 1,
+    "quantite_disponible": 0,
+    "quantite_reservee": 0,
+    "emplacement": "A-20-1",
+    "date_derniere_entree": "2025-01-15T16:00:00Z",
+    "date_derniere_sortie": "2025-01-21T17:30:00Z",
+    "derniere_mise_a_jour": "2025-01-21T17:30:00Z"
+  }
 ]

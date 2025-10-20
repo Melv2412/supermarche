@@ -13,10 +13,20 @@ App.formatPrice = (v) => {
       const roles = (el.getAttribute('data-roles')||'').split(',').map(s=>s.trim());
       if(roles.length && role && !roles.includes(role)){
         el.style.display = 'none';
+      } else if(roles.length && role && roles.includes(role)){
+        el.style.display = 'block';
       }
     });
     const badge = document.getElementById('role-badge');
-    if(badge && role){ badge.textContent = role.toUpperCase(); }
+    if(badge && role){ 
+      const roleNames = {
+        'admin': 'ADMIN',
+        'rh': 'RH',
+        'caissier': 'CAISSIER',
+        'client': 'CLIENT'
+      };
+      badge.textContent = roleNames[role] || role.toUpperCase(); 
+    }
   }
   function guard(){
     const path = window.location.pathname;

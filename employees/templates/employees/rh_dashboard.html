@@ -1,0 +1,250 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}RH - Dashboard{% endblock %}
+{% block content %}
+<div class="dashboard-layout">
+  <!-- En-tête -->
+  <div class="dashboard-header">
+    <h1 class="dashboard-title">👷 Dashboard Ressources Humaines</h1>
+    <p class="dashboard-subtitle">Gestion des employés et planning</p>
+  </div>
+
+  <!-- Statistiques RH -->
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-card-header">
+        <div class="kpi-card-label">Total Employés</div>
+        <div class="kpi-card-icon">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+          </svg>
+        </div>
+      </div>
+      <div id="total-employees" class="kpi-card-value">5</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-card-header">
+        <div class="kpi-card-label">Employés Actifs</div>
+        <div class="kpi-card-icon">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+        </div>
+      </div>
+      <div id="active-employees" class="kpi-card-value">4</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-card-header">
+        <div class="kpi-card-label">En Congé</div>
+        <div class="kpi-card-icon">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+          </svg>
+        </div>
+      </div>
+      <div id="on-leave" class="kpi-card-value">1</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-card-header">
+        <div class="kpi-card-label">Nouveaux ce mois</div>
+        <div class="kpi-card-icon">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+          </svg>
+        </div>
+      </div>
+      <div id="new-this-month" class="kpi-card-value">2</div>
+    </div>
+  </div>
+
+  <div class="dashboard-content">
+    <div class="dashboard-main">
+      <!-- Actions Rapides RH -->
+      <div class="action-cards">
+        <a href="/employees/list/" class="action-card">
+          <div class="action-card-header">
+            <div class="action-card-icon">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+              </svg>
+            </div>
+            <div>
+              <h3 class="action-card-title">Liste des Employés</h3>
+              <p class="action-card-description">Gérer le personnel</p>
+            </div>
+          </div>
+        </a>
+        
+        <a href="/employees/create/" class="action-card">
+          <div class="action-card-header">
+            <div class="action-card-icon">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+              </svg>
+            </div>
+            <div>
+              <h3 class="action-card-title">Nouvel Employé</h3>
+              <p class="action-card-description">Ajouter un employé</p>
+            </div>
+          </div>
+        </a>
+        
+        <a href="/employees/schedule/" class="action-card">
+          <div class="action-card-header">
+            <div class="action-card-icon">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+              </svg>
+            </div>
+            <div>
+              <h3 class="action-card-title">Planning</h3>
+              <p class="action-card-description">Gérer les horaires</p>
+            </div>
+          </div>
+        </a>
+        
+        <a href="/employees/shifts/" class="action-card">
+          <div class="action-card-header">
+            <div class="action-card-icon">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+            </div>
+            <div>
+              <h3 class="action-card-title">Équipes</h3>
+              <p class="action-card-description">Planifier les équipes</p>
+            </div>
+          </div>
+        </a>
+        
+        <a href="/employees/leaves/" class="action-card">
+          <div class="action-card-header">
+            <div class="action-card-icon">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+              </svg>
+            </div>
+            <div>
+              <h3 class="action-card-title">Congés</h3>
+              <p class="action-card-description">Gérer les absences</p>
+            </div>
+          </div>
+        </a>
+        
+        <a href="/employees/performance/" class="action-card">
+          <div class="action-card-header">
+            <div class="action-card-icon">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+              </svg>
+            </div>
+            <div>
+              <h3 class="action-card-title">Évaluations</h3>
+              <p class="action-card-description">Performance du personnel</p>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <div class="dashboard-sidebar">
+      <!-- Employés récents -->
+      <div class="recent-items">
+        <div class="recent-items-header">
+          <h3 class="recent-items-title">👥 Employés Récents</h3>
+          <a href="/employees/list/" class="recent-items-link">Voir tout</a>
+        </div>
+        <div id="recent-employees">
+          <div class="recent-item">
+            <div class="recent-item-info">
+              <div class="recent-item-name">Sarah Chevalier</div>
+              <div class="recent-item-details">Caissier • sarah.chevalier@example.com</div>
+            </div>
+            <span class="recent-item-status active">Actif</span>
+          </div>
+          <div class="recent-item">
+            <div class="recent-item-info">
+              <div class="recent-item-name">Ali Kaba</div>
+              <div class="recent-item-details">Rayon • ali.kaba@example.com</div>
+            </div>
+            <span class="recent-item-status active">Actif</span>
+          </div>
+          <div class="recent-item">
+            <div class="recent-item-info">
+              <div class="recent-item-name">Emma Blanc</div>
+              <div class="recent-item-details">Logistique • emma.blanc@example.com</div>
+            </div>
+            <span class="recent-item-status active">Actif</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Alertes -->
+      <div class="alert-panel">
+        <div class="alert-panel-header">
+          <h3 class="alert-panel-title">🚨 Alertes</h3>
+        </div>
+        <div class="alert-item warning">
+          <div class="alert-item-title">Formation requise</div>
+          <div class="alert-item-description">2 employés à former cette semaine</div>
+        </div>
+        <div class="alert-item info">
+          <div class="alert-item-title">Nouveaux employés</div>
+          <div class="alert-item-description">2 nouveaux arrivés ce mois</div>
+        </div>
+        <div class="alert-item success">
+          <div class="alert-item-title">Objectifs atteints</div>
+          <div class="alert-item-description">Performance du mois : +15%</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Planning du jour -->
+  <div class="table-container">
+    <div class="table-header">
+      <h3>📅 Planning du Jour</h3>
+    </div>
+    <div class="table-responsive">
+      <table class="table-modern">
+        <thead>
+          <tr>
+            <th>Employé</th>
+            <th>Poste</th>
+            <th>Heure de début</th>
+            <th>Heure de fin</th>
+            <th>Statut</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="cell-employee">Sarah Chevalier</td>
+            <td class="cell-role">Caissier</td>
+            <td><span class="cell-time">08:00</span></td>
+            <td><span class="cell-time">16:00</span></td>
+            <td><span class="cell-status present">Présent</span></td>
+          </tr>
+          <tr>
+            <td class="cell-employee">Ali Kaba</td>
+            <td class="cell-role">Rayon</td>
+            <td><span class="cell-time">09:00</span></td>
+            <td><span class="cell-time">17:00</span></td>
+            <td><span class="cell-status late">En retard</span></td>
+          </tr>
+          <tr>
+            <td class="cell-employee">Emma Blanc</td>
+            <td class="cell-role">Logistique</td>
+            <td><span class="cell-time">07:00</span></td>
+            <td><span class="cell-time">15:00</span></td>
+            <td><span class="cell-status present">Présent</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script src="{% static 'js/employees.js' %}?v=2"></script>
+<script>Employees.initDashboard();</script>
+{% endblock %}
