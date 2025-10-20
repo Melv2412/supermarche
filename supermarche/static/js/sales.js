@@ -272,7 +272,7 @@ window.Sales = (function(){
     });
   }
 
-  function processPayment(){
+  async function processPayment(){
     if(state.cart.length === 0){
       alert('Le panier est vide');
       return;
@@ -287,10 +287,8 @@ window.Sales = (function(){
       return;
     }
 
-    // Simulation de la transaction
-    const transaction = {
-      numero_ticket: `TKT-${Date.now()}`,
-      date_transaction: new Date().toISOString(),
+    // Création de la transaction via API
+    const transactionData = {
       montant_brut: state.cartTotals.montant_brut,
       montant_remises: state.cartTotals.montant_remises,
       montant_net: state.cartTotals.montant_net,
@@ -298,7 +296,7 @@ window.Sales = (function(){
       statut: 'terminee',
       id_caisse: 1,
       id_client: customerId || null,
-      id_caissier: 1,
+      id_caissier: Number(localStorage.getItem('user_id')) || 1,
       lignes: state.cart.map(item => ({
         id_produit: item.id_produit,
         quantite: item.quantite,
@@ -314,10 +312,31 @@ window.Sales = (function(){
       }]
     };
 
-    console.log('Transaction créée:', transaction);
-    alert(`Transaction terminée!\nTicket: ${transaction.numero_ticket}\nMontant: ${formatPrice(transaction.montant_net)}`);
-    
-    clearCart();
+    try {
+      const response = await fetch('/api/transactions/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]')?.value || '',
+          'Authorization': 'Token ' + (localStorage.getItem('token') || '')
+        },
+        body: JSON.stringify(transactionData)
+      });
+
+      if(response.ok){
+        const transaction = await response.json();
+        console.log('Transaction créée:', transaction);
+        alert(`Transaction terminée!\nTicket: ${transaction.numero_ticket}\nMontant: ${formatPrice(transaction.montant_net)}`);
+        clearCart();
+      } else {
+        const error = await response.json();
+        console.error('Erreur transaction:', error);
+        alert('Erreur lors de la création de la transaction: ' + (error.detail || 'Erreur inconnue'));
+      }
+    } catch(error) {
+      console.error('Erreur:', error);
+      alert('Erreur lors de la création de la transaction');
+    }
   }
 
   function clearCart(){

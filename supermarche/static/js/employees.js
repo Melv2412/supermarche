@@ -7,10 +7,10 @@ window.Employees = (function(){
   function gotoDetail(id){ window.location.href = `/employees/detail/?id=${id||1}`; }
   function gotoForm(){ window.location.href = '/employees/create/'; }
 
-  async function loadEmployees(){ const r = await fetch('/static/data/employees.json'); return await r.json(); }
-  async function loadSchedules(){ const r = await fetch('/static/data/schedules.json'); return await r.json(); }
-  async function loadLeaves(){ const r = await fetch('/static/data/leaves.json'); return await r.json(); }
-  async function loadReviews(){ const r = await fetch('/static/data/reviews.json'); return await r.json(); }
+  async function loadEmployees(){ const r = await fetch('/api/employees/'); return await r.json(); }
+  async function loadSchedules(){ const r = await fetch('/api/schedules/'); return await r.json(); }
+  async function loadLeaves(){ const r = await fetch('/api/leaves/'); return await r.json(); }
+  async function loadReviews(){ const r = await fetch('/api/performance/'); return await r.json(); }
   async function loadTrainings(){ const r = await fetch('/static/data/trainings.json'); return await r.json(); }
 
   // List
@@ -81,18 +81,63 @@ window.Employees = (function(){
 
   // Form
   function setValidity(input, valid){ if(valid){ input.classList.remove('is-invalid'); input.classList.add('is-valid'); } else { input.classList.remove('is-valid'); input.classList.add('is-invalid'); } }
-  function initForm(){
+  async function initForm(){
     const form = document.getElementById('emp-form');
-    form?.addEventListener('submit', (e)=>{
+    form?.addEventListener('submit', async (e)=>{
       e.preventDefault();
       const name = document.getElementById('f-name');
       const email = document.getElementById('f-email');
       const role = document.getElementById('f-role');
+      const phone = document.getElementById('f-phone');
+      const salary = document.getElementById('f-salary');
+      const hireDate = document.getElementById('f-hire-date');
+      
       const ok = name.value.trim() && email.checkValidity() && role.value;
       setValidity(name, !!name.value.trim());
       setValidity(email, email.checkValidity());
       setValidity(role, !!role.value);
-      if(ok){ alert('Employé enregistré (simulation).'); }
+      
+      if(ok){
+        try {
+          const birthDate = document.getElementById('f-birth-date');
+          const address = document.getElementById('f-address');
+          
+          // Extraire nom et prénom du nom complet
+          const nameParts = name.value.trim().split(' ');
+          const prenom = nameParts[0] || 'Prénom';
+          const nom = nameParts.slice(1).join(' ') || 'Nom';
+          
+          const response = await fetch('/api/employees/', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]')?.value || ''
+            },
+            body: JSON.stringify({
+              nom: nom,
+              prenom: prenom,
+              email: email.value.trim(),
+              poste: role.value,
+              telephone: phone?.value.trim() || '0000000000',
+              adresse: address?.value.trim() || '',
+              date_naissance: birthDate?.value || '1990-01-01',
+              salaire: salary?.value ? Number(salary.value) : 150000,
+              date_embauche: hireDate?.value || new Date().toISOString().split('T')[0]
+            })
+          });
+          
+          if(response.ok){
+            alert('Employé créé avec succès !');
+            window.location.href = '/employees/';
+          } else {
+            const error = await response.json();
+            alert('Erreur: ' + (error.nom_complet?.[0] || error.email?.[0] || 'Impossible de créer l\'employé'));
+          }
+        } catch(error) {
+          console.error('Erreur création employé:', error);
+          alert('Erreur lors de la création de l\'employé');
+        }
+      }
     });
   }
 
@@ -160,27 +205,56 @@ window.Employees = (function(){
   // Leave requests
   async function initLeaveRequests(){
     try{
-      const [emps, leaves] = await Promise.all([loadEmployees(), loadLeaves()]);
+      const leaves = await loadLeaves();
       const qEl = document.getElementById('lv-search');
       const sEl = document.getElementById('lv-status');
       const tbody = document.getElementById('lv-tbody');
       const count = document.getElementById('lv-count');
+      
+      function formatDate(date){
+        const d = new Date(date);
+        return d.toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' });
+      }
+      
+      function getStatusBadge(statut){
+        if(statut === 'approved') return '<span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium">✅ Approuvé</span>';
+        if(statut === 'rejected') return '<span class="px-3 py-1 bg-red-100 text-red-700 rounded-full text-sm font-medium">❌ Refusé</span>';
+        return '<span class="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-sm font-medium">⏳ En attente</span>';
+      }
+      
       function render(){
         const q = (qEl.value||'').toLowerCase();
         const st = sEl.value||'';
         const filtered = leaves.filter(l => {
-          const e = emps.find(x=>x.id===l.id);
-          const okQ = (e?.name+' '+l.type).toLowerCase().includes(q);
-          const okS = !st || l.status===st;
+          const okQ = (l.nom_employe+' '+l.type+' '+l.motif).toLowerCase().includes(q);
+          const okS = !st || l.statut===st;
           return okQ && okS;
         });
         tbody.innerHTML = '';
         filtered.forEach(l=>{
-          const e = emps.find(x=>x.id===l.id);
-          const stClass = l.status==='approved'?'success':(l.status==='rejected'?'danger':'secondary');
-          const stLabel = l.status==='approved'?'Approuvé':(l.status==='rejected'?'Refusé':'En attente');
           const tr = document.createElement('tr');
-          tr.innerHTML = `<td>${e?.name||'-'}</td><td>${l.from} → ${l.to}</td><td>${l.type}</td><td><span class="badge text-bg-${stClass}">${stLabel}</span></td><td>${l.note||''}</td>`;
+          tr.innerHTML = `
+            <td>
+              <div class="font-semibold text-gray-800">${l.nom_employe}</div>
+              <div class="text-sm text-gray-500">${l.poste}</div>
+            </td>
+            <td>
+              <div class="text-sm">${formatDate(l.date_debut)}</div>
+              <div class="text-xs text-gray-500">au ${formatDate(l.date_fin)}</div>
+            </td>
+            <td class="text-center">
+              <span class="px-2 py-1 bg-violet-100 text-violet-700 rounded text-sm font-medium">${l.duree_jours}j</span>
+            </td>
+            <td><span class="text-sm font-medium text-gray-700">${l.type}</span></td>
+            <td class="text-center">${getStatusBadge(l.statut)}</td>
+            <td class="text-sm text-gray-600">${l.motif}</td>
+            <td class="text-center">
+              ${l.statut === 'pending' ? `
+                <button class="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600 text-sm mr-1" onclick="approveLeave(${l.id_demande})">✓</button>
+                <button class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 text-sm" onclick="rejectLeave(${l.id_demande})">✗</button>
+              ` : `<span class="text-gray-400 text-sm">${l.valideur || '-'}</span>`}
+            </td>
+          `;
           tbody.appendChild(tr);
         });
         count.textContent = filtered.length;

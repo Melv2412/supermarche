@@ -2,165 +2,190 @@
 {% load static %}
 {% block title %}Admin - Dashboard{% endblock %}
 {% block content %}
-<div class="container-fluid">
-  <!-- En-tête Admin -->
-  <div class="row mb-4">
-    <div class="col-12">
-      <div class="card bg-gradient text-white" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-        <div class="card-body">
-          <h1 class="h3 mb-2">👑 Dashboard Administrateur</h1>
-          <p class="mb-0 opacity-75">Vue d'ensemble complète du supermarché</p>
+<div class="max-w-7xl mx-auto px-4 py-6">
+  <!-- En-tête Admin avec animation -->
+  <div class="mb-8 animate-slide-down">
+    <div class="card-modern overflow-hidden">
+      <div class="card-header-modern" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%, #f093fb 100%);">
+        <div class="flex items-center justify-between">
+          <div>
+            <h1 class="text-3xl font-bold text-white mb-2">👑 Dashboard Administrateur</h1>
+            <p class="text-white opacity-90">Vue d'ensemble complète du supermarché</p>
+          </div>
+          <div class="hidden md:block">
+            <div class="w-20 h-20 bg-white bg-opacity-20 rounded-2xl flex items-center justify-center animate-float">
+              <span class="text-5xl">📊</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- KPIs Principaux -->
-  <div class="row g-3 mb-4">
-    <div class="col-6 col-lg-3">
-      <div class="card text-center">
-        <div class="card-body">
-          <div class="text-muted small">Chiffre d'Affaires</div>
-          <div id="revenue" class="h4 m-0 text-success">0 FCFA</div>
-        </div>
+  <!-- KPIs Principaux avec animations -->
+  <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8">
+    <div class="kpi-card animate-scale-in" style="border-left: 4px solid #10b981;">
+      <div class="flex items-center justify-between mb-3">
+        <span class="kpi-label">Chiffre d'Affaires</span>
+        <span class="text-3xl">💰</span>
       </div>
+      <div id="revenue" class="kpi-value" style="color: #10b981;">0 FCFA</div>
+      <div class="text-sm text-gray-500 mt-2">Total des ventes</div>
     </div>
-    <div class="col-6 col-lg-3">
-      <div class="card text-center">
-        <div class="card-body">
-          <div class="text-muted small">Produits en Stock</div>
-          <div id="products-stock" class="h4 m-0 text-primary">0</div>
-        </div>
+    
+    <div class="kpi-card animate-scale-in" style="animation-delay: 0.1s; border-left: 4px solid #3b82f6;">
+      <div class="flex items-center justify-between mb-3">
+        <span class="kpi-label">Produits en Stock</span>
+        <span class="text-3xl">📦</span>
       </div>
+      <div id="products-stock" class="kpi-value" style="color: #3b82f6;">0</div>
+      <div class="text-sm text-gray-500 mt-2">Articles disponibles</div>
     </div>
-    <div class="col-6 col-lg-3">
-      <div class="card text-center">
-        <div class="card-body">
-          <div class="text-muted small">Clients Actifs</div>
-          <div id="active-customers" class="h4 m-0 text-info">0</div>
-        </div>
+    
+    <div class="kpi-card animate-scale-in" style="animation-delay: 0.2s; border-left: 4px solid #06b6d4;">
+      <div class="flex items-center justify-between mb-3">
+        <span class="kpi-label">Clients Actifs</span>
+        <span class="text-3xl">👥</span>
       </div>
+      <div id="active-customers" class="kpi-value" style="color: #06b6d4;">0</div>
+      <div class="text-sm text-gray-500 mt-2">Clients enregistrés</div>
     </div>
-    <div class="col-6 col-lg-3">
-      <div class="card text-center">
-        <div class="card-body">
-          <div class="text-muted small">Employés</div>
-          <div id="total-employees" class="h4 m-0 text-warning">0</div>
-        </div>
+    
+    <div class="kpi-card animate-scale-in" style="animation-delay: 0.3s; border-left: 4px solid #f59e0b;">
+      <div class="flex items-center justify-between mb-3">
+        <span class="kpi-label">Employés</span>
+        <span class="text-3xl">👨‍💼</span>
       </div>
+      <div id="total-employees" class="kpi-value" style="color: #f59e0b;">0</div>
+      <div class="text-sm text-gray-500 mt-2">Personnel actif</div>
     </div>
   </div>
 
-  <div class="row">
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
     <!-- Modules Principaux -->
-    <div class="col-lg-8 mb-4">
-      <div class="card">
-        <div class="card-header">
-          <h5 class="mb-0">🏪 Modules Principaux</h5>
+    <div class="lg:col-span-2">
+      <div class="card-modern animate-slide-up">
+        <div class="card-header-modern">
+          <h2 class="text-xl font-semibold text-white">🏪 Modules Principaux</h2>
         </div>
-        <div class="card-body">
-          <div class="row g-3">
-            <div class="col-md-6">
-              <a href="/sales/pos/" class="btn btn-outline-primary w-100 p-3 text-start">
-                <div class="d-flex align-items-center">
-                  <svg class="w-8 h-8 me-3" style="width: 2rem; height: 2rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="p-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <a href="/sales/pos/" class="module-card group">
+              <div class="flex items-center">
+                <div class="module-icon" style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);">
+                  <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
                   </svg>
-                  <div>
-                    <div class="fw-bold">Caisse & Ventes</div>
-                    <small class="text-muted">Gestion des ventes et POS</small>
-                  </div>
                 </div>
-              </a>
-            </div>
-            <div class="col-md-6">
-              <a href="/products/" class="btn btn-outline-success w-100 p-3 text-start">
-                <div class="d-flex align-items-center">
-                  <svg class="w-8 h-8 me-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="ml-4">
+                  <div class="font-bold text-gray-800 group-hover:text-blue-600 transition-colors">Caisse & Ventes</div>
+                  <div class="text-sm text-gray-500">Gestion des ventes et POS</div>
+                </div>
+              </div>
+            </a>
+            <a href="/products/" class="module-card group">
+              <div class="flex items-center">
+                <div class="module-icon" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+                  <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
                   </svg>
-                  <div>
-                    <div class="fw-bold">Produits & Stocks</div>
-                    <small class="text-muted">Gestion des produits et inventaire</small>
-                  </div>
                 </div>
-              </a>
-            </div>
-            <div class="col-md-6">
-              <a href="/customers/management/" class="btn btn-outline-info w-100 p-3 text-start">
-                <div class="d-flex align-items-center">
-                  <svg class="w-8 h-8 me-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="ml-4">
+                  <div class="font-bold text-gray-800 group-hover:text-green-600 transition-colors">Produits & Stocks</div>
+                  <div class="text-sm text-gray-500">Gestion des produits et inventaire</div>
+                </div>
+              </div>
+            </a>
+            <a href="/customers/management/" class="module-card group">
+              <div class="flex items-center">
+                <div class="module-icon" style="background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);">
+                  <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
                   </svg>
-                  <div>
-                    <div class="fw-bold">Gestion Clients</div>
-                    <small class="text-muted">Clients et programme de fidélité</small>
-                  </div>
                 </div>
-              </a>
-            </div>
-            <div class="col-md-6">
-              <a href="/employees/" class="btn btn-outline-warning w-100 p-3 text-start">
-                <div class="d-flex align-items-center">
-                  <svg class="w-8 h-8 me-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="ml-4">
+                  <div class="font-bold text-gray-800 group-hover:text-cyan-600 transition-colors">Gestion Clients</div>
+                  <div class="text-sm text-gray-500">Clients et programme de fidélité</div>
+                </div>
+              </div>
+            </a>
+            <a href="/employees/" class="module-card group">
+              <div class="flex items-center">
+                <div class="module-icon" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">
+                  <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
                   </svg>
-                  <div>
-                    <div class="fw-bold">Ressources Humaines</div>
-                    <small class="text-muted">Gestion des employés</small>
-                  </div>
                 </div>
-              </a>
-            </div>
-            <div class="col-md-6">
-              <a href="/suppliers/" class="btn btn-outline-secondary w-100 p-3 text-start">
-                <div class="d-flex align-items-center">
-                  <svg class="w-8 h-8 me-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="ml-4">
+                  <div class="font-bold text-gray-800 group-hover:text-amber-600 transition-colors">Ressources Humaines</div>
+                  <div class="text-sm text-gray-500">Gestion des employés</div>
+                </div>
+              </div>
+            </a>
+            <a href="/suppliers/" class="module-card group">
+              <div class="flex items-center">
+                <div class="module-icon" style="background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);">
+                  <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
                   </svg>
-                  <div>
-                    <div class="fw-bold">Fournisseurs</div>
-                    <small class="text-muted">Gestion des fournisseurs</small>
-                  </div>
                 </div>
-              </a>
-            </div>
-            <div class="col-md-6">
-              <a href="/reporting/" class="btn btn-outline-dark w-100 p-3 text-start">
-                <div class="d-flex align-items-center">
-                  <svg class="w-8 h-8 me-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="ml-4">
+                  <div class="font-bold text-gray-800 group-hover:text-gray-600 transition-colors">Fournisseurs</div>
+                  <div class="text-sm text-gray-500">Gestion des fournisseurs</div>
+                </div>
+              </div>
+            </a>
+            <a href="/reporting/" class="module-card group">
+              <div class="flex items-center">
+                <div class="module-icon" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);">
+                  <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
                   </svg>
-                  <div>
-                    <div class="fw-bold">Reporting & Analytics</div>
-                    <small class="text-muted">Rapports et analyses</small>
-                  </div>
                 </div>
-              </a>
-            </div>
+                <div class="ml-4">
+                  <div class="font-bold text-gray-800 group-hover:text-purple-600 transition-colors">Reporting & Analytics</div>
+                  <div class="text-sm text-gray-500">Rapports et analyses</div>
+                </div>
+              </div>
+            </a>
           </div>
         </div>
       </div>
     </div>
 
     <!-- Alertes et Notifications -->
-    <div class="col-lg-4 mb-4">
-      <div class="card">
-        <div class="card-header">
-          <h5 class="mb-0">🚨 Alertes</h5>
+    <div class="lg:col-span-1">
+      <div class="card-modern animate-slide-up" style="animation-delay: 0.1s;">
+        <div class="card-header-modern">
+          <h2 class="text-xl font-semibold text-white">🚨 Alertes</h2>
         </div>
-        <div class="card-body">
-          <div class="alert alert-warning">
-            <strong>Stock faible</strong><br>
-            <small>5 produits en rupture de stock</small>
+        <div class="p-6 space-y-4">
+          <div class="alert-card" style="border-left: 4px solid #f59e0b; background: #fef3c7;">
+            <div class="flex items-start">
+              <span class="text-2xl mr-3">⚠️</span>
+              <div>
+                <div class="font-bold text-amber-800">Stock faible</div>
+                <div class="text-sm text-amber-700">5 produits en rupture de stock</div>
+              </div>
+            </div>
           </div>
-          <div class="alert alert-info">
-            <strong>Nouveaux employés</strong><br>
-            <small>2 employés à former cette semaine</small>
+          <div class="alert-card" style="border-left: 4px solid #3b82f6; background: #dbeafe;">
+            <div class="flex items-start">
+              <span class="text-2xl mr-3">ℹ️</span>
+              <div>
+                <div class="font-bold text-blue-800">Nouveaux employés</div>
+                <div class="text-sm text-blue-700">2 employés à former cette semaine</div>
+              </div>
+            </div>
           </div>
-          <div class="alert alert-success">
-            <strong>Objectifs atteints</strong><br>
-            <small>Ventes du mois : +15%</small>
+          <div class="alert-card" style="border-left: 4px solid #10b981; background: #d1fae5;">
+            <div class="flex items-start">
+              <span class="text-2xl mr-3">✅</span>
+              <div>
+                <div class="font-bold text-green-800">Objectifs atteints</div>
+                <div class="text-sm text-green-700">Ventes du mois : +15%</div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -168,21 +193,19 @@
   </div>
 
   <!-- Graphiques -->
-  <div class="row">
-    <div class="col-12">
-      <div class="card">
-        <div class="card-header">
-          <h5 class="mb-0">📊 Vue d'Ensemble</h5>
-        </div>
-        <div class="card-body">
-          <canvas id="admin-chart" height="100"></canvas>
-        </div>
+  <div class="mt-8">
+    <div class="card-modern animate-slide-up" style="animation-delay: 0.2s;">
+      <div class="card-header-modern">
+        <h2 class="text-xl font-semibold text-white">📊 Vue d'Ensemble des Ventes</h2>
+      </div>
+      <div class="p-6">
+        <canvas id="admin-chart" height="100"></canvas>
       </div>
     </div>
   </div>
 </div>
 {% endblock %}
 {% block extra_js %}
-<script src="{% static 'js/reporting.js' %}?v=2"></script>
+<script src="{% static 'js/reporting.js' %}?v=20251020"></script>
 <script>Reporting.initAdminDashboard();</script>
 {% endblock %}

@@ -1,0 +1,185 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Réclamations Clients{% endblock %}
+{% block content %}
+<div class="container-fluid p-6">
+  <!-- Header -->
+  <div class="flex justify-between items-center mb-6">
+    <div>
+      <h1 class="text-3xl font-bold text-gray-800">📝 Réclamations Clients</h1>
+      <p class="text-gray-600 mt-1">Gestion des réclamations et demandes clients</p>
+    </div>
+    <button onclick="Complaints.showCreateModal()" class="btn-primary">
+      <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+      </svg>
+      Nouvelle réclamation
+    </button>
+  </div>
+
+  <!-- Filtres -->
+  <div class="card mb-6">
+    <div class="p-4">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Statut</label>
+          <select id="filter-status" class="input-modern">
+            <option value="">Tous les statuts</option>
+            <option value="ouverte">Ouverte</option>
+            <option value="en_cours">En cours</option>
+            <option value="resolue">Résolue</option>
+            <option value="fermee">Fermée</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Priorité</label>
+          <select id="filter-priority" class="input-modern">
+            <option value="">Toutes les priorités</option>
+            <option value="urgente">Urgente</option>
+            <option value="haute">Haute</option>
+            <option value="moyenne">Moyenne</option>
+            <option value="basse">Basse</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Recherche</label>
+          <input type="text" id="filter-search" class="input-modern" placeholder="Rechercher...">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+    <div class="card-stat gradient-blue">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-white opacity-90 text-sm">Total</p>
+          <p class="text-white text-3xl font-bold mt-1" id="stat-total">0</p>
+        </div>
+        <div class="text-white text-4xl opacity-80">📋</div>
+      </div>
+    </div>
+    <div class="card-stat gradient-yellow">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-white opacity-90 text-sm">Ouvertes</p>
+          <p class="text-white text-3xl font-bold mt-1" id="stat-open">0</p>
+        </div>
+        <div class="text-white text-4xl opacity-80">🔔</div>
+      </div>
+    </div>
+    <div class="card-stat gradient-orange">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-white opacity-90 text-sm">En cours</p>
+          <p class="text-white text-3xl font-bold mt-1" id="stat-progress">0</p>
+        </div>
+        <div class="text-white text-4xl opacity-80">⏳</div>
+      </div>
+    </div>
+    <div class="card-stat gradient-green">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-white opacity-90 text-sm">Résolues</p>
+          <p class="text-white text-3xl font-bold mt-1" id="stat-resolved">0</p>
+        </div>
+        <div class="text-white text-4xl opacity-80">✅</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Liste des réclamations -->
+  <div class="card">
+    <div class="overflow-x-auto">
+      <table class="table-modern">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Client</th>
+            <th>Sujet</th>
+            <th>Priorité</th>
+            <th>Statut</th>
+            <th>Date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="complaints-tbody">
+          <tr>
+            <td colspan="7" class="text-center py-8 text-gray-500">
+              <div class="text-4xl mb-2">📭</div>
+              Chargement...
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Détails -->
+<div id="modal-details" class="modal hidden">
+  <div class="modal-content max-w-2xl">
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="text-xl font-bold">Détails de la réclamation</h2>
+      <button onclick="Complaints.closeModal()" class="text-gray-500 hover:text-gray-700">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
+    <div id="modal-details-content"></div>
+  </div>
+</div>
+
+<!-- Modal Création -->
+<div id="modal-create" class="modal hidden">
+  <div class="modal-content max-w-lg">
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="text-xl font-bold">Nouvelle réclamation</h2>
+      <button onclick="Complaints.closeModal()" class="text-gray-500 hover:text-gray-700">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
+    <form id="form-create-complaint" class="space-y-4">
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Client</label>
+        <select id="create-client" class="input-modern" required>
+          <option value="">Sélectionner un client...</option>
+        </select>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Sujet</label>
+        <input type="text" id="create-subject" class="input-modern" required>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+        <textarea id="create-description" class="input-modern" rows="4" required></textarea>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Priorité</label>
+        <select id="create-priority" class="input-modern" required>
+          <option value="basse">Basse</option>
+          <option value="moyenne" selected>Moyenne</option>
+          <option value="haute">Haute</option>
+          <option value="urgente">Urgente</option>
+        </select>
+      </div>
+      <div class="flex justify-end space-x-3 pt-4">
+        <button type="button" onclick="Complaints.closeModal()" class="btn-secondary">Annuler</button>
+        <button type="submit" class="btn-primary">Créer</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script src="{% static 'js/complaints.js' %}?v=1"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  Complaints.init();
+});
+</script>
+{% endblock %}

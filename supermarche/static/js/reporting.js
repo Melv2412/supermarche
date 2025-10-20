@@ -13,11 +13,11 @@ window.Reporting = (function(){
   function gotoReports(){ window.location.href = '/reporting/reports/'; }
 
   async function loadKPIs(){ 
-    const res = await fetch('/static/data/kpis.json'); 
+    const res = await fetch('/api/rh/dashboard/'); 
     return await res.json(); 
   }
   async function loadSalesReports(){ 
-    const res = await fetch('/static/data/sales_reports.json'); 
+    const res = await fetch('/api/reports/sales/'); 
     return await res.json(); 
     destroy(charts.daily);
     charts.daily = new Chart(els.cDaily().getContext('2d'), {
@@ -54,7 +54,7 @@ window.Reporting = (function(){
 
   async function load(){
     const days = Number(els.period().value||30);
-    const url = '/static/data/reporting.json';
+    const url = `/api/reports/sales/?periode=${days}`;
     const res = await fetch(url);
     const json = await res.json();
     // naive slice by period if arrays are longer

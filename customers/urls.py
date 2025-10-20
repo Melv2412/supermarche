@@ -12,4 +12,6 @@ urlpatterns = [
     
     # Interface de gestion pour les employés
     path('management/', TemplateView.as_view(template_name='customers/management_dashboard.html'), name='management_dashboard'),
+    path('list/', TemplateView.as_view(template_name='customers/client_list.html'), name='client_list'),
+    path('complaints/', TemplateView.as_view(template_name='customers/complaints.html'), name='complaints'),
 ]

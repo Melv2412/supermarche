@@ -14,7 +14,7 @@ window.Products = (function(){
 
   async function loadCategories(){
     try{
-      const res = await fetch('/static/data/categories.json');
+      const res = await fetch('/api/categories/');
       return await res.json();
     }catch(e){ console.error('Categories load error:', e); return []; }
   }
@@ -85,7 +85,7 @@ window.Products = (function(){
   async function initList(){
     try{
       const [products, categories] = await Promise.all([
-        fetch('/static/data/products.json').then(r => r.json()),
+        fetch('/api/products/').then(r => r.json()),
         loadCategories()
       ]);
       
@@ -185,7 +185,60 @@ window.Products = (function(){
     }
 
     const form = document.getElementById('product-form');
-    form?.addEventListener('submit', (e) => { e.preventDefault(); preview(); });
+    form?.addEventListener('submit', async (e) => { 
+      e.preventDefault(); 
+      
+      const name = document.getElementById('f-name');
+      const cat = document.getElementById('f-category');
+      const barcode = document.getElementById('f-barcode');
+      const price = document.getElementById('f-price');
+      const priceAchat = document.getElementById('f-price-achat');
+      const seuil = document.getElementById('f-seuil');
+      const perissable = document.getElementById('f-perissable');
+      const desc = document.getElementById('f-desc');
+
+      const okName = name.value.trim().length>0;
+      const okCat = cat.value.trim().length>0;
+      const okPrice = Number(price.value)>=0;
+      const okPriceAchat = Number(priceAchat.value)>=0;
+      const okSeuil = Number(seuil.value)>=0;
+
+      if(!(okName && okCat && okPrice && okPriceAchat && okSeuil)) {
+        alert('Veuillez remplir tous les champs obligatoires');
+        return;
+      }
+
+      try {
+        const response = await fetch('/api/products/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]')?.value || ''
+          },
+          body: JSON.stringify({
+            nom: name.value.trim(),
+            id_categorie: Number(cat.value),
+            code_barre: barcode.value.trim() || null,
+            prix_unitaire: Number(price.value),
+            prix_achat: Number(priceAchat.value),
+            seuil_reapprovisionnement: Number(seuil.value),
+            est_perissable: perissable.checked,
+            description: desc.value.trim() || ''
+          })
+        });
+        
+        if(response.ok){
+          alert('Produit créé avec succès !');
+          window.location.href = '/products/';
+        } else {
+          const error = await response.json();
+          alert('Erreur: ' + (error.nom?.[0] || error.code_barre?.[0] || 'Impossible de créer le produit'));
+        }
+      } catch(error) {
+        console.error('Erreur création produit:', error);
+        alert('Erreur lors de la création du produit');
+      }
+    });
   }
 
   // Categories
@@ -211,15 +264,42 @@ window.Products = (function(){
     }catch(e){ console.error('Categories load error:', e); }
   }
 
-  function initCategoryForm(){
+  async function initCategoryForm(){
     const form = document.getElementById('category-form');
     function setValidity(input, valid){ if(valid){ input.classList.remove('is-invalid'); input.classList.add('is-valid'); } else { input.classList.remove('is-valid'); input.classList.add('is-invalid'); } }
-    form?.addEventListener('submit', (e)=>{
+    form?.addEventListener('submit', async (e)=>{
       e.preventDefault();
       const name = document.getElementById('c-name');
+      const desc = document.getElementById('c-desc');
       const ok = name.value.trim().length>0;
       setValidity(name, ok);
-      if(ok){ alert('Catégorie enregistrée (simulation).'); }
+      
+      if(ok){
+        try {
+          const response = await fetch('/api/categories/', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]')?.value || ''
+            },
+            body: JSON.stringify({
+              nom: name.value.trim(),
+              description: desc?.value.trim() || ''
+            })
+          });
+          
+          if(response.ok){
+            alert('Catégorie créée avec succès !');
+            window.location.href = '/products/categories/';
+          } else {
+            const error = await response.json();
+            alert('Erreur: ' + (error.nom?.[0] || 'Impossible de créer la catégorie'));
+          }
+        } catch(error) {
+          console.error('Erreur création catégorie:', error);
+          alert('Erreur lors de la création de la catégorie');
+        }
+      }
     });
   }
 
@@ -227,7 +307,7 @@ window.Products = (function(){
   async function initScanner(){
     try{
       const [products, categories] = await Promise.all([
-        fetch('/static/data/products.json').then(r => r.json()),
+        fetch('/api/products/').then(r => r.json()),
         loadCategories()
       ]);
       const input = document.getElementById('scan-input');

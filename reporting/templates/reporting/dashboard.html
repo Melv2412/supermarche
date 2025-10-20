@@ -2,59 +2,108 @@
 {% load static %}
 {% block title %}Reporting - Dashboard{% endblock %}
 {% block content %}
-<div class="container-fluid">
-  <div class="row g-3 mb-3">
-    <div class="col-6 col-lg-3"><div class="card"><div class="card-body">
-      <div class="text-muted small">Ventes (période)</div>
-      <div id="kpi-period-sales" class="h4 m-0">0 FCFA</div>
-    </div></div></div>
-    <div class="col-6 col-lg-3"><div class="card"><div class="card-body">
-      <div class="text-muted small">Marge</div>
-      <div id="kpi-margin" class="h4 m-0">0 FCFA</div>
-    </div></div></div>
-    <div class="col-6 col-lg-3"><div class="card"><div class="card-body">
-      <div class="text-muted small">Tickets</div>
-      <div id="kpi-tickets" class="h4 m-0">0</div>
-    </div></div></div>
-    <div class="col-6 col-lg-3"><div class="card"><div class="card-body">
-      <div class="text-muted small">Panier moyen</div>
-      <div id="kpi-avg" class="h4 m-0">0 FCFA</div>
-    </div></div></div>
-  </div>
-
-  <div class="d-flex flex-wrap gap-2 align-items-end mb-3">
-    <div>
-      <label class="form-label small text-muted">Période</label>
-      <select id="period" class="form-select form-select-sm">
-        <option value="7">7 jours</option>
-        <option value="30" selected>30 jours</option>
-        <option value="90">90 jours</option>
-      </select>
-    </div>
-    <button id="refresh" class="btn btn-outline-secondary btn-sm">Actualiser</button>
-  </div>
-
-  <div class="row g-3">
-    <div class="col-12 col-lg-7">
-      <div class="card">
-        <div class="card-header"><strong>Ventes par jour</strong></div>
-        <div class="card-body">
-          <canvas id="chart-daily" height="120"></canvas>
-        </div>
+<div class="max-w-7xl mx-auto px-4 py-6">
+  <!-- Header -->
+  <div class="mb-8 animate-slide-down">
+    <div class="flex justify-between items-center mb-6">
+      <div>
+        <h1 class="text-3xl font-bold gradient-text-violet">📊 Rapports Financiers</h1>
+        <p class="text-gray-600 mt-1">Analyse des ventes et performances financières</p>
+      </div>
+      <div class="flex gap-3">
+        <select id="period" class="input-modern" style="min-width: 150px;">
+          <option value="7">7 derniers jours</option>
+          <option value="30" selected>30 derniers jours</option>
+          <option value="90">90 derniers jours</option>
+        </select>
+        <button id="refresh" class="btn-secondary">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+          </svg>
+          Actualiser
+        </button>
       </div>
     </div>
-    <div class="col-12 col-lg-5">
-      <div class="card mb-3">
-        <div class="card-header"><strong>Ventes par catégorie</strong></div>
-        <div class="card-body">
-          <canvas id="chart-categories" height="150"></canvas>
-        </div>
+  </div>
+
+  <!-- KPI Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <div class="kpi-card animate-scale-in">
+      <div class="flex items-center justify-between mb-3">
+        <span class="kpi-label">Ventes totales</span>
+        <span class="text-3xl">💰</span>
       </div>
-      <div class="card">
-        <div class="card-header"><strong>Moyens de paiement</strong></div>
-        <div class="card-body">
-          <canvas id="chart-payments" height="150"></canvas>
-        </div>
+      <div id="kpi-period-sales" class="kpi-value">0 FCFA</div>
+      <div class="text-sm text-gray-500 mt-2">Sur la période</div>
+    </div>
+    <div class="kpi-card animate-scale-in" style="animation-delay: 0.1s;">
+      <div class="flex items-center justify-between mb-3">
+        <span class="kpi-label">Marge brute</span>
+        <span class="text-3xl">📈</span>
+      </div>
+      <div id="kpi-margin" class="kpi-value" style="color: #16a34a;">0 FCFA</div>
+      <div class="text-sm text-gray-500 mt-2">Bénéfice</div>
+    </div>
+    <div class="kpi-card animate-scale-in" style="animation-delay: 0.2s;">
+      <div class="flex items-center justify-between mb-3">
+        <span class="kpi-label">Transactions</span>
+        <span class="text-3xl">🎫</span>
+      </div>
+      <div id="kpi-tickets" class="kpi-value">0</div>
+      <div class="text-sm text-gray-500 mt-2">Nombre de tickets</div>
+    </div>
+    <div class="kpi-card animate-scale-in" style="animation-delay: 0.3s;">
+      <div class="flex items-center justify-between mb-3">
+        <span class="kpi-label">Panier moyen</span>
+        <span class="text-3xl">🛍️</span>
+      </div>
+      <div id="kpi-avg" class="kpi-value" style="color: #8b5cf6;">0 FCFA</div>
+      <div class="text-sm text-gray-500 mt-2">Par transaction</div>
+    </div>
+  </div>
+
+  <!-- Graphiques -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+    <!-- Ventes par jour -->
+    <div class="lg:col-span-2 card-modern animate-slide-up">
+      <div class="card-header-modern">
+        <h2 class="text-xl font-semibold text-white">📅 Ventes par jour</h2>
+      </div>
+      <div class="p-6">
+        <canvas id="chart-daily" height="120"></canvas>
+      </div>
+    </div>
+
+    <!-- Ventes par catégorie -->
+    <div class="card-modern animate-slide-up" style="animation-delay: 0.1s;">
+      <div class="card-header-modern">
+        <h2 class="text-xl font-semibold text-white">📋 Catégories</h2>
+      </div>
+      <div class="p-6">
+        <canvas id="chart-categories" height="200"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Moyens de paiement et Top produits -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- Moyens de paiement -->
+    <div class="card-modern animate-slide-up" style="animation-delay: 0.2s;">
+      <div class="card-header-modern">
+        <h2 class="text-xl font-semibold text-white">💳 Moyens de paiement</h2>
+      </div>
+      <div class="p-6">
+        <canvas id="chart-payments" height="200"></canvas>
+      </div>
+    </div>
+
+    <!-- Top produits -->
+    <div class="card-modern animate-slide-up" style="animation-delay: 0.3s;">
+      <div class="card-header-modern">
+        <h2 class="text-xl font-semibold text-white">🏆 Top 5 Produits</h2>
+      </div>
+      <div class="p-6">
+        <div id="top-products" class="space-y-3"></div>
       </div>
     </div>
   </div>

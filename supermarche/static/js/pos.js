@@ -139,7 +139,7 @@
 
   async function init(){
     try {
-      const res = await fetch('/static/data/products.json');
+      const res = await fetch('/api/products/');
       const rawProducts = await res.json();
       
       // Mapper les produits au bon format

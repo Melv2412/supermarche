@@ -110,5 +110,12 @@
 </div>
 {% endblock %}
 {% block extra_js %}
-<script src="{% static 'js/inventory.js' %}?v=2"></script>
+<script src="{% static 'js/inventory.js' %}?v=20251020debug"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  if (typeof Inventory !== 'undefined' && Inventory.initStockDashboard) {
+    Inventory.initStockDashboard();
+  }
+});
+</script>
 {% endblock %}

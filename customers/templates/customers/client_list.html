@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Liste des Clients{% endblock %}
+{% block content %}
+<div class="container-fluid p-6">
+  <!-- Header -->
+  <div class="flex justify-between items-center mb-6">
+    <div>
+      <h1 class="text-3xl font-bold text-gray-800">👥 Liste des Clients</h1>
+      <p class="text-gray-600 mt-1">Gestion de la base clients</p>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+    <div class="card-stat gradient-blue">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-white opacity-90 text-sm">Total Clients</p>
+          <p class="text-white text-3xl font-bold mt-1" id="stat-total">0</p>
+        </div>
+        <div class="text-white text-4xl opacity-80">👥</div>
+      </div>
+    </div>
+    <div class="card-stat gradient-green">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-white opacity-90 text-sm">Clients Actifs</p>
+          <p class="text-white text-3xl font-bold mt-1" id="stat-active">0</p>
+        </div>
+        <div class="text-white text-4xl opacity-80">✅</div>
+      </div>
+    </div>
+    <div class="card-stat gradient-violet">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-white opacity-90 text-sm">Avec Carte Fidélité</p>
+          <p class="text-white text-3xl font-bold mt-1" id="stat-cards">0</p>
+        </div>
+        <div class="text-white text-4xl opacity-80">💳</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recherche -->
+  <div class="card mb-6">
+    <div class="p-4">
+      <input type="text" id="client-search" class="input-modern" placeholder="Rechercher un client (nom, prénom, email)...">
+    </div>
+  </div>
+
+  <!-- Liste des clients -->
+  <div class="card">
+    <div class="overflow-x-auto">
+      <table class="table-modern">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nom Complet</th>
+            <th>Email</th>
+            <th>Téléphone</th>
+            <th>Carte Fidélité</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="clients-tbody">
+          <tr>
+            <td colspan="6" class="text-center py-8 text-gray-500">
+              <div class="text-4xl mb-2">👥</div>
+              Chargement...
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Détails -->
+<div id="modal-details" class="modal hidden">
+  <div class="modal-content max-w-2xl">
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="text-xl font-bold">Détails du client</h2>
+      <button onclick="Clients.closeModal()" class="text-gray-500 hover:text-gray-700">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
+    <div id="modal-details-content"></div>
+  </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script src="{% static 'js/clients.js' %}?v=1"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  Clients.init();
+});
+</script>
+{% endblock %}

@@ -17,15 +17,15 @@ window.Suppliers = (function(){
   function gotoOrderForm(){ window.location.href = '/suppliers/orders/create/'; }
 
   async function loadSuppliers(){
-    const res = await fetch('/static/data/suppliers.json');
+    const res = await fetch('/api/suppliers/');
     return await res.json();
   }
   async function loadOrders(){
-    const res = await fetch('/static/data/orders.json');
+    const res = await fetch('/api/purchase-orders/');
     return await res.json();
   }
   async function loadTracking(){
-    const res = await fetch('/static/data/tracking.json');
+    const res = await fetch('/api/deliveries/');
     return await res.json();
   }
 
@@ -86,17 +86,59 @@ window.Suppliers = (function(){
     if(valid){ input.classList.remove('is-invalid'); input.classList.add('is-valid'); }
     else { input.classList.remove('is-valid'); input.classList.add('is-invalid'); }
   }
-  function initSupplierForm(){
+  async function initSupplierForm(){
     const form = document.getElementById('supplier-form');
-    form?.addEventListener('submit', (e)=>{
+    form?.addEventListener('submit', async (e)=>{
       e.preventDefault();
       const name = document.getElementById('f-name');
       const email = document.getElementById('f-email');
+      const phone = document.getElementById('f-phone');
+      const address = document.getElementById('f-address');
+      
       const okName = name.value.trim().length>0;
       const okEmail = email.checkValidity();
       setValidity(name, okName);
       setValidity(email, okEmail);
-      if(okName && okEmail){ alert('Fournisseur enregistré (simulation).'); }
+      
+      if(okName && okEmail){
+        try {
+          const city = document.getElementById('f-city');
+          const country = document.getElementById('f-country');
+          const deliveryDays = document.getElementById('f-delivery-days');
+          const minOrder = document.getElementById('f-min-order');
+          const paymentTerms = document.getElementById('f-payment-terms');
+          
+          const response = await fetch('/api/suppliers/', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]')?.value || ''
+            },
+            body: JSON.stringify({
+              nom: name.value.trim(),
+              email: email.value.trim(),
+              telephone: phone?.value.trim() || '0000000000',
+              adresse: address?.value.trim() || 'Non spécifié',
+              ville: city?.value.trim() || 'Abidjan',
+              pays: country?.value.trim() || 'Côte d\'Ivoire',
+              delai_livraison_jours: deliveryDays?.value ? Number(deliveryDays.value) : 7,
+              montant_commande_min: minOrder?.value ? Number(minOrder.value) : 0,
+              conditions_paiement: paymentTerms?.value.trim() || '30 jours'
+            })
+          });
+          
+          if(response.ok){
+            alert('Fournisseur créé avec succès !');
+            window.location.href = '/suppliers/';
+          } else {
+            const error = await response.json();
+            alert('Erreur: ' + (error.nom?.[0] || error.email?.[0] || 'Impossible de créer le fournisseur'));
+          }
+        } catch(error) {
+          console.error('Erreur création fournisseur:', error);
+          alert('Erreur lors de la création du fournisseur');
+        }
+      }
     });
   }
 
@@ -189,7 +231,60 @@ window.Suppliers = (function(){
     document.getElementById('o-add-line').addEventListener('click', addLine);
 
     const form = document.getElementById('order-form');
-    form?.addEventListener('submit', (e)=>{ e.preventDefault(); alert('Commande enregistrée (simulation).'); });
+    form?.addEventListener('submit', async (e)=>{ 
+      e.preventDefault(); 
+      
+      const supplier = document.getElementById('o-supplier');
+      const deliveryDate = document.getElementById('o-delivery-date');
+      
+      if(!supplier.value){
+        alert('Veuillez sélectionner un fournisseur');
+        return;
+      }
+      
+      // Collecter les lignes de commande
+      const lines = [];
+      tbody.querySelectorAll('tr').forEach(tr => {
+        const product = tr.querySelector('input[placeholder="Produit"]').value.trim();
+        const qty = Number(tr.querySelector('[data-qty]').value || 0);
+        const unit_price = Number(tr.querySelector('[data-unit]').value || 0);
+        
+        if(product && qty > 0){
+          lines.push({ product, qty, unit_price });
+        }
+      });
+      
+      if(lines.length === 0){
+        alert('Veuillez ajouter au moins un produit à la commande');
+        return;
+      }
+      
+      try {
+        const response = await fetch('/api/suppliers/orders/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]')?.value || ''
+          },
+          body: JSON.stringify({
+            id_fournisseur: Number(supplier.value),
+            date_livraison_prevue: deliveryDate?.value || null,
+            lignes: lines
+          })
+        });
+        
+        if(response.ok){
+          alert('Commande créée avec succès !');
+          window.location.href = '/suppliers/orders/';
+        } else {
+          const error = await response.json();
+          alert('Erreur: ' + (error.detail || 'Impossible de créer la commande'));
+        }
+      } catch(error) {
+        console.error('Erreur création commande:', error);
+        alert('Erreur lors de la création de la commande');
+      }
+    });
   }
 
   // Tracking

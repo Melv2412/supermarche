@@ -2,34 +2,48 @@
 {% load static %}
 {% block title %}Fournisseurs - Liste{% endblock %}
 {% block content %}
-<div class="container-fluid">
-  <div class="d-flex flex-wrap gap-2 align-items-end mb-3">
-    <div class="flex-grow-1">
-      <label class="form-label small text-muted">Recherche</label>
-      <input id="sup-search" class="form-control form-control-sm" placeholder="Nom, email, téléphone...">
+<div class="max-w-7xl mx-auto px-4 py-6">
+  <!-- Header -->
+  <div class="mb-6 animate-slide-down">
+    <div class="flex justify-between items-center mb-6">
+      <div>
+        <h1 class="text-3xl font-bold gradient-text-violet">🚚 Fournisseurs</h1>
+        <p class="text-gray-600 mt-1">Gestion des fournisseurs et commandes</p>
+      </div>
+      <button class="btn-primary" onclick="Suppliers.gotoSupplierForm();return false;">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+        </svg>
+        Nouveau fournisseur
+      </button>
     </div>
-    <a href="#" class="btn btn-primary btn-sm" onclick="Suppliers.gotoSupplierForm();return false;">Nouveau fournisseur</a>
+    
+    <!-- Filtres -->
+    <div class="flex flex-wrap gap-4">
+      <div class="flex-1 min-w-64">
+        <input id="sup-search" class="input-modern" placeholder="🔍 Rechercher un fournisseur...">
+      </div>
+      <div class="badge-violet" style="padding: 0.75rem 1.5rem;">
+        <span id="sup-count" class="font-bold">0</span> fournisseurs
+      </div>
+    </div>
   </div>
 
-  <div class="card">
-    <div class="card-header d-flex justify-content-between align-items-center">
-      <strong>Fournisseurs</strong>
-      <span id="sup-count" class="badge text-bg-secondary">0</span>
-    </div>
-    <div class="table-responsive">
-      <table class="table table-sm align-middle m-0">
-        <thead>
-          <tr>
-            <th>Nom</th>
-            <th>Email</th>
-            <th>Téléphone</th>
-            <th>Catégories</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody id="sup-tbody"></tbody>
-      </table>
-    </div>
+  <!-- Tableau -->
+  <div class="card-modern animate-slide-up">
+    <table class="table-modern">
+      <thead>
+        <tr>
+          <th>Fournisseur</th>
+          <th>Contact</th>
+          <th>Catégories</th>
+          <th class="text-center">Commandes</th>
+          <th class="text-center">Statut</th>
+          <th class="text-center">Actions</th>
+        </tr>
+      </thead>
+      <tbody id="sup-tbody"></tbody>
+    </table>
   </div>
 </div>
 {% endblock %}

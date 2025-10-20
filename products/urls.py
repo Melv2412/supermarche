@@ -10,4 +10,5 @@ urlpatterns = [
     path('categories/', TemplateView.as_view(template_name='products/category_list.html'), name='category_list'),
     path('categories/create/', TemplateView.as_view(template_name='products/category_form.html'), name='category_form'),
     path('barcode/', TemplateView.as_view(template_name='products/barcode_scanner.html'), name='barcode_scanner'),
+    path('promotions/', TemplateView.as_view(template_name='products/promotions.html'), name='promotions'),
 ]
