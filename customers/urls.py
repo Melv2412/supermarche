@@ -6,6 +6,8 @@ app_name = 'customers'
 urlpatterns = [
     # Interface client personnelle
     path('', TemplateView.as_view(template_name='customers/loyalty_dashboard.html'), name='loyalty_dashboard'),
+    path('shop/', TemplateView.as_view(template_name='customers/shop.html'), name='shop'),
+    path('checkout/', TemplateView.as_view(template_name='customers/checkout.html'), name='checkout'),
     path('points/', TemplateView.as_view(template_name='customers/points_history.html'), name='points_history'),
     
     # Interface de gestion pour les employés

@@ -1,0 +1,56 @@
+[
+  {
+    "id_role": 1,
+    "nom_role": "admin",
+    "description": "Administrateur système - Accès complet",
+    "niveau_acces": 100,
+    "date_creation": "2024-01-01T00:00:00Z",
+    "est_actif": true,
+    "permissions": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+  },
+  {
+    "id_role": 2,
+    "nom_role": "manager",
+    "description": "Manager - Gestion globale sauf sécurité",
+    "niveau_acces": 80,
+    "date_creation": "2024-01-01T00:00:00Z",
+    "est_actif": true,
+    "permissions": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
+  },
+  {
+    "id_role": 3,
+    "nom_role": "stock_manager",
+    "description": "Gestionnaire de stocks",
+    "niveau_acces": 60,
+    "date_creation": "2024-01-01T00:00:00Z",
+    "est_actif": true,
+    "permissions": [1, 2, 3, 4, 5, 6, 7, 8]
+  },
+  {
+    "id_role": 4,
+    "nom_role": "caissier",
+    "description": "Caissier - Opérations de vente",
+    "niveau_acces": 40,
+    "date_creation": "2024-01-01T00:00:00Z",
+    "est_actif": true,
+    "permissions": [9, 10, 11, 12, 1]
+  },
+  {
+    "id_role": 5,
+    "nom_role": "rh",
+    "description": "Ressources Humaines",
+    "niveau_acces": 70,
+    "date_creation": "2024-01-01T00:00:00Z",
+    "est_actif": true,
+    "permissions": [13, 14, 15, 16]
+  },
+  {
+    "id_role": 6,
+    "nom_role": "client",
+    "description": "Client - Espace personnel",
+    "niveau_acces": 10,
+    "date_creation": "2024-01-01T00:00:00Z",
+    "est_actif": true,
+    "permissions": [17, 18]
+  }
+]

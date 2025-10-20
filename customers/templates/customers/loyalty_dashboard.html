@@ -2,121 +2,128 @@
 {% load static %}
 {% block title %}Mon Espace Client{% endblock %}
 {% block content %}
-<div class="container-fluid">
-  <!-- En-tête personnel -->
-  <div class="row mb-4">
-    <div class="col-12">
-      <div class="card bg-primary text-white">
-        <div class="card-body">
-          <div class="row align-items-center">
-            <div class="col-md-8">
-              <h1 class="h3 mb-2">Bonjour, <span id="client-name">Jean Dupont</span></h1>
-              <p class="mb-0 opacity-75" id="client-email">jean.dupont@example.com</p>
-            </div>
-            <div class="col-md-4 text-md-end">
-              <div class="h2 mb-0" id="client-points">820</div>
-              <small class="opacity-75">points de fidélité</small>
-            </div>
-          </div>
+<div class="max-w-7xl mx-auto px-4 py-6">
+  <!-- En-tête personnel moderne -->
+  <div class="mb-8 animate-slide-down">
+    <div class="card-modern card-gradient-violet shadow-violet" style="padding: 2.5rem;">
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div>
+          <h1 class="text-3xl font-bold mb-2 text-white">👋 Bonjour, <span id="client-name" class="text-white">Jean Dupont</span></h1>
+          <p class="text-white" style="opacity: 0.9;" id="client-email">jean.dupont@example.com</p>
+        </div>
+        <div class="badge-white animate-pulse-slow" style="padding: 1.5rem 2rem;">
+          <div class="text-sm mb-1" style="color: #9333ea;">Mes Points Fidélité</div>
+          <div class="kpi-value" style="font-size: 2.5rem; margin: 0;" id="client-points">820</div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Mes statistiques personnelles -->
-  <div class="row g-3 mb-4">
-    <div class="col-6 col-lg-3">
-      <div class="card text-center">
-        <div class="card-body">
-          <div class="text-muted small">Mes Points</div>
-          <div id="my-points" class="h4 m-0 text-primary">820</div>
-        </div>
+  <!-- Statistiques modernes -->
+  <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <div class="kpi-card animate-scale-in">
+      <div class="flex items-center justify-between mb-3">
+        <span class="kpi-label">Achats ce mois</span>
+        <span class="text-3xl">🛍️</span>
       </div>
+      <div id="my-purchases-month" class="kpi-value">3</div>
     </div>
-    <div class="col-6 col-lg-3">
-      <div class="card text-center">
-        <div class="card-body">
-          <div class="text-muted small">Achats ce mois</div>
-          <div id="my-purchases-month" class="h4 m-0 text-success">3</div>
-        </div>
+    
+    <div class="kpi-card animate-scale-in" style="animation-delay: 0.1s;">
+      <div class="flex items-center justify-between mb-3">
+        <span class="kpi-label">Dépenses ce mois</span>
+        <span class="text-3xl">💰</span>
       </div>
+      <div id="my-spending-month" class="kpi-value">12 500 FCFA</div>
     </div>
-    <div class="col-6 col-lg-3">
-      <div class="card text-center">
-        <div class="card-body">
-          <div class="text-muted small">Dépenses ce mois</div>
-          <div id="my-spending-month" class="h4 m-0 text-info">12 500 FCFA</div>
-        </div>
+    
+    <div class="kpi-card animate-scale-in" style="animation-delay: 0.2s;">
+      <div class="flex items-center justify-between mb-3">
+        <span class="kpi-label">Niveau fidélité</span>
+        <span class="text-3xl">⭐</span>
       </div>
+      <div id="my-level" class="kpi-value">Bronze</div>
     </div>
-    <div class="col-6 col-lg-3">
-      <div class="card text-center">
-        <div class="card-body">
-          <div class="text-muted small">Niveau de fidélité</div>
-          <div id="my-level" class="h4 m-0 text-warning">Bronze</div>
-        </div>
+    
+    <div class="kpi-card animate-scale-in" style="animation-delay: 0.3s;">
+      <div class="flex items-center justify-between mb-3">
+        <span class="kpi-label">Économies</span>
+        <span class="text-3xl">💎</span>
       </div>
+      <div id="my-savings" class="kpi-value">2 400 FCFA</div>
     </div>
   </div>
 
-  <div class="row">
+  <!-- Action principale -->
+  <div class="mb-8 animate-slide-up">
+    <a href="/customers/shop/" class="block card-modern card-gradient-yellow shadow-yellow" style="padding: 2.5rem; text-decoration: none; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);" onmouseover="this.style.transform='translateY(-10px) scale(1.02)'" onmouseout="this.style.transform='translateY(0) scale(1)'">
+      <div class="flex items-center justify-between">
+        <div>
+          <div class="text-5xl mb-3 animate-float">🛍️</div>
+          <h3 class="text-3xl font-bold mb-2">Faire mes courses</h3>
+          <p class="text-lg" style="opacity: 0.9;">Commandez en ligne et faites-vous livrer à domicile</p>
+        </div>
+        <div class="text-6xl animate-pulse-slow">→</div>
+      </div>
+    </a>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
     <!-- Mes offres personnalisées -->
-    <div class="col-lg-6 mb-4">
-      <div class="card">
-        <div class="card-header">
-          <h5 class="mb-0">🎁 Mes Offres Spéciales</h5>
+    <div class="bg-white rounded-xl shadow-md overflow-hidden">
+      <div class="bg-gradient-to-r from-orange-500 to-red-500 text-white px-6 py-4">
+        <h2 class="text-xl font-bold">🎁 Mes Offres Spéciales</h2>
+      </div>
+      <div class="p-6 space-y-4">
+        <div class="bg-green-50 border-l-4 border-green-500 p-4 rounded">
+          <div class="font-bold text-green-800">10% de réduction</div>
+          <div class="text-sm text-green-700">sur tous les fruits</div>
+          <div class="text-xs text-green-600 mt-1">Valable jusqu'au 31/01/2024</div>
         </div>
-        <div class="card-body">
-          <div class="alert alert-success">
-            <strong>10% de réduction</strong> sur tous les fruits
-            <br><small class="text-muted">Valable jusqu'au 31/01/2024</small>
-          </div>
-          <div class="alert alert-info">
-            <strong>50 points bonus</strong> pour tout achat > 5000 FCFA
-            <br><small class="text-muted">Offre permanente</small>
-          </div>
+        <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded">
+          <div class="font-bold text-blue-800">50 points bonus</div>
+          <div class="text-sm text-blue-700">pour tout achat > 5000 FCFA</div>
+          <div class="text-xs text-blue-600 mt-1">Offre permanente</div>
         </div>
       </div>
     </div>
 
     <!-- Mes derniers achats -->
-    <div class="col-lg-6 mb-4">
-  <div class="card">
-    <div class="card-header d-flex justify-content-between align-items-center">
-          <h5 class="mb-0">🛒 Mes Derniers Achats</h5>
-          <a href="#" class="btn btn-sm btn-outline-primary" onclick="Customers.gotoHistory();return false;">Voir tout</a>
-        </div>
-        <div class="card-body">
-          <div id="my-recent-purchases">
-            <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
-              <div>
-                <div class="fw-bold">15/01/2024</div>
-                <small class="text-muted">Fruits et légumes</small>
-              </div>
-              <div class="text-end">
-                <div class="fw-bold">2 500 FCFA</div>
-                <small class="text-success">+25 points</small>
-              </div>
+    <div class="bg-white rounded-xl shadow-md overflow-hidden">
+      <div class="bg-gradient-to-r from-blue-500 to-indigo-500 text-white px-6 py-4 flex justify-between items-center">
+        <h2 class="text-xl font-bold">🛒 Mes Derniers Achats</h2>
+        <a href="/customers/points/" class="text-white hover:text-blue-100 text-sm underline">Voir tout →</a>
+      </div>
+      <div class="p-6">
+        <div id="my-recent-purchases" class="space-y-3">
+          <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+            <div>
+              <div class="font-semibold text-gray-800">15/01/2024</div>
+              <div class="text-sm text-gray-600">Fruits et légumes</div>
             </div>
-            <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
-              <div>
-                <div class="fw-bold">10/01/2024</div>
-                <small class="text-muted">Épicerie</small>
-              </div>
-              <div class="text-end">
-                <div class="fw-bold">1 800 FCFA</div>
-                <small class="text-success">+18 points</small>
-              </div>
+            <div class="text-right">
+              <div class="font-bold text-gray-800">2 500 FCFA</div>
+              <div class="text-sm text-green-600 font-semibold">+25 points</div>
             </div>
-            <div class="d-flex justify-content-between align-items-center py-2">
-              <div>
-                <div class="fw-bold">05/01/2024</div>
-                <small class="text-muted">Boucherie</small>
-              </div>
-              <div class="text-end">
-                <div class="fw-bold">3 200 FCFA</div>
-                <small class="text-success">+32 points</small>
-              </div>
+          </div>
+          <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+            <div>
+              <div class="font-semibold text-gray-800">10/01/2024</div>
+              <div class="text-sm text-gray-600">Épicerie</div>
+            </div>
+            <div class="text-right">
+              <div class="font-bold text-gray-800">1 800 FCFA</div>
+              <div class="text-sm text-green-600 font-semibold">+18 points</div>
+            </div>
+          </div>
+          <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+            <div>
+              <div class="font-semibold text-gray-800">05/01/2024</div>
+              <div class="text-sm text-gray-600">Boucherie</div>
+            </div>
+            <div class="text-right">
+              <div class="font-bold text-gray-800">3 200 FCFA</div>
+              <div class="text-sm text-green-600 font-semibold">+32 points</div>
             </div>
           </div>
         </div>
@@ -124,43 +131,47 @@
     </div>
   </div>
 
-  <!-- Actions rapides -->
-  <div class="row">
-    <div class="col-12">
-      <div class="card">
-        <div class="card-header">
-          <h5 class="mb-0">⚡ Actions Rapides</h5>
-        </div>
-        <div class="card-body">
-          <div class="row g-3">
-            <div class="col-md-3">
-              <button class="btn btn-outline-primary w-100" onclick="Customers.gotoHistory();return false;">
-                <i class="fas fa-history me-2"></i>Historique des points
-              </button>
-            </div>
-            <div class="col-md-3">
-              <button class="btn btn-outline-success w-100" onclick="alert('Fonctionnalité à venir');return false;">
-                <i class="fas fa-gift me-2"></i>Utiliser mes points
-              </button>
-            </div>
-            <div class="col-md-3">
-              <button class="btn btn-outline-info w-100" onclick="alert('Fonctionnalité à venir');return false;">
-                <i class="fas fa-user-edit me-2"></i>Modifier mon profil
-              </button>
-            </div>
-            <div class="col-md-3">
-              <button class="btn btn-outline-warning w-100" onclick="alert('Fonctionnalité à venir');return false;">
-                <i class="fas fa-bell me-2"></i>Préférences
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
 </div>
 {% endblock %}
 {% block extra_js %}
-<script src="{% static 'js/customers.js' %}?v=2"></script>
-<script>Customers.initDashboard();</script>
+<script src="{% static 'js/customers.js' %}?v=3"></script>
+<script>
+// Charger les infos du client connecté
+document.addEventListener('DOMContentLoaded', function(){
+  const userEmail = localStorage.getItem('user_email') || 'client@example.com';
+  const userName = localStorage.getItem('user_name') || 'Client';
+  
+  // Afficher immédiatement le nom depuis localStorage
+  document.getElementById('client-name').textContent = userName;
+  document.getElementById('client-email').textContent = userEmail;
+  
+  // Charger les données du client depuis le JSON pour les points
+  fetch('/static/data/customers.json')
+    .then(res => res.json())
+    .then(customers => {
+      const client = customers.find(c => c.email === userEmail);
+      if(client) {
+        // Mettre à jour avec les vraies données
+        document.getElementById('client-name').textContent = client.name;
+        document.getElementById('client-email').textContent = client.email;
+        document.getElementById('client-points').textContent = client.points.toLocaleString('fr-FR');
+        
+        // Mettre à jour les KPIs si les éléments existent
+        const purchasesEl = document.getElementById('my-purchases-month');
+        const spendingEl = document.getElementById('my-spending-month');
+        const levelEl = document.getElementById('my-level');
+        const savingsEl = document.getElementById('my-savings');
+        
+        if(purchasesEl) purchasesEl.textContent = '3';
+        if(spendingEl) spendingEl.textContent = '12 500 FCFA';
+        if(levelEl) levelEl.textContent = client.points > 1000 ? 'Or' : client.points > 500 ? 'Argent' : 'Bronze';
+        if(savingsEl) savingsEl.textContent = '2 400 FCFA';
+      }
+    })
+    .catch(e => {
+      console.error('Erreur chargement client:', e);
+      // Garder les données de localStorage si erreur
+    });
+});
+</script>
 {% endblock %}

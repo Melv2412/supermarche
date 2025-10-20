@@ -1,0 +1,6 @@
+[
+  {"id_session": 1, "id_utilisateur": 1, "token_session": "tok_abc123def456", "date_debut": "2025-01-22T09:30:00Z", "date_fin": null, "adresse_ip": "192.168.1.100", "est_active": true, "user_agent": "Mozilla/5.0"},
+  {"id_session": 2, "id_utilisateur": 3, "token_session": "tok_ghi789jkl012", "date_debut": "2025-01-22T08:00:00Z", "date_fin": null, "adresse_ip": "192.168.1.101", "est_active": true, "user_agent": "Mozilla/5.0"},
+  {"id_session": 3, "id_utilisateur": 4, "token_session": "tok_mno345pqr678", "date_debut": "2025-01-22T14:00:00Z", "date_fin": null, "adresse_ip": "192.168.1.102", "est_active": true, "user_agent": "Mozilla/5.0"},
+  {"id_session": 4, "id_utilisateur": 2, "token_session": "tok_stu901vwx234", "date_debut": "2025-01-22T08:15:00Z", "date_fin": "2025-01-22T17:05:00Z", "adresse_ip": "192.168.1.103", "est_active": false, "user_agent": "Mozilla/5.0"}
+]

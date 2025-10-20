@@ -1,0 +1,86 @@
+[
+  {
+    "id_notification": 1,
+    "id_client": 1,
+    "titre": "Nouvelle offre personnalisée",
+    "message": "Une offre spéciale vous attend ! 15% sur vos produits d'épicerie préférés.",
+    "type_notification": "offre",
+    "date_envoi": "2025-01-23T09:00:00Z",
+    "est_lue": false,
+    "priorite": "normale",
+    "lien": "/customers/offers/1",
+    "icone": "gift"
+  },
+  {
+    "id_notification": 2,
+    "id_client": 2,
+    "titre": "Joyeux anniversaire !",
+    "message": "Toute l'équipe vous souhaite un joyeux anniversaire ! Profitez de 20% sur votre prochain achat.",
+    "type_notification": "anniversaire",
+    "date_envoi": "2025-01-20T08:00:00Z",
+    "est_lue": true,
+    "priorite": "haute",
+    "lien": "/customers/offers/2",
+    "icone": "cake"
+  },
+  {
+    "id_notification": 3,
+    "id_client": 3,
+    "titre": "Nouveaux points fidélité",
+    "message": "Félicitations ! Vous avez gagné 150 points lors de votre dernier achat.",
+    "type_notification": "points",
+    "date_envoi": "2025-01-22T18:30:00Z",
+    "est_lue": true,
+    "priorite": "normale",
+    "lien": "/customers/points/",
+    "icone": "star"
+  },
+  {
+    "id_notification": 4,
+    "id_client": 3,
+    "titre": "Niveau de fidélité atteint !",
+    "message": "Bravo ! Vous êtes passé au niveau OR. Profitez de vos nouveaux avantages.",
+    "type_notification": "niveau",
+    "date_envoi": "2025-01-15T14:20:00Z",
+    "est_lue": true,
+    "priorite": "haute",
+    "lien": "/customers/",
+    "icone": "trophy"
+  },
+  {
+    "id_notification": 5,
+    "id_client": 1,
+    "titre": "Produit de nouveau disponible",
+    "message": "Le Riz basmati 1kg que vous aimez est de nouveau en stock !",
+    "type_notification": "stock",
+    "date_envoi": "2025-01-22T10:00:00Z",
+    "est_lue": false,
+    "priorite": "normale",
+    "lien": "/products/",
+    "icone": "package"
+  },
+  {
+    "id_notification": 6,
+    "id_client": 4,
+    "titre": "Bienvenue !",
+    "message": "Merci de votre inscription ! Découvrez votre offre de bienvenue.",
+    "type_notification": "bienvenue",
+    "date_envoi": "2025-01-18T16:50:00Z",
+    "est_lue": true,
+    "priorite": "haute",
+    "lien": "/customers/offers/5",
+    "icone": "hand-wave"
+  },
+  {
+    "id_notification": 7,
+    "id_client": 2,
+    "titre": "Points bientôt expirés",
+    "message": "Attention ! 500 points expireront le 31 janvier. Utilisez-les vite !",
+    "type_notification": "alerte",
+    "date_envoi": "2025-01-21T09:00:00Z",
+    "est_lue": false,
+    "priorite": "haute",
+    "lien": "/customers/points/",
+    "icone": "alert-triangle"
+  }
+]

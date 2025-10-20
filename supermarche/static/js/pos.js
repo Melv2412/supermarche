@@ -1,4 +1,4 @@
-﻿(function(){
+(function(){
   const state = { products: [], cart: {} };
   const $list = $('#pos-products');
   const $search = $('#pos-search');
@@ -140,7 +140,17 @@
   async function init(){
     try {
       const res = await fetch('/static/data/products.json');
-      state.products = await res.json();
+      const rawProducts = await res.json();
+      
+      // Mapper les produits au bon format
+      state.products = rawProducts.map(p => ({
+        id: p.id_produit,
+        name: p.nom,
+        price: p.prix_unitaire,
+        barcode: p.code_barre,
+        category: p.id_categorie
+      }));
+      
       renderProducts(state.products);
       renderCart();
       wireSearch();

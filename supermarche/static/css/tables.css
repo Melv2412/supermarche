@@ -445,10 +445,10 @@
 .table-modern tbody tr::before {
   content: '';
   position: absolute;
-  left: 0;
+  left: -4px;
   top: 0;
-  height: 100%;
-  width: 3px;
+  bottom: 0;
+  width: 4px;
   background: transparent;
   transition: all 0.2s;
 }

@@ -1,7 +1,9 @@
 [
-  { "id": 1, "name": "Sarah Chevalier", "email": "sarah.chevalier@example.com", "role": "Caissier",   "active": true,  "notes": "Polyvalente" },
-  { "id": 2, "name": "Ali Kaba",        "email": "ali.kaba@example.com",        "role": "Rayon",     "active": true,  "notes": "Rayon épicerie" },
-  { "id": 3, "name": "Emma Blanc",      "email": "emma.blanc@example.com",      "role": "Logistique", "active": true,  "notes": "Réception" },
-  { "id": 4, "name": "Paul Garnier",    "email": "paul.garnier@example.com",    "role": "Manager",   "active": true,  "notes": "Adjoint" },
-  { "id": 5, "name": "Noa Petit",       "email": "noa.petit@example.com",       "role": "Caissier",   "active": false, "notes": "Temps partiel" }
+  { "id": 1, "name": "Kone Mariam", "email": "mariam.kone@supermarche.ci", "role": "Caissier", "active": true, "notes": "Caisse principale" },
+  { "id": 2, "name": "Coulibaly Ibrahim", "email": "ibrahim.coulibaly@supermarche.ci", "role": "Rayon", "active": true, "notes": "Rayon épicerie" },
+  { "id": 3, "name": "Ouattara Aminata", "email": "aminata.ouattara@supermarche.ci", "role": "Logistique", "active": true, "notes": "Réception marchandises" },
+  { "id": 4, "name": "Diallo Sekou", "email": "sekou.diallo@supermarche.ci", "role": "Manager", "active": true, "notes": "Responsable adjoint" },
+  { "id": 5, "name": "Toure Fatoumata", "email": "fatoumata.toure@supermarche.ci", "role": "Caissier", "active": true, "notes": "Caisse express" },
+  { "id": 6, "name": "Bamba Souleymane", "email": "souleymane.bamba@supermarche.ci", "role": "Rayon", "active": true, "notes": "Rayon frais" },
+  { "id": 7, "name": "N'Guessan Ange", "email": "ange.nguessan@supermarche.ci", "role": "Caissier", "active": false, "notes": "Congé maternité" }
 ]

@@ -1,0 +1,76 @@
+[
+  {
+    "id_livraison": 1,
+    "id_commande": 104,
+    "numero_livraison": "LIV-20250928-001",
+    "date_livraison_prevue": "2025-09-28",
+    "date_livraison_reelle": "2025-09-28T14:30:00Z",
+    "statut": "livree",
+    "id_entrepot": 1,
+    "transporteur": "Express Logistics",
+    "numero_suivi": "EXP123456789",
+    "lignes": [
+      {
+        "id_produit": 1,
+        "nom_produit": "Pâtes Spaghetti 500g",
+        "quantite_commandee": 1000,
+        "quantite_recue": 1000,
+        "quantite_conforme": 1000,
+        "quantite_endommagee": 0
+      }
+    ],
+    "notes": "Livraison conforme, aucun problème"
+  },
+  {
+    "id_livraison": 2,
+    "id_commande": 102,
+    "numero_livraison": "LIV-20250926-001",
+    "date_livraison_prevue": "2025-09-26",
+    "date_livraison_reelle": "2025-09-26T10:15:00Z",
+    "statut": "livree",
+    "id_entrepot": 1,
+    "transporteur": "FastDelivery",
+    "numero_suivi": "FD987654321",
+    "lignes": [
+      {
+        "id_produit": 4,
+        "nom_produit": "Huile tournesol 1L",
+        "quantite_commandee": 400,
+        "quantite_recue": 398,
+        "quantite_conforme": 395,
+        "quantite_endommagee": 3
+      },
+      {
+        "id_produit": 6,
+        "nom_produit": "Riz basmati 1kg",
+        "quantite_commandee": 200,
+        "quantite_recue": 200,
+        "quantite_conforme": 200,
+        "quantite_endommagee": 0
+      }
+    ],
+    "notes": "3 bouteilles d'huile endommagées lors du transport"
+  },
+  {
+    "id_livraison": 3,
+    "id_commande": 103,
+    "numero_livraison": "LIV-20250927-001",
+    "date_livraison_prevue": "2025-09-27",
+    "date_livraison_reelle": null,
+    "statut": "en_transit",
+    "id_entrepot": 1,
+    "transporteur": "ColdChain Transport",
+    "numero_suivi": "CCT555666777",
+    "lignes": [
+      {
+        "id_produit": 2,
+        "nom_produit": "Lait demi-écrémé 1L",
+        "quantite_commandee": 500,
+        "quantite_recue": 0,
+        "quantite_conforme": 0,
+        "quantite_endommagee": 0
+      }
+    ],
+    "notes": "En cours de livraison, arrivée prévue aujourd'hui"
+  }
+]

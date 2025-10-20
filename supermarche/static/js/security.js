@@ -1,7 +1,13 @@
 window.AppSec = (function(){
-  function setValidity(input, valid){
-    if(valid){ input.classList.remove('is-invalid'); input.classList.add('is-valid'); }
-    else { input.classList.remove('is-valid'); input.classList.add('is-invalid'); }
+  function showError(errorId, show){
+    const el = document.getElementById(errorId);
+    if(el){
+      if(show){
+        el.classList.remove('hidden');
+      } else {
+        el.classList.add('hidden');
+      }
+    }
   }
 
   function goto(page){
@@ -20,13 +26,37 @@ window.AppSec = (function(){
       const okEmail = email.checkValidity();
       const okPwd = password.value.length >= 6;
       const okRole = !!roleSel?.value;
-      setValidity(email, okEmail);
-      setValidity(password, okPwd);
-      if(roleSel){ setValidity(roleSel, okRole); }
+      
+      // Afficher les erreurs uniquement après soumission
+      showError('email-error', !okEmail);
+      showError('password-error', !okPwd);
+      showError('role-error', !okRole);
       if(okEmail && okPwd && okRole){
         // store session (front-only)
         localStorage.setItem('user_email', email.value);
         localStorage.setItem('role', roleSel.value);
+        
+        // Chercher le nom dans customers.json d'abord
+        fetch('/static/data/customers.json')
+          .then(res => res.json())
+          .then(customers => {
+            const client = customers.find(c => c.email === email.value);
+            if(client) {
+              localStorage.setItem('user_name', client.name);
+            } else {
+              // Sinon extraire depuis l'email
+              const userName = email.value.split('@')[0].replace(/[._-]/g, ' ');
+              const capitalizedName = userName.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+              localStorage.setItem('user_name', capitalizedName);
+            }
+          })
+          .catch(e => {
+            // En cas d'erreur, extraire depuis l'email
+            const userName = email.value.split('@')[0].replace(/[._-]/g, ' ');
+            const capitalizedName = userName.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+            localStorage.setItem('user_name', capitalizedName);
+          });
+        
         // redirect per role
         const role = roleSel.value;
         const dest = {
@@ -52,12 +82,16 @@ window.AppSec = (function(){
       const okEmail = email.checkValidity();
       const okPwd = password.value.length >= 6;
       const okMatch = password.value === password2.value;
-      setValidity(fullname, okName);
-      setValidity(email, okEmail);
-      setValidity(password, okPwd);
-      setValidity(password2, okMatch);
+      
+      // Afficher les erreurs uniquement après soumission
+      showError('fullname-error', !okName);
+      showError('email-error', !okEmail);
+      showError('password-error', !okPwd);
+      showError('password2-error', !okMatch);
+      
       if(okName && okEmail && okPwd && okMatch){
-        alert('Inscription simulée (front uniquement).');
+        alert('Inscription réussie ! Vous pouvez maintenant vous connecter.');
+        window.location.href = '/security/login/';
       }
     });
   }
@@ -68,8 +102,13 @@ window.AppSec = (function(){
       e.preventDefault();
       const email = document.getElementById('email');
       const okEmail = email.checkValidity();
-      setValidity(email, okEmail);
-      if(okEmail){ alert('Lien de réinitialisation envoyé (simulation).'); }
+      
+      showError('email-error', !okEmail);
+      
+      if(okEmail){ 
+        alert('Lien de réinitialisation envoyé à ' + email.value);
+        window.location.href = '/security/login/';
+      }
     });
   }
 

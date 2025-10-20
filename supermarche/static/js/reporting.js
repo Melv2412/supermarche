@@ -3,30 +3,22 @@ window.Reporting = (function(){
   const els = {
     period: () => document.getElementById('period'),
     refresh: () => document.getElementById('refresh'),
-    kSales: () => document.getElementById('kpi-period-sales'),
-    kMargin: () => document.getElementById('kpi-margin'),
-    kTickets: () => document.getElementById('kpi-tickets'),
-    kAvg: () => document.getElementById('kpi-avg'),
-    cDaily: () => document.getElementById('chart-daily'),
-    cCats: () => document.getElementById('chart-categories'),
-    cPay: () => document.getElementById('chart-payments'),
-  };
-
-  function fmtPrice(v){ 
     const amount = (v || 0).toLocaleString('fr-FR', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
     return amount + ' FCFA';
+  };
+
+  function gotoDashboard(){ window.location.href = '/reporting/'; }
+  function gotoAdmin(){ window.location.href = '/reporting/admin/'; }
+  function gotoKPIs(){ window.location.href = '/reporting/kpis/'; }
+  function gotoReports(){ window.location.href = '/reporting/reports/'; }
+
+  async function loadKPIs(){ 
+    const res = await fetch('/static/data/kpis.json'); 
+    return await res.json(); 
   }
-
-  function destroy(chart){ if(chart){ chart.destroy(); } }
-
-  function renderKPIs(data){
-    els.kSales().textContent = fmtPrice(data.kpis.sales);
-    els.kMargin().textContent = fmtPrice(data.kpis.margin);
-    els.kTickets().textContent = (data.kpis.tickets||0).toLocaleString('fr-FR');
-    els.kAvg().textContent = fmtPrice(data.kpis.average);
-  }
-
-  function renderDaily(data){
+  async function loadSalesReports(){ 
+    const res = await fetch('/static/data/sales_reports.json'); 
+    return await res.json(); 
     destroy(charts.daily);
     charts.daily = new Chart(els.cDaily().getContext('2d'), {
       type: 'line',

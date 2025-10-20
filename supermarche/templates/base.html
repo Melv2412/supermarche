@@ -5,11 +5,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{% block title %}Supermarché{% endblock %}</title>
-  <link rel="icon" type="image/png" href="{% static 'images/empty_bag.png' %}">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏪</text></svg>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{% static 'css/style.css' %}?v=6">
+  <link rel="stylesheet" href="{% static 'css/theme.css' %}?v=1">
   <link rel="stylesheet" href="{% static 'css/tables.css' %}?v=1">
   <link rel="stylesheet" href="{% static 'css/pages.css' %}?v=1">
   <link rel="stylesheet" href="{% static 'css/dashboards.css' %}?v=1">
@@ -17,16 +18,18 @@
 </head>
 <body class="bg-gray-50 font-sans">
   <div class="min-h-screen flex flex-col">
-    {% include 'header.html' %}
+    {% block no_header %}{% include 'header.html' %}{% endblock %}
     <div class="flex flex-1">
+      {% block no_sidebar %}
       <aside class="w-64 sidebar-modern min-h-screen">
         {% include 'sidebar.html' %}
       </aside>
+      {% endblock %}
       <main class="flex-1 page-container animate-fade-in">
         {% block content %}{% endblock %}
       </main>
     </div>
-    {% include 'footer.html' %}
+    {% block no_footer %}{% include 'footer.html' %}{% endblock %}
   </div>
 
   <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>

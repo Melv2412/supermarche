@@ -6,6 +6,8 @@ window.Customers = (function(){
   };
 
   function gotoHistory(){ window.location.href = '/customers/points/'; }
+  function gotoManagement(){ window.location.href = '/customers/management/'; }
+  function gotoMySpace(){ window.location.href = '/customers/'; }
 
   async function loadCustomers(){
     const res = await fetch('/static/data/customers.json');
@@ -15,6 +17,16 @@ window.Customers = (function(){
   async function loadHistory(){
     const res = await fetch('/static/data/points_history.json');
     return await res.json();
+  }
+
+  function getCurrentClientId(){
+    // Simuler l'ID du client connecté (en réalité viendrait de la session)
+    return 1; // Client ID 1 par défaut
+  }
+
+  function getCurrentClientEmail(){
+    // Simuler l'email du client connecté
+    return localStorage.getItem('user_email') || 'client@example.com';
   }
 
   function renderDashboard(customers){
@@ -41,8 +53,39 @@ window.Customers = (function(){
     els.dash.kAct().textContent = fmt(act);
   }
 
+  // ESPACE CLIENT - Voir uniquement SES propres données
+  async function initMySpace(){
+    try{
+      const customers = await loadCustomers();
+      const currentClientId = getCurrentClientId();
+      const myData = customers.find(c => c.id === currentClientId);
+      
+      if(!myData){
+        alert('Données client non trouvées');
+        return;
+      }
+
+      // Afficher MES informations uniquement
+      document.getElementById('my-name')?.textContent = myData.name;
+      document.getElementById('my-email')?.textContent = myData.email;
+      document.getElementById('my-points')?.textContent = fmt(myData.points);
+      document.getElementById('my-status')?.textContent = myData.active ? 'Actif' : 'Inactif';
+      
+    }catch(e){ console.error('My space load error:', e); }
+  }
+
+  // GESTION CLIENTS - Réservé ADMIN/RH uniquement
   async function initDashboard(){
     try{
+      const role = App.Role.getRole();
+      
+      // Vérifier que l'utilisateur est admin ou RH
+      if(role !== 'admin' && role !== 'rh'){
+        alert('Accès non autorisé. Cette page est réservée aux administrateurs et RH.');
+        window.location.href = '/customers/';
+        return;
+      }
+
       const data = await loadCustomers();
       renderDashboard(data);
       els.dash.q()?.addEventListener('input', ()=>renderDashboard(data));
@@ -76,14 +119,31 @@ window.Customers = (function(){
     els.hist.count().textContent = filtered.length;
   }
 
+  // HISTORIQUE POINTS - Client voit UNIQUEMENT son historique
   async function initHistory(){
     try{
-      const data = await loadHistory();
-      renderHistory(data);
-      els.hist.q()?.addEventListener('input', ()=>renderHistory(data));
-      els.hist.type()?.addEventListener('change', ()=>renderHistory(data));
+      const role = App.Role.getRole();
+      const allHistory = await loadHistory();
+      
+      let dataToShow;
+      
+      if(role === 'client'){
+        // CLIENT: Voir uniquement SON historique
+        const currentClientId = getCurrentClientId();
+        dataToShow = allHistory.filter(h => h.id === currentClientId);
+      } else if(role === 'admin' || role === 'rh'){
+        // ADMIN/RH: Voir tout l'historique
+        dataToShow = allHistory;
+      } else {
+        alert('Accès non autorisé');
+        return;
+      }
+      
+      renderHistory(dataToShow);
+      els.hist.q()?.addEventListener('input', ()=>renderHistory(dataToShow));
+      els.hist.type()?.addEventListener('change', ()=>renderHistory(dataToShow));
     }catch(e){ console.error('History load error:', e); }
   }
 
-  return { initDashboard, initHistory, gotoHistory };
+  return { initDashboard, initHistory, initMySpace, gotoHistory, gotoManagement, gotoMySpace };
 })();

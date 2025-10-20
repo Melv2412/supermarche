@@ -254,15 +254,48 @@ window.Inventory = (function(){
   function updateInventory(productId, quantiteReelle){
     const quantiteTheorique = document.querySelector(`input[onchange*="${productId}"]`)?.value || 0;
     const ecart = parseInt(quantiteReelle) - parseInt(quantiteTheorique);
-    const valeurEcart = ecart * 10; // Prix moyen pour simulation
-    
-    document.getElementById(`ecart-${productId}`).textContent = fmt(ecart);
+    const valeurEcart = ecart * 10;
+    document.getElementById(`ecart-${productId}`).textContent = ecart;
     document.getElementById(`valeur-ecart-${productId}`).textContent = formatPrice(valeurEcart);
   }
 
+  async function initMovements(){
+    try{
+      const movements = await fetch('/static/data/stock_movements.json').then(r => r.json());
+      renderMovementsTable(movements);
+      document.getElementById('mov-type')?.addEventListener('change', () => filterMovements(movements));
+    }catch(e){ console.error('Movements load error:', e); }
+  }
+
+  function filterMovements(movements){
+    const type = document.getElementById('mov-type')?.value || '';
+    const filtered = !type ? movements : movements.filter(m => m.type_mouvement === type);
+    renderMovementsTable(filtered);
+  }
+
+  function renderMovementsTable(movements){
+    const tbody = document.getElementById('movements-tbody');
+    if(!tbody) return;
+    tbody.innerHTML = '';
+    movements.forEach(m => {
+      const typeClass = m.type_mouvement === 'entree' ? 'text-success' : m.type_mouvement === 'sortie' ? 'text-danger' : 'text-warning';
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td>${m.date_mouvement.split('T')[0]}</td><td>${m.nom_produit}</td><td class="${typeClass}">${m.type_mouvement}</td><td class="text-center">${m.quantite}</td><td>${m.entrepot_nom}</td><td>${m.reference}</td><td>${m.utilisateur}</td><td>${m.motif}</td>`;
+      tbody.appendChild(tr);
+    });
+    document.getElementById('movements-count').textContent = movements.length;
+  }
+
   return {
-    gotoStockDashboard, gotoStockList, gotoAlerts, gotoInventory,
-    initStockDashboard, initStockList, initInventory,
-    resolveAlert, updateInventory
+    initStockDashboard,
+    initStockList,
+    initInventory,
+    initMovements,
+    gotoStockDashboard,
+    gotoStockList,
+    gotoAlerts,
+    gotoInventory,
+    resolveAlert,
+    updateInventory
   };
 })();

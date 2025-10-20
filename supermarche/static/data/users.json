@@ -1,0 +1,67 @@
+[
+  {
+    "id_utilisateur": 1,
+    "username": "admin",
+    "password_hash": "$2b$10$abcdefghijklmnopqrstuvwxyz123456",
+    "email": "admin@supermarche.com",
+    "nom": "Administrateur",
+    "prenom": "Système",
+    "est_actif": true,
+    "tentatives_echouees": 0,
+    "date_derniere_connexion": "2025-01-22T09:30:00Z",
+    "date_creation": "2024-01-01T00:00:00Z",
+    "roles": ["admin"]
+  },
+  {
+    "id_utilisateur": 2,
+    "username": "marie.martin",
+    "password_hash": "$2b$10$abcdefghijklmnopqrstuvwxyz123456",
+    "email": "marie.martin@supermarche.com",
+    "nom": "Martin",
+    "prenom": "Marie",
+    "est_actif": true,
+    "tentatives_echouees": 0,
+    "date_derniere_connexion": "2025-01-22T08:15:00Z",
+    "date_creation": "2024-03-15T00:00:00Z",
+    "roles": ["rh", "manager"]
+  },
+  {
+    "id_utilisateur": 3,
+    "username": "jean.dupont",
+    "password_hash": "$2b$10$abcdefghijklmnopqrstuvwxyz123456",
+    "email": "jean.dupont@supermarche.com",
+    "nom": "Dupont",
+    "prenom": "Jean",
+    "est_actif": true,
+    "tentatives_echouees": 0,
+    "date_derniere_connexion": "2025-01-22T08:00:00Z",
+    "date_creation": "2024-02-10T00:00:00Z",
+    "roles": ["stock_manager"]
+  },
+  {
+    "id_utilisateur": 4,
+    "username": "pierre.dubois",
+    "password_hash": "$2b$10$abcdefghijklmnopqrstuvwxyz123456",
+    "email": "pierre.dubois@supermarche.com",
+    "nom": "Dubois",
+    "prenom": "Pierre",
+    "est_actif": true,
+    "tentatives_echouees": 0,
+    "date_derniere_connexion": "2025-01-22T14:00:00Z",
+    "date_creation": "2024-05-20T00:00:00Z",
+    "roles": ["caissier"]
+  },
+  {
+    "id_utilisateur": 5,
+    "username": "sophie.laurent",
+    "password_hash": "$2b$10$abcdefghijklmnopqrstuvwxyz123456",
+    "email": "sophie.laurent@supermarche.com",
+    "nom": "Laurent",
+    "prenom": "Sophie",
+    "est_actif": false,
+    "tentatives_echouees": 3,
+    "date_derniere_connexion": "2025-01-20T16:45:00Z",
+    "date_creation": "2024-08-01T00:00:00Z",
+    "roles": ["caissier"]
+  }
+]

@@ -1,5 +1,5 @@
 window.Products = (function(){
-  const state = { items: [], page: 1, size: 8, filtered: [], categories: [] };
+  const state = { items: [], page: 1, size: 8, filtered: [], categories: [], categoriesMap: {} };
 
   function formatPrice(v){ 
     const amount = (v || 0).toLocaleString('fr-FR', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
@@ -20,6 +20,13 @@ window.Products = (function(){
   }
 
   function renderCategories(selectEl, categories){
+    if(!selectEl) return;
+    // Garder uniquement l'option par défaut si elle existe
+    const hasDefault = selectEl.options.length > 0 && selectEl.options[0].value === '';
+    if(!hasDefault) {
+      selectEl.innerHTML = '<option value="">Choisir une catégorie...</option>';
+    }
+    
     categories.forEach(c => { 
       const opt = document.createElement('option'); 
       opt.value = c.id_categorie; 
@@ -51,9 +58,10 @@ window.Products = (function(){
 
     slice.forEach(p => {
       const tr = document.createElement('tr');
+      const categoryName = state.categoriesMap[p.id_categorie] || 'Non définie';
       tr.innerHTML = `
         <td>${p.nom}</td>
-        <td>${p.id_categorie||'-'}</td>
+        <td>${categoryName}</td>
         <td>${p.code_barre||'-'}</td>
         <td class="text-end">${formatPrice(p.prix_unitaire)}</td>
         <td class="text-end">${formatPrice(p.prix_achat)}</td>
@@ -80,7 +88,21 @@ window.Products = (function(){
         fetch('/static/data/products.json').then(r => r.json()),
         loadCategories()
       ]);
+      
+      console.log('Produits chargés:', products.length);
+      console.log('Catégories chargées:', categories.length);
+      
       state.items = products;
+      state.categories = categories;
+      
+      // Créer un map ID -> Nom pour les catégories
+      state.categoriesMap = {};
+      categories.forEach(cat => {
+        state.categoriesMap[cat.id_categorie] = cat.nom;
+      });
+      
+      console.log('CategoriesMap créé:', state.categoriesMap);
+      
       renderCategories(document.getElementById('prod-category'), categories);
       state.filtered = state.items.slice();
       applyFilters();
@@ -137,11 +159,30 @@ window.Products = (function(){
   }
 
   async function initForm(){
+    const loadingEl = document.getElementById('category-loading');
     try{
       const categories = await loadCategories();
       const sel = document.getElementById('f-category');
       renderCategories(sel, categories);
-    }catch(e){ console.warn('Catégories non chargées:', e); }
+      
+      // Masquer le message de chargement et afficher le résultat
+      if(loadingEl) {
+        if(categories.length > 0) {
+          loadingEl.textContent = `✅ ${categories.length} catégorie(s) chargée(s)`;
+          loadingEl.className = 'text-sm text-green-600 mt-1';
+          setTimeout(() => loadingEl.classList.add('hidden'), 3000);
+        } else {
+          loadingEl.textContent = '⚠️ Aucune catégorie trouvée. Créez-en une d\'abord.';
+          loadingEl.className = 'text-sm text-orange-600 mt-1';
+        }
+      }
+    }catch(e){ 
+      console.warn('Catégories non chargées:', e);
+      if(loadingEl) {
+        loadingEl.textContent = '❌ Erreur de chargement des catégories';
+        loadingEl.className = 'text-sm text-red-600 mt-1';
+      }
+    }
 
     const form = document.getElementById('product-form');
     form?.addEventListener('submit', (e) => { e.preventDefault(); preview(); });

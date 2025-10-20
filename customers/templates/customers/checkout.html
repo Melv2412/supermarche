@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Paiement{% endblock %}
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 py-6">
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-800">💳 Finaliser ma commande</h1>
+    <p class="text-gray-600 mt-2">Vérifiez votre commande et choisissez votre mode de paiement</p>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- Récapitulatif commande -->
+    <div class="lg:col-span-2">
+      <div class="card-modern mb-6">
+        <div class="card-header-modern">
+          <h2 class="text-xl font-semibold">📦 Récapitulatif de la commande</h2>
+        </div>
+        <div class="p-6">
+          <div id="checkout-items">
+            <!-- Items chargés dynamiquement -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Informations de livraison -->
+      <div class="card-modern mb-6">
+        <div class="card-header-modern">
+          <h2 class="text-xl font-semibold">📍 Informations de livraison</h2>
+        </div>
+        <div class="p-6">
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Nom complet</label>
+              <input type="text" id="delivery-name" class="input-modern" placeholder="Jean Dupont" required>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Téléphone</label>
+              <input type="tel" id="delivery-phone" class="input-modern" placeholder="+237 6XX XXX XXX" required>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Adresse de livraison</label>
+              <textarea id="delivery-address" class="input-modern" rows="3" placeholder="Quartier, rue, numéro..." required></textarea>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Mode de livraison</label>
+              <select id="delivery-mode" class="input-modern">
+                <option value="standard">Livraison standard (2-3 jours) - Gratuit</option>
+                <option value="express">Livraison express (24h) - 1000 FCFA</option>
+                <option value="pickup">Retrait en magasin - Gratuit</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mode de paiement -->
+      <div class="card-modern">
+        <div class="card-header-modern">
+          <h2 class="text-xl font-semibold">💳 Mode de paiement</h2>
+        </div>
+        <div class="p-6">
+          <div class="space-y-3">
+            <label class="flex items-center p-4 border rounded-lg cursor-pointer hover:bg-gray-50">
+              <input type="radio" name="payment" value="mobile" class="mr-3" checked>
+              <div class="flex-1">
+                <div class="font-semibold">Mobile Money</div>
+                <div class="text-sm text-gray-600">Orange Money, MTN Mobile Money</div>
+              </div>
+              <span class="text-2xl">📱</span>
+            </label>
+            
+            <label class="flex items-center p-4 border rounded-lg cursor-pointer hover:bg-gray-50">
+              <input type="radio" name="payment" value="card" class="mr-3">
+              <div class="flex-1">
+                <div class="font-semibold">Carte bancaire</div>
+                <div class="text-sm text-gray-600">Visa, Mastercard</div>
+              </div>
+              <span class="text-2xl">💳</span>
+            </label>
+            
+            <label class="flex items-center p-4 border rounded-lg cursor-pointer hover:bg-gray-50">
+              <input type="radio" name="payment" value="cash" class="mr-3">
+              <div class="flex-1">
+                <div class="font-semibold">Paiement à la livraison</div>
+                <div class="text-sm text-gray-600">Espèces uniquement</div>
+              </div>
+              <span class="text-2xl">💵</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Résumé et validation -->
+    <div class="lg:col-span-1">
+      <div class="card-modern sticky top-4">
+        <div class="card-header-modern">
+          <h2 class="text-xl font-semibold">💰 Total</h2>
+        </div>
+        <div class="p-6 space-y-3">
+          <div class="flex justify-between text-gray-600">
+            <span>Sous-total</span>
+            <span id="subtotal">0 FCFA</span>
+          </div>
+          <div class="flex justify-between text-gray-600">
+            <span>Livraison</span>
+            <span id="delivery-cost">Gratuit</span>
+          </div>
+          <div class="flex justify-between text-gray-600">
+            <span>Points utilisés</span>
+            <span id="points-used">0</span>
+          </div>
+          <div class="border-t pt-3 flex justify-between text-lg font-bold">
+            <span>Total</span>
+            <span id="total" class="text-green-600">0 FCFA</span>
+          </div>
+          
+          <div class="mt-4 p-3 bg-blue-50 rounded-lg">
+            <div class="text-sm font-medium text-blue-800 mb-2">💎 Utiliser mes points</div>
+            <div class="flex items-center gap-2">
+              <input type="number" id="points-input" class="input-modern flex-1" placeholder="0" min="0" max="820">
+              <button class="btn-sm btn-primary" onclick="Checkout.applyPoints()">Appliquer</button>
+            </div>
+            <div class="text-xs text-blue-600 mt-1">Vous avez 820 points (1 point = 1 FCFA)</div>
+          </div>
+
+          <button class="btn-primary w-full py-3 text-lg mt-4" onclick="Checkout.confirmOrder()">
+            Confirmer la commande
+          </button>
+          
+          <a href="/customers/shop/" class="block text-center text-sm text-gray-600 hover:text-gray-800 mt-2">
+            ← Retour à la boutique
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script src="{% static 'js/checkout.js' %}?v=1"></script>
+<script>Checkout.init();</script>
+{% endblock %}

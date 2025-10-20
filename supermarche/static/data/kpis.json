@@ -1,0 +1,10 @@
+[
+  {"id_kpi": 1, "nom_kpi": "CA Journalier", "code_kpi": "ca_jour", "categorie": "ventes", "valeur_actuelle": 1247.85, "valeur_cible": 1500.00, "seuil_alerte": 1000.00, "tendance": "stable", "unite": "FCFA"},
+  {"id_kpi": 2, "nom_kpi": "Ticket Moyen", "code_kpi": "ticket_moyen", "categorie": "ventes", "valeur_actuelle": 26.55, "valeur_cible": 30.00, "seuil_alerte": 20.00, "tendance": "hausse", "unite": "FCFA"},
+  {"id_kpi": 3, "nom_kpi": "Taux Rupture", "code_kpi": "taux_rupture", "categorie": "stocks", "valeur_actuelle": 2.5, "valeur_cible": 0.0, "seuil_alerte": 5.0, "tendance": "stable", "unite": "%"},
+  {"id_kpi": 4, "nom_kpi": "Taux Rotation Stock", "code_kpi": "rotation_stock", "categorie": "stocks", "valeur_actuelle": 12.3, "valeur_cible": 15.0, "seuil_alerte": 8.0, "tendance": "hausse", "unite": "jours"},
+  {"id_kpi": 5, "nom_kpi": "Taux Fidélisation", "code_kpi": "fidelisation", "categorie": "clients", "valeur_actuelle": 68.5, "valeur_cible": 75.0, "seuil_alerte": 60.0, "tendance": "hausse", "unite": "%"},
+  {"id_kpi": 6, "nom_kpi": "Satisfaction Client", "code_kpi": "satisfaction", "categorie": "clients", "valeur_actuelle": 4.2, "valeur_cible": 4.5, "seuil_alerte": 3.5, "tendance": "stable", "unite": "/5"},
+  {"id_kpi": 7, "nom_kpi": "Taux Absentéisme", "code_kpi": "absenteisme", "categorie": "rh", "valeur_actuelle": 3.8, "valeur_cible": 2.0, "seuil_alerte": 5.0, "tendance": "baisse", "unite": "%"},
+  {"id_kpi": 8, "nom_kpi": "Productivité", "code_kpi": "productivite", "categorie": "rh", "valeur_actuelle": 87.5, "valeur_cible": 90.0, "seuil_alerte": 80.0, "tendance": "hausse", "unite": "%"}
+]
