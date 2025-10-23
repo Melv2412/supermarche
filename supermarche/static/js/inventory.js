@@ -56,11 +56,11 @@ window.Inventory = (function(){
       const outOfStock = products.filter(p => (p.stock || 0) === 0).length;
       const totalValue = products.reduce((sum, p) => sum + ((p.stock || 0) * (p.prix_achat || 0)), 0);
 
-      // Update KPI elements
-      document.getElementById('kpi-total')?.textContent = fmt(totalProducts);
-      document.getElementById('kpi-low')?.textContent = fmt(lowStock);
-      document.getElementById('kpi-out')?.textContent = fmt(outOfStock);
-      document.getElementById('kpi-value')?.textContent = formatPrice(totalValue);
+  // Update KPI elements
+  var kpt = document.getElementById('kpi-total'); if (kpt) kpt.textContent = fmt(totalProducts);
+  var kpl = document.getElementById('kpi-low'); if (kpl) kpl.textContent = fmt(lowStock);
+  var kpo = document.getElementById('kpi-out'); if (kpo) kpo.textContent = fmt(outOfStock);
+  var kpv = document.getElementById('kpi-value'); if (kpv) kpv.textContent = formatPrice(totalValue);
 
       // Populate category filter
       const categorySelect = document.getElementById('filter-category');
@@ -86,8 +86,8 @@ window.Inventory = (function(){
           return okSearch && okCategory && okThreshold;
         });
 
-        renderStockTable(filtered);
-        document.getElementById('count')?.textContent = fmt(filtered.length);
+  renderStockTable(filtered);
+  var cnt = document.getElementById('count'); if (cnt) cnt.textContent = fmt(filtered.length);
       }
 
       // Event listeners

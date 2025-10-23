@@ -12,4 +12,7 @@ urlpatterns = [
     # Dashboards & Reports
     path('cashier/dashboard/', api_views.cashier_dashboard, name='api_cashier_dashboard'),
     path('reports/sales/', api_views.sales_report, name='api_sales_report'),
+    
+    # Online Shopping
+    path('checkout/', api_views.online_checkout, name='api_online_checkout'),  # POST /api/sales/checkout/
 ]

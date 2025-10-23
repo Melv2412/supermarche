@@ -6,15 +6,15 @@ window.Orders = (function(){
   };
 
   async function loadOrders(){ 
-    const res = await fetch('/static/data/orders.json'); 
+    const res = await fetch('/api/orders/'); 
     return await res.json(); 
   }
   async function loadSuppliers(){ 
-    const res = await fetch('/static/data/suppliers.json'); 
+    const res = await fetch('/api/suppliers/'); 
     return await res.json(); 
   }
   async function loadProducts(){ 
-    const res = await fetch('/static/data/products.json'); 
+    const res = await fetch('/api/products/'); 
     return await res.json(); 
   }
 

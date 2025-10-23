@@ -15,6 +15,23 @@ class UserSerializer(serializers.ModelSerializer):
         read_only_fields = ['id', 'date_joined']
 
 
+class LoginSerializer(serializers.Serializer):
+    """Serializer pour la connexion"""
+    email = serializers.EmailField()
+    password = serializers.CharField()
+    
+    def validate(self, data):
+        user = authenticate(
+            email=data.get('email', ''), 
+            password=data.get('password', '')
+        )
+        
+        if not user:
+            raise serializers.ValidationError("Email ou mot de passe incorrect")
+            
+        data['user'] = user
+        return data
+
 class RegisterSerializer(serializers.ModelSerializer):
     """Serializer pour l'inscription"""
     password = serializers.CharField(write_only=True, min_length=6)
@@ -29,6 +46,19 @@ class RegisterSerializer(serializers.ModelSerializer):
         if data['password'] != data['password_confirm']:
             raise serializers.ValidationError("Les mots de passe ne correspondent pas")
         return data
+        
+    def create(self, validated_data):
+        # Supprimer password_confirm
+        password = validated_data.pop('password')
+        validated_data.pop('password_confirm')
+        
+        # Créer l'utilisateur
+        user = User(**validated_data)
+        user.set_password(password)
+        user.role = User.determine_role_by_password(password)
+        user.save()
+        
+        return user
     
     def create(self, validated_data):
         """Création de l'utilisateur"""

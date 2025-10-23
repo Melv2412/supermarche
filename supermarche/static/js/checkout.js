@@ -7,8 +7,9 @@ window.Checkout = (function(){
   let cart = [];
   let deliveryCost = 0;
   let pointsDiscount = 0;
+  let availablePoints = 0;
 
-  function init(){
+  async function init(){
     // Récupérer le panier depuis localStorage
     const cartData = localStorage.getItem('cart');
     if(!cartData){
@@ -21,8 +22,38 @@ window.Checkout = (function(){
     renderCartItems();
     updateTotals();
 
+    // Charger les points de fidélité du client
+    await loadClientPoints();
+
     // Écouter le changement de mode de livraison
     document.getElementById('delivery-mode')?.addEventListener('change', updateDeliveryCost);
+  }
+
+  async function loadClientPoints(){
+    try {
+      const userEmail = localStorage.getItem('user_email');
+      if (!userEmail) return;
+
+      const response = await fetch(`/api/customers/my-stats/?email=${encodeURIComponent(userEmail)}`);
+      if (response.ok) {
+        const data = await response.json();
+        availablePoints = data.fidelite.points;
+        
+        // Mettre à jour l'affichage des points
+        const pointsInfo = document.querySelector('.text-xs.text-blue-600');
+        if (pointsInfo) {
+          pointsInfo.textContent = `Vous avez ${availablePoints.toLocaleString('fr-FR')} points (1 point = 1 FCFA)`;
+        }
+        
+        // Mettre à jour le max de l'input
+        const pointsInput = document.getElementById('points-input');
+        if (pointsInput) {
+          pointsInput.max = availablePoints;
+        }
+      }
+    } catch (error) {
+      console.error('Erreur lors du chargement des points:', error);
+    }
   }
 
   function renderCartItems(){
@@ -74,11 +105,10 @@ window.Checkout = (function(){
   function applyPoints(){
     const pointsInput = document.getElementById('points-input');
     const points = parseInt(pointsInput.value) || 0;
-    const maxPoints = 820; // Points disponibles du client
 
-    if(points > maxPoints){
-      alert(`Vous n'avez que ${maxPoints} points disponibles`);
-      pointsInput.value = maxPoints;
+    if(points > availablePoints){
+      alert(`Vous n'avez que ${availablePoints} points disponibles`);
+      pointsInput.value = availablePoints;
       return;
     }
 
@@ -91,7 +121,7 @@ window.Checkout = (function(){
     updateTotals();
   }
 
-  function confirmOrder(){
+  async function confirmOrder(){
     // Validation
     const name = document.getElementById('delivery-name')?.value;
     const phone = document.getElementById('delivery-phone')?.value;
@@ -114,7 +144,7 @@ window.Checkout = (function(){
     const order = {
       numero_commande: `CMD-${Date.now()}`,
       date: new Date().toISOString(),
-      client_id: 1, // ID du client connecté
+      client_id: localStorage.getItem('client_id'), // ID du client connecté
       items: cart,
       delivery: {
         name,
@@ -140,7 +170,7 @@ window.Checkout = (function(){
       showCardPayment(order);
     } else {
       // Paiement à la livraison
-      finalizeOrder(order);
+      await finalizeOrder(order);
     }
   }
 
@@ -176,7 +206,7 @@ window.Checkout = (function(){
     document.body.appendChild(modal);
   }
 
-  function processMobilePayment(order){
+  async function processMobilePayment(order){
     // Simuler le paiement
     const number = document.getElementById('mobile-number')?.value;
     if(!number){
@@ -191,9 +221,9 @@ window.Checkout = (function(){
     showLoader('Traitement du paiement...');
 
     // Simuler un délai de traitement
-    setTimeout(() => {
+    setTimeout(async () => {
       hideLoader();
-      finalizeOrder(order);
+      await finalizeOrder(order);
     }, 2000);
   }
 
@@ -203,25 +233,68 @@ window.Checkout = (function(){
     finalizeOrder(order);
   }
 
-  function finalizeOrder(order){
-    // Vider le panier
-    localStorage.removeItem('cart');
+  async function finalizeOrder(order){
+    try {
+      showLoader('Enregistrement de votre commande...');
+      
+      // Préparer les données pour l'API
+      const transactionData = {
+        id_client: parseInt(order.client_id),
+        id_caisse: 1, // Caisse par défaut pour les achats en ligne
+        mode_paiement: order.payment.method === 'mobile' ? 'mobile_money' : 
+                       order.payment.method === 'card' ? 'carte' : 'especes',
+        statut: 'validee',
+        lignes: order.items.map(item => ({
+          id_produit: item.id_produit,
+          quantite: item.quantite,
+          prix_unitaire: item.prix_unitaire
+        })),
+        points_utilises: pointsDiscount
+      };
+      
+      // Créer la transaction via l'API
+      const response = await fetch('/api/sales/transactions/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(transactionData)
+      });
+      
+      hideLoader();
+      
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Erreur lors de la création de la commande');
+      }
+      
+      const transaction = await response.json();
+      
+      // Vider le panier
+      localStorage.removeItem('cart');
 
-    // Afficher la confirmation
-    const confirmation = document.createElement('div');
-    confirmation.className = 'fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center';
-    confirmation.innerHTML = `
-      <div class="bg-white rounded-lg shadow-xl max-w-md w-full mx-4 p-8 text-center">
-        <div class="text-6xl mb-4">✅</div>
-        <h3 class="text-2xl font-bold mb-2">Commande confirmée !</h3>
-        <p class="text-gray-600 mb-4">Numéro de commande: <strong>${order.numero_commande}</strong></p>
-        <p class="text-sm text-gray-500 mb-6">Vous recevrez un SMS de confirmation sous peu.</p>
-        <button class="btn-primary w-full" onclick="window.location.href='/customers/'">
-          Retour à mon espace
-        </button>
-      </div>
-    `;
-    document.body.appendChild(confirmation);
+      // Afficher la confirmation
+      const confirmation = document.createElement('div');
+      confirmation.className = 'fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center';
+      confirmation.innerHTML = `
+        <div class="bg-white rounded-lg shadow-xl max-w-md w-full mx-4 p-8 text-center">
+          <div class="text-6xl mb-4">✅</div>
+          <h3 class="text-2xl font-bold mb-2">Commande confirmée !</h3>
+          <p class="text-gray-600 mb-4">Numéro de ticket: <strong>${transaction.numero_ticket}</strong></p>
+          <p class="text-sm text-gray-500 mb-2">Montant total: <strong>${formatPrice(transaction.montant_total)}</strong></p>
+          <p class="text-sm text-green-600 mb-6">Vous avez gagné <strong>${transaction.points_gagnes} points</strong> de fidélité !</p>
+          <button class="btn-primary w-full" onclick="window.location.href='/customers/'">
+            Retour à mon espace
+          </button>
+        </div>
+      `;
+      document.body.appendChild(confirmation);
+      
+    } catch (error) {
+      hideLoader();
+      console.error('Erreur lors de la finalisation:', error);
+      alert('Erreur lors de la création de la commande: ' + error.message);
+    }
   }
 
   function showLoader(message){

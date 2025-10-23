@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from django.contrib.auth import logout
+from django.contrib.auth import authenticate, login, logout
 from .models import User
 from .serializers import (
     UserSerializer, RegisterSerializer, LoginSerializer, ChangePasswordSerializer
@@ -18,6 +18,25 @@ def register(request):
     
     if serializer.is_valid():
         user = serializer.save()
+        
+        # Si c'est un client, créer automatiquement un profil client
+        if user.role == 'client':
+            from customers.models import Client, LoyaltyCard
+            
+            # Créer le profil client
+            client, created = Client.objects.get_or_create(
+                email=user.email,
+                defaults={
+                    'nom': user.nom,
+                    'prenom': user.prenom,
+                    'telephone': user.telephone or '',
+                    'actif': True
+                }
+            )
+            
+            # Créer une carte de fidélité si elle n'existe pas
+            if created:
+                LoyaltyCard.objects.create(id_client=client)
         
         # Créer un token pour l'utilisateur
         token, created = Token.objects.get_or_create(user=user)

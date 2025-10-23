@@ -16,7 +16,7 @@ from .serializers import (
 def category_list(request):
     """Liste toutes les catégories ou crée une nouvelle"""
     if request.method == 'GET':
-        categories = Category.objects.filter(actif=True)
+        categories = Category.objects.all()
         serializer = CategorySerializer(categories, many=True)
         return Response(serializer.data)
     
@@ -56,7 +56,7 @@ def category_detail(request, pk):
 def product_list(request):
     """Liste tous les produits ou crée un nouveau"""
     if request.method == 'GET':
-        products = Product.objects.filter(actif=True).select_related('id_categorie')
+        products = Product.objects.all().select_related('id_categorie')
         
         # Filtres optionnels
         category_id = request.query_params.get('category', None)

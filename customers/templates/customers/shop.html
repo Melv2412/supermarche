@@ -62,14 +62,22 @@
           <span id="cart-total" class="text-green-600">0 FCFA</span>
         </div>
       </div>
-      <button id="btn-checkout" class="w-full bg-green-600 text-white py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed" onclick="Shop.proceedToCheckout()" disabled>
-        Procéder au paiement →
+      <button id="btn-checkout" class="w-full bg-red-600 text-white py-4 rounded-lg font-bold text-lg hover:bg-red-700 shadow-xl border-b-4 border-red-800 active:border-b-0 active:mt-1 transition-all disabled:bg-gray-300 disabled:border-gray-400 disabled:cursor-not-allowed disabled:transform-none" onclick="Shop.proceedToCheckout()" disabled>
+        💰 Enregistrer le paiement
       </button>
     </div>
   </div>
 </div>
 {% endblock %}
 {% block extra_js %}
-<script src="{% static 'js/shop.js' %}?v=2"></script>
-<script>Shop.init();</script>
+<script src="{% static 'js/shop.js' %}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    if (typeof Shop !== 'undefined') {
+        Shop.init();
+    } else {
+        console.error('Shop module not loaded');
+    }
+});
+</script>
 {% endblock %}

@@ -1,7 +1,0 @@
-[
-  {"id_log": 1, "date_heure": "2025-01-22T09:30:15Z", "type_log": "auth", "niveau": "info", "message": "Connexion réussie", "module": "security", "action": "login", "id_utilisateur": 1, "username": "admin", "adresse_ip": "192.168.1.100"},
-  {"id_log": 2, "date_heure": "2025-01-22T09:35:22Z", "type_log": "data", "niveau": "info", "message": "Création produit: Pâtes Spaghetti 500g", "module": "products", "action": "create", "id_utilisateur": 1, "username": "admin", "adresse_ip": "192.168.1.100"},
-  {"id_log": 3, "date_heure": "2025-01-22T10:15:45Z", "type_log": "security", "niveau": "warning", "message": "Tentative connexion échouée", "module": "security", "action": "login_failed", "id_utilisateur": null, "username": "sophie.laurent", "adresse_ip": "192.168.1.105"},
-  {"id_log": 4, "date_heure": "2025-01-22T14:30:10Z", "type_log": "transaction", "niveau": "info", "message": "Vente TKT-20250122-001 validée", "module": "sales", "action": "sale_completed", "id_utilisateur": 4, "username": "pierre.dubois", "adresse_ip": "192.168.1.102"},
-  {"id_log": 5, "date_heure": "2025-01-22T15:20:33Z", "type_log": "data", "niveau": "info", "message": "Réception livraison LIV-20250928-001", "module": "suppliers", "action": "delivery_received", "id_utilisateur": 3, "username": "jean.dupont", "adresse_ip": "192.168.1.101"}
-]

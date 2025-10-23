@@ -23,9 +23,9 @@ window.Clients = (function(){
     const active = clients.filter(c => c.actif).length;
     const withCard = clients.filter(c => c.carte_fidelite).length;
     
-    document.getElementById('stat-total')?.textContent = total;
-    document.getElementById('stat-active')?.textContent = active;
-    document.getElementById('stat-cards')?.textContent = withCard;
+  var st = document.getElementById('stat-total'); if (st) st.textContent = total;
+  var sa = document.getElementById('stat-active'); if (sa) sa.textContent = active;
+  var sc = document.getElementById('stat-cards'); if (sc) sc.textContent = withCard;
   }
   
   function renderTable() {

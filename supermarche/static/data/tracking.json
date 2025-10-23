@@ -1,6 +1,0 @@
-[
-  { "order_id": 101, "supplier": "AgriFrais SARL",       "carrier": "ChronoFresh", "status": "in_transit", "eta": "2025-09-29" },
-  { "order_id": 102, "supplier": "DeliPro Distribution", "carrier": "DHL",         "status": "in_transit", "eta": "2025-09-30" },
-  { "order_id": 103, "supplier": "LactaNord",            "carrier": "GEFCO",       "status": "delayed",    "eta": "2025-10-01" },
-  { "order_id": 104, "supplier": "DeliPro Distribution", "carrier": "Colissimo",   "status": "delivered",  "eta": "2025-09-28" }
-]

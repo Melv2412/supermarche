@@ -21,19 +21,19 @@ window.Sales = (function(){
 
   // Load data
   async function loadTransactions(){ 
-    const res = await fetch('/static/data/transactions.json'); 
+    const res = await fetch('/api/sales/transactions/'); 
     return await res.json(); 
   }
   async function loadProducts(){ 
-    const res = await fetch('/static/data/products.json'); 
+    const res = await fetch('/api/products/'); 
     return await res.json(); 
   }
   async function loadPromotions(){ 
-    const res = await fetch('/static/data/promotions.json'); 
+    const res = await fetch('/api/promotions/'); 
     return await res.json(); 
   }
   async function loadCustomers(){ 
-    const res = await fetch('/static/data/customers.json'); 
+    const res = await fetch('/api/customers/'); 
     return await res.json(); 
   }
   async function loadCaisses(){ 
@@ -69,10 +69,10 @@ window.Sales = (function(){
         new Date(t.date_transaction).toDateString() === new Date().toDateString()
       ).length;
 
-      document.getElementById('kpi-revenue')?.textContent = formatPrice(totalRevenue);
-      document.getElementById('kpi-transactions')?.textContent = fmt(totalTransactions);
-      document.getElementById('kpi-avg-ticket')?.textContent = formatPrice(avgTicket);
-      document.getElementById('kpi-today')?.textContent = fmt(todayTransactions);
+  var kpr = document.getElementById('kpi-revenue'); if (kpr) kpr.textContent = formatPrice(totalRevenue);
+  var kpt = document.getElementById('kpi-transactions'); if (kpt) kpt.textContent = fmt(totalTransactions);
+  var kpa = document.getElementById('kpi-avg-ticket'); if (kpa) kpa.textContent = formatPrice(avgTicket);
+  var kpd = document.getElementById('kpi-today'); if (kpd) kpd.textContent = fmt(todayTransactions);
 
     }catch(e){ console.error('Sales dashboard error:', e); }
   }

@@ -1,9 +1,0 @@
-[
-  { "date": "2025-09-20", "name": "Jean Dupont",  "email": "jean.dupont@example.com",  "points": 120, "type": "earn",   "note": "Achat caisse #TX10231" },
-  { "date": "2025-09-22", "name": "Jean Dupont",  "email": "jean.dupont@example.com",  "points": 200, "type": "redeem", "note": "Récompense -10 FCFA" },
-  { "date": "2025-09-23", "name": "Sarah Martin", "email": "sarah.martin@example.com", "points": 300, "type": "earn",   "note": "Achat drive #TX10487" },
-  { "date": "2025-09-24", "name": "Sarah Martin", "email": "sarah.martin@example.com", "points": 50,  "type": "adjust", "note": "Ajustement service client" },
-  { "date": "2025-09-25", "name": "Ali Ben",      "email": "ali.ben@example.com",      "points": 80,  "type": "earn",   "note": "Achat caisse #TX10754" },
-  { "date": "2025-09-26", "name": "Emma Leroy",   "email": "emma.leroy@example.com",   "points": 150, "type": "earn",   "note": "Achat caisse #TX10890" },
-  { "date": "2025-09-27", "name": "Paul Moreau",  "email": "paul.moreau@example.com",  "points": 100, "type": "redeem", "note": "Récompense -5 FCFA" }
-]

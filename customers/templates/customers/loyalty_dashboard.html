@@ -8,12 +8,12 @@
     <div class="card-modern card-gradient-violet shadow-violet" style="padding: 2.5rem;">
       <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h1 class="text-3xl font-bold mb-2 text-white">👋 Bonjour, <span id="client-name" class="text-white">Jean Dupont</span></h1>
-          <p class="text-white" style="opacity: 0.9;" id="client-email">jean.dupont@example.com</p>
+          <h1 class="text-3xl font-bold mb-2 text-white">👋 Bonjour, <span id="client-name" class="text-white">Chargement...</span></h1>
+          <p class="text-white" style="opacity: 0.9;" id="client-email">Chargement...</p>
         </div>
         <div class="badge-white animate-pulse-slow" style="padding: 1.5rem 2rem;">
           <div class="text-sm mb-1" style="color: #9333ea;">Mes Points Fidélité</div>
-          <div class="kpi-value" style="font-size: 2.5rem; margin: 0;" id="client-points">820</div>
+          <div id="client-points" class="kpi-value" style="font-size: 2.5rem; margin: 0;">0</div>
         </div>
       </div>
     </div>
@@ -26,7 +26,7 @@
         <span class="kpi-label">Achats ce mois</span>
         <span class="text-3xl">🛍️</span>
       </div>
-      <div id="my-purchases-month" class="kpi-value">3</div>
+      <div id="my-purchases-month" class="kpi-value">0</div>
     </div>
     
     <div class="kpi-card animate-scale-in" style="animation-delay: 0.1s;">
@@ -34,7 +34,7 @@
         <span class="kpi-label">Dépenses ce mois</span>
         <span class="text-3xl">💰</span>
       </div>
-      <div id="my-spending-month" class="kpi-value">12 500 FCFA</div>
+      <div id="my-spending-month" class="kpi-value">0 FCFA</div>
     </div>
     
     <div class="kpi-card animate-scale-in" style="animation-delay: 0.2s;">
@@ -42,7 +42,7 @@
         <span class="kpi-label">Niveau fidélité</span>
         <span class="text-3xl">⭐</span>
       </div>
-      <div id="my-level" class="kpi-value">Bronze</div>
+      <div id="my-level" class="kpi-value">-</div>
     </div>
     
     <div class="kpi-card animate-scale-in" style="animation-delay: 0.3s;">
@@ -50,7 +50,7 @@
         <span class="kpi-label">Économies</span>
         <span class="text-3xl">💎</span>
       </div>
-      <div id="my-savings" class="kpi-value">2 400 FCFA</div>
+      <div id="my-savings" class="kpi-value">0 FCFA</div>
     </div>
   </div>
 
@@ -96,34 +96,10 @@
       </div>
       <div class="p-6">
         <div id="my-recent-purchases" class="space-y-3">
-          <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-            <div>
-              <div class="font-semibold text-gray-800">15/01/2024</div>
-              <div class="text-sm text-gray-600">Fruits et légumes</div>
-            </div>
-            <div class="text-right">
-              <div class="font-bold text-gray-800">2 500 FCFA</div>
-              <div class="text-sm text-green-600 font-semibold">+25 points</div>
-            </div>
-          </div>
-          <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-            <div>
-              <div class="font-semibold text-gray-800">10/01/2024</div>
-              <div class="text-sm text-gray-600">Épicerie</div>
-            </div>
-            <div class="text-right">
-              <div class="font-bold text-gray-800">1 800 FCFA</div>
-              <div class="text-sm text-green-600 font-semibold">+18 points</div>
-            </div>
-          </div>
-          <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-            <div>
-              <div class="font-semibold text-gray-800">05/01/2024</div>
-              <div class="text-sm text-gray-600">Boucherie</div>
-            </div>
-            <div class="text-right">
-              <div class="font-bold text-gray-800">3 200 FCFA</div>
-              <div class="text-sm text-green-600 font-semibold">+32 points</div>
+          <div class="flex justify-center items-center p-6 text-gray-500">
+            <div class="text-center">
+              <div class="text-3xl mb-2">⏳</div>
+              <div>Chargement de vos achats...</div>
             </div>
           </div>
         </div>
@@ -138,39 +114,85 @@
 <script>
 // Charger les infos du client connecté
 document.addEventListener('DOMContentLoaded', function(){
-  const userEmail = localStorage.getItem('user_email') || 'client@example.com';
-  const userName = localStorage.getItem('user_name') || 'Client';
+  const userEmail = localStorage.getItem('user_email');
   
-  // Afficher immédiatement le nom depuis localStorage
-  document.getElementById('client-name').textContent = userName;
-  document.getElementById('client-email').textContent = userEmail;
+  if (!userEmail) {
+    console.error('Aucun utilisateur connecté');
+    alert('Veuillez vous connecter pour accéder à cette page');
+    window.location.href = '/security/login/';
+    return;
+  }
   
-  // Charger les données du client depuis le JSON pour les points
-  fetch('/static/data/customers.json')
-    .then(res => res.json())
-    .then(customers => {
-      const client = customers.find(c => c.email === userEmail);
-      if(client) {
-        // Mettre à jour avec les vraies données
-        document.getElementById('client-name').textContent = client.name;
-        document.getElementById('client-email').textContent = client.email;
-        document.getElementById('client-points').textContent = client.points.toLocaleString('fr-FR');
-        
-        // Mettre à jour les KPIs si les éléments existent
-        const purchasesEl = document.getElementById('my-purchases-month');
-        const spendingEl = document.getElementById('my-spending-month');
-        const levelEl = document.getElementById('my-level');
-        const savingsEl = document.getElementById('my-savings');
-        
-        if(purchasesEl) purchasesEl.textContent = '3';
-        if(spendingEl) spendingEl.textContent = '12 500 FCFA';
-        if(levelEl) levelEl.textContent = client.points > 1000 ? 'Or' : client.points > 500 ? 'Argent' : 'Bronze';
-        if(savingsEl) savingsEl.textContent = '2 400 FCFA';
+  // Charger les vraies données depuis l'API basée sur l'email
+  fetch(`/api/customers/my-stats/?email=${encodeURIComponent(userEmail)}`)
+    .then(res => {
+      if (!res.ok) {
+        return res.json().then(err => {
+          throw new Error(err.error || 'Erreur lors du chargement des données');
+        });
+      }
+      return res.json();
+    })
+    .then(data => {
+      console.log('Données chargées:', data);
+      
+      // Sauvegarder l'ID du client pour une utilisation future
+      localStorage.setItem('client_id', data.client.id);
+      
+      // Mettre à jour les informations du client
+      document.getElementById('client-name').textContent = data.client.nom;
+      document.getElementById('client-email').textContent = data.client.email;
+      
+      // Mettre à jour les points de fidélité
+      document.getElementById('client-points').textContent = data.fidelite.points.toLocaleString('fr-FR');
+      
+      // Mettre à jour les statistiques du mois
+      document.getElementById('my-purchases-month').textContent = data.stats_mois.achats;
+      document.getElementById('my-spending-month').textContent = data.stats_mois.depenses.toLocaleString('fr-FR') + ' FCFA';
+      document.getElementById('my-level').textContent = data.fidelite.niveau;
+      document.getElementById('my-savings').textContent = data.stats_mois.economies.toLocaleString('fr-FR') + ' FCFA';
+      
+      // Mettre à jour les dernières transactions
+      const transactionsContainer = document.getElementById('my-recent-purchases');
+      if (data.dernieres_transactions && data.dernieres_transactions.length > 0) {
+        transactionsContainer.innerHTML = '';
+        data.dernieres_transactions.forEach(trans => {
+          const transDiv = document.createElement('div');
+          transDiv.className = 'flex justify-between items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors';
+          transDiv.innerHTML = `
+            <div>
+              <div class="font-semibold text-gray-800">${trans.date}</div>
+              <div class="text-sm text-gray-600">${trans.numero_ticket}</div>
+            </div>
+            <div class="text-right">
+              <div class="font-bold text-gray-800">${trans.montant.toLocaleString('fr-FR')} FCFA</div>
+              <div class="text-sm text-green-600 font-semibold">+${trans.points} points</div>
+            </div>
+          `;
+          transactionsContainer.appendChild(transDiv);
+        });
+      } else {
+        transactionsContainer.innerHTML = `
+          <div class="flex justify-center items-center p-6 text-gray-500">
+            <div class="text-center">
+              <div class="text-3xl mb-2">📭</div>
+              <div>Aucun achat récent</div>
+            </div>
+          </div>
+        `;
       }
     })
     .catch(e => {
-      console.error('Erreur chargement client:', e);
-      // Garder les données de localStorage si erreur
+      console.error('Erreur chargement des données:', e);
+      
+      // Afficher un message d'erreur plus détaillé
+      const errorMessage = e.message || 'Erreur inconnue';
+      
+      if (errorMessage.includes('Client non trouvé')) {
+        alert('Votre profil client n\'a pas encore été créé. Veuillez contacter l\'administrateur ou effectuer un premier achat.');
+      } else {
+        alert('Erreur lors du chargement de vos données: ' + errorMessage);
+      }
     });
 });
 </script>

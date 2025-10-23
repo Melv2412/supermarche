@@ -66,10 +66,14 @@ window.Customers = (function(){
       }
 
       // Afficher MES informations uniquement
-      document.getElementById('my-name')?.textContent = myData.name;
-      document.getElementById('my-email')?.textContent = myData.email;
-      document.getElementById('my-points')?.textContent = fmt(myData.points);
-      document.getElementById('my-status')?.textContent = myData.active ? 'Actif' : 'Inactif';
+  var el = document.getElementById('my-name');
+  if (el) el.textContent = myData.name;
+  var el2 = document.getElementById('my-email');
+  if (el2) el2.textContent = myData.email;
+  var el3 = document.getElementById('my-points');
+  if (el3) el3.textContent = fmt(myData.points);
+  var el4 = document.getElementById('my-status');
+  if (el4) el4.textContent = myData.active ? 'Actif' : 'Inactif';
       
     }catch(e){ console.error('My space load error:', e); }
   }
