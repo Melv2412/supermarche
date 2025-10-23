@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard Clients{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold mb-8">Dashboard Clients</h1>
+    
+    <!-- Cartes de statistiques -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <!-- Total Clients inscrits -->
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-gray-500 text-sm font-medium">Clients inscrits</h3>
+            <p class="text-3xl font-bold">{{ stats.total_inscrits }}</p>
+            <div class="mt-2 flex items-center">
+                <span class="text-green-500">
+                    <span class="text-sm font-medium">Total</span>
+                </span>
+            </div>
+        </div>
+
+        <!-- Clients actifs -->
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-gray-500 text-sm font-medium">Clients actifs</h3>
+            <p class="text-3xl font-bold">{{ stats.clients_actifs }}</p>
+            <div class="mt-2 flex items-center">
+                <span class="text-blue-500">
+                    <span class="text-sm font-medium">{{ stats.taux_activite|floatformat:1 }}% du total</span>
+                </span>
+            </div>
+        </div>
+
+        <!-- Nouveaux clients -->
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-gray-500 text-sm font-medium">Nouveaux clients</h3>
+            <p class="text-3xl font-bold">{{ stats.nouveaux_clients }}</p>
+            <div class="mt-2 flex items-center">
+                <span class="text-purple-500">
+                    <span class="text-sm font-medium">30 derniers jours</span>
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Distribution par ville -->
+    <div class="bg-white rounded-lg shadow p-6 mb-8">
+        <h3 class="text-xl font-semibold mb-4">Répartition par ville</h3>
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead>
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ville</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre de clients</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    {% for ville in stats.clients_par_ville %}
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap">{{ ville.ville }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">{{ ville.total }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

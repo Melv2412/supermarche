@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+
+{% block title %}Détail Stock{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <!-- En-tête avec informations produit -->
+    <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+        <div class="flex justify-between items-start">
+            <div>
+                <h1 class="text-2xl font-bold mb-2">{{ stock.produit.nom }}</h1>
+                <p class="text-gray-600">Référence: {{ stock.produit.reference }}</p>
+            </div>
+            <div class="text-right">
+                <span class="px-4 py-2 rounded-full {% if stock.en_rupture %}bg-red-100 text-red-800
+                           {% elif stock.stock_faible %}bg-yellow-100 text-yellow-800
+                           {% else %}bg-green-100 text-green-800{% endif %}">
+                    {% if stock.en_rupture %}
+                        Rupture de stock
+                    {% elif stock.stock_faible %}
+                        Stock faible
+                    {% else %}
+                        Stock normal
+                    {% endif %}
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Informations de stock -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-gray-500 text-sm font-medium">Stock actuel</h3>
+            <p class="text-3xl font-bold">{{ stock.quantite }}</p>
+        </div>
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-gray-500 text-sm font-medium">Seuil d'alerte</h3>
+            <p class="text-3xl font-bold">{{ stock.seuil_alerte }}</p>
+        </div>
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-gray-500 text-sm font-medium">Emplacement</h3>
+            <p class="text-3xl font-bold">{{ stock.emplacement|default:"-" }}</p>
+        </div>
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-gray-500 text-sm font-medium">Dernière mise à jour</h3>
+            <p class="text-xl font-bold">{{ stock.derniere_maj|date:"d/m/Y H:i" }}</p>
+        </div>
+    </div>
+
+    <!-- Formulaires d'ajustement -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <!-- Entrée de stock -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h3 class="text-lg font-bold mb-4">Entrée de stock</h3>
+            <form action="{% url 'inventory:ajuster_stock' stock.produit.id_produit %}" method="POST" class="space-y-4">
+                {% csrf_token %}
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Quantité</label>
+                    <input type="number" name="quantite" min="1" required
+                           class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Raison</label>
+                    <select name="raison" required
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                        <option value="reception">Réception</option>
+                        <option value="retour">Retour</option>
+                        <option value="ajustement">Ajustement</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Référence</label>
+                    <input type="text" name="reference"
+                           class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                </div>
+                <button type="submit" 
+                        class="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
+                    Ajouter au stock
+                </button>
+            </form>
+        </div>
+
+        <!-- Sortie de stock -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h3 class="text-lg font-bold mb-4">Sortie de stock</h3>
+            <form action="{% url 'inventory:ajuster_stock' stock.produit.id_produit %}" method="POST" class="space-y-4">
+                {% csrf_token %}
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Quantité</label>
+                    <input type="number" name="quantite" min="1" max="{{ stock.quantite }}" required
+                           class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Raison</label>
+                    <select name="raison" required
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                        <option value="vente">Vente</option>
+                        <option value="perte">Perte/Casse</option>
+                        <option value="ajustement">Ajustement</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Référence</label>
+                    <input type="text" name="reference"
+                           class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                </div>
+                <button type="submit" 
+                        class="w-full bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
+                    Retirer du stock
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Historique des mouvements -->
+    <div class="bg-white rounded-lg shadow-lg p-6">
+        <h2 class="text-xl font-bold mb-4">Historique des mouvements</h2>
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead>
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quantité</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stock final</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Référence</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    {% for mouvement in mouvements %}
+                    <tr class="hover:bg-gray-50">
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            {{ mouvement.date|date:"d/m/Y H:i" }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="px-2 py-1 text-xs rounded-full
+                                       {% if mouvement.quantite > 0 %}bg-green-100 text-green-800
+                                       {% else %}bg-red-100 text-red-800{% endif %}">
+                                {{ mouvement.get_raison_display }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            {% if mouvement.quantite > 0 %}+{% endif %}{{ mouvement.quantite }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            {{ mouvement.nouvelle_quantite }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            {{ mouvement.reference|default:"-" }}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="px-6 py-4 text-center text-gray-500">
+                            Aucun mouvement enregistré
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

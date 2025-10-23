@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+
+{% block title %}Inventaire{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="flex justify-between items-center mb-8">
+        <h1 class="text-3xl font-bold">Inventaire #{{ inventaire.id }}</h1>
+        <div class="space-x-4">
+            <form method="POST" class="inline">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="terminer">
+                <button type="submit"
+                        class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700"
+                        onclick="return confirm('Confirmer la fin de l\'inventaire ?')">
+                    Terminer l'inventaire
+                </button>
+            </form>
+            <form method="POST" class="inline">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="annuler">
+                <button type="submit"
+                        class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700"
+                        onclick="return confirm('Annuler l\'inventaire ?')">
+                    Annuler
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Barre de recherche -->
+    <div class="mb-6">
+        <input type="text" 
+               id="searchInventaire" 
+               class="w-full p-3 rounded-lg border" 
+               placeholder="Rechercher un produit..."
+               onkeyup="filterInventaire()">
+    </div>
+
+    <!-- Liste des produits -->
+    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+        <form method="POST" class="divide-y divide-gray-200">
+            {% csrf_token %}
+            <table class="min-w-full">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Produit</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stock théorique</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stock réel</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Différence</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Commentaire</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    {% for ligne in lignes %}
+                    <tr class="hover:bg-gray-50">
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            {{ ligne.stock.produit.nom }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            {{ ligne.quantite_theorique }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <input type="number" 
+                                   name="quantite_{{ ligne.id }}" 
+                                   value="{{ ligne.quantite_reelle }}"
+                                   min="0"
+                                   class="w-24 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                                   onchange="updateDifference(this, {{ ligne.quantite_theorique }}, '{{ ligne.id }}')">
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span id="difference_{{ ligne.id }}" 
+                                  class="px-2 py-1 text-xs rounded-full
+                                  {% if ligne.difference > 0 %}bg-green-100 text-green-800
+                                  {% elif ligne.difference < 0 %}bg-red-100 text-red-800
+                                  {% else %}bg-gray-100 text-gray-800{% endif %}">
+                                {% if ligne.difference > 0 %}+{% endif %}{{ ligne.difference }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4">
+                            <input type="text" 
+                                   name="commentaire_{{ ligne.id }}" 
+                                   value="{{ ligne.commentaire|default:'' }}"
+                                   class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </form>
+    </div>
+</div>
+
+<script>
+function filterInventaire() {
+    var input = document.getElementById('searchInventaire');
+    var filter = input.value.toLowerCase();
+    var rows = document.getElementsByTagName('tr');
+
+    for (var i = 1; i < rows.length; i++) {
+        var show = false;
+        var cells = rows[i].getElementsByTagName('td');
+        if (cells.length > 0) {
+            var text = cells[0].textContent || cells[0].innerText;
+            if (text.toLowerCase().indexOf(filter) > -1) {
+                show = true;
+            }
+        }
+        rows[i].style.display = show ? '' : 'none';
+    }
+}
+
+function updateDifference(input, theorique, ligneId) {
+    var reel = parseInt(input.value) || 0;
+    var difference = reel - theorique;
+    var span = document.getElementById('difference_' + ligneId);
+    
+    // Mettre à jour le texte
+    span.textContent = difference > 0 ? '+' + difference : difference;
+    
+    // Mettre à jour la classe
+    span.className = 'px-2 py-1 text-xs rounded-full ' + 
+        (difference > 0 ? 'bg-green-100 text-green-800' :
+         difference < 0 ? 'bg-red-100 text-red-800' :
+                         'bg-gray-100 text-gray-800');
+}
+</script>
+{% endblock %}

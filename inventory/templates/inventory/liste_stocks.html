@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block title %}Liste des Stocks{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="flex justify-between items-center mb-8">
+        <h1 class="text-3xl font-bold">Liste des Stocks</h1>
+        <form action="{% url 'inventory:nouvel_inventaire' %}" method="POST" class="inline">
+            {% csrf_token %}
+            <button type="submit"
+                    class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">
+                Nouvel inventaire
+            </button>
+        </form>
+    </div>
+
+    <!-- Barre de recherche -->
+    <div class="mb-6">
+        <input type="text" 
+               id="searchStock" 
+               class="w-full p-3 rounded-lg border" 
+               placeholder="Rechercher un produit..."
+               onkeyup="filterStocks()">
+    </div>
+
+    <!-- Liste des stocks -->
+    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+                <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Produit</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stock</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Seuil</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Emplacement</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+                {% for stock in stocks %}
+                <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <a href="{% url 'inventory:detail_stock' stock.produit.id_produit %}"
+                           class="text-indigo-600 hover:text-indigo-900">
+                            {{ stock.produit.nom }}
+                        </a>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ stock.quantite }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ stock.seuil_alerte }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ stock.emplacement|default:"-" }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        {% if stock.en_rupture %}
+                            <span class="px-2 py-1 text-xs rounded-full bg-red-100 text-red-800">Rupture</span>
+                        {% elif stock.stock_faible %}
+                            <span class="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800">Stock faible</span>
+                        {% else %}
+                            <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">Normal</span>
+                        {% endif %}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                        <a href="{% url 'inventory:detail_stock' stock.produit.id_produit %}" 
+                           class="text-indigo-600 hover:text-indigo-900">Gérer</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="px-6 py-4 text-center text-gray-500">
+                        Aucun stock enregistré
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+function filterStocks() {
+    var input = document.getElementById('searchStock');
+    var filter = input.value.toLowerCase();
+    var rows = document.getElementsByTagName('tr');
+
+    for (var i = 1; i < rows.length; i++) {
+        var show = false;
+        var cells = rows[i].getElementsByTagName('td');
+        if (cells.length > 0) {
+            var text = cells[0].textContent || cells[0].innerText;
+            if (text.toLowerCase().indexOf(filter) > -1) {
+                show = true;
+            }
+        }
+        rows[i].style.display = show ? '' : 'none';
+    }
+}
+</script>
+{% endblock %}
