@@ -32,14 +32,59 @@ class LoginSerializer(serializers.Serializer):
         data['user'] = user
         return data
 
-class RegisterSerializer(serializers.ModelSerializer):
-    """Serializer pour l'inscription"""
-    password = serializers.CharField(write_only=True, min_length=6)
-    password_confirm = serializers.CharField(write_only=True, min_length=6)
-    
+from rest_framework import serializers
+from django.contrib.auth import authenticate
+from .models import User
+
+
+class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['email', 'password', 'password_confirm', 'nom', 'prenom', 'telephone']
+        fields = ('id', 'email', 'nom', 'prenom', 'role', 'telephone')
+
+
+class RegisterSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True)
+    password_confirm = serializers.CharField(write_only=True)
+
+    class Meta:
+        model = User
+        fields = ('email', 'password', 'password_confirm', 'nom', 'prenom', 'telephone')
+
+    def validate(self, data):
+        if data['password'] != data['password_confirm']:
+            raise serializers.ValidationError("Les mots de passe ne correspondent pas")
+        return data
+
+    def create(self, validated_data):
+        validated_data.pop('password_confirm')
+        password = validated_data.pop('password')
+        user = User(**validated_data)
+        user.set_password(password)
+        user.save()
+        return user
+
+
+class LoginSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    password = serializers.CharField()
+
+    def validate(self, data):
+        email = data.get('email', '')
+        password = data.get('password', '')
+        
+        if email and password:
+            user = authenticate(email=email, password=password)
+            if user:
+                if user.is_active:
+                    data['user'] = user
+                    return data
+                else:
+                    raise serializers.ValidationError('Ce compte est désactivé.')
+            else:
+                raise serializers.ValidationError('Email ou mot de passe incorrect.')
+        else:
+            raise serializers.ValidationError('Les champs email et mot de passe sont obligatoires.')
     
     def validate(self, data):
         """Validation des données"""
