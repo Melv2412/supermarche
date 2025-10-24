@@ -1,6 +1,20 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block title %}Admin - Dashboard{% endblock %}
+
+{% block extra_css %}
+<style>
+.report-card {
+  background: white;
+  transition: all 0.3s ease;
+}
+.report-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="max-w-7xl mx-auto px-4 py-6">
   <!-- En-tête Admin avec animation -->
@@ -23,6 +37,48 @@
   </div>
 
   <!-- KPIs Principaux avec animations -->
+  <!-- Section Rapports PDF -->
+  <div class="mb-8">
+    <h2 class="text-2xl font-bold text-gray-800 mb-4">📊 Rapports PDF</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Rapport Financier -->
+      <div class="report-card rounded-lg p-6 shadow hover:shadow-lg">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-semibold text-gray-800">Rapport Financier</h3>
+          <span class="text-2xl">📈</span>
+        </div>
+        <p class="text-gray-600 mb-4">Vue d'ensemble des finances du supermarché</p>
+        <a href="{% url 'reporting:financial_pdf' %}" class="btn-primary w-full text-center">
+          Générer PDF
+        </a>
+      </div>
+
+      <!-- Rapport Inventaire -->
+      <div class="report-card rounded-lg p-6 shadow hover:shadow-lg">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-semibold text-gray-800">Rapport Inventaire</h3>
+          <span class="text-2xl">📦</span>
+        </div>
+        <p class="text-gray-600 mb-4">État actuel des stocks et produits</p>
+        <a href="{% url 'reporting:inventory_pdf' %}" class="btn-primary w-full text-center">
+          Générer PDF
+        </a>
+      </div>
+
+      <!-- Rapport Commandes Fournisseurs -->
+      <div class="report-card rounded-lg p-6 shadow hover:shadow-lg">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-semibold text-gray-800">Commandes Fournisseurs</h3>
+          <span class="text-2xl">🚚</span>
+        </div>
+        <p class="text-gray-600 mb-4">Suivi des commandes et livraisons</p>
+        <a href="{% url 'reporting:supplier_orders_pdf' %}" class="btn-primary w-full text-center">
+          Générer PDF
+        </a>
+      </div>
+    </div>
+  </div>
+
   <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8">
     <div class="kpi-card animate-scale-in" style="border-left: 4px solid #10b981;">
       <div class="flex items-center justify-between mb-3">
@@ -192,9 +248,45 @@
     </div>
   </div>
 
-  <!-- Graphiques -->
+  <!-- Rapports PDF -->
   <div class="mt-8">
     <div class="card-modern animate-slide-up" style="animation-delay: 0.2s;">
+      <div class="card-header-modern">
+        <h2 class="text-xl font-semibold text-white">📑 Rapports PDF</h2>
+      </div>
+      <div class="p-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <a href="/reporting/pdf/financial/" class="report-card p-4 rounded-lg border border-gray-200 hover:shadow-lg transition-shadow">
+            <div class="flex items-center mb-2">
+              <span class="text-2xl mr-2">📈</span>
+              <h3 class="font-semibold">Rapport Financier</h3>
+            </div>
+            <p class="text-sm text-gray-600">État financier global</p>
+          </a>
+          
+          <a href="/reporting/pdf/inventory/" class="report-card p-4 rounded-lg border border-gray-200 hover:shadow-lg transition-shadow">
+            <div class="flex items-center mb-2">
+              <span class="text-2xl mr-2">📦</span>
+              <h3 class="font-semibold">Rapport d'Inventaire</h3>
+            </div>
+            <p class="text-sm text-gray-600">État des stocks</p>
+          </a>
+          
+          <a href="/reporting/pdf/employee-schedule/" class="report-card p-4 rounded-lg border border-gray-200 hover:shadow-lg transition-shadow">
+            <div class="flex items-center mb-2">
+              <span class="text-2xl mr-2">👥</span>
+              <h3 class="font-semibold">Planning Employés</h3>
+            </div>
+            <p class="text-sm text-gray-600">Planning du personnel</p>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Graphiques -->
+  <div class="mt-8">
+    <div class="card-modern animate-slide-up" style="animation-delay: 0.3s;">
       <div class="card-header-modern">
         <h2 class="text-xl font-semibold text-white">📊 Vue d'Ensemble des Ventes</h2>
       </div>

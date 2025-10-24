@@ -92,7 +92,23 @@
     </div>
 </div>
 {% endblock %}
+
 {% block extra_js %}
-<script src="{% static 'js/suppliers.js' %}?v=2"></script>
-<script>Suppliers.initSupplierForm();</script>
+<script src="{% static 'js/suppliers.js' %}?v={{ timestamp }}"></script>
+<script>
+  // Attendre que le DOM ET le script suppliers.js soient chargés
+  (function initPage() {
+    if (typeof window.App !== 'undefined' && window.App.Suppliers) {
+      // Le script est chargé, on peut initialiser
+      document.addEventListener('DOMContentLoaded', function() {
+        console.log('Initialisation du formulaire fournisseur...');
+        App.Suppliers.initSupplierForm();
+      });
+    } else {
+      // Le script n'est pas encore chargé, on réessaie dans 50ms
+      console.log('En attente du chargement de App.Suppliers...');
+      setTimeout(initPage, 50);
+    }
+  })();
+</script>
 {% endblock %}

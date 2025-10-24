@@ -11,6 +11,7 @@ class Supplier(models.Model):
     telephone = models.CharField(max_length=20)
     adresse = models.TextField()
     ville = models.CharField(max_length=100)
+    
     pays = models.CharField(max_length=100, default='Côte d\'Ivoire')
     
     # Conditions commerciales
@@ -79,7 +80,7 @@ class PurchaseOrder(models.Model):
     notes = models.TextField(blank=True, null=True)
     
     class Meta:
-        db_table = 'commandes_fournisseurs'
+        db_table = 'purchase_orders'
         verbose_name = 'Commande fournisseur'
         verbose_name_plural = 'Commandes fournisseurs'
         ordering = ['-date_commande']
@@ -114,7 +115,7 @@ class PurchaseOrderLine(models.Model):
     )
     
     class Meta:
-        db_table = 'lignes_commandes_fournisseurs'
+        db_table = 'purchase_order_lines'
         verbose_name = 'Ligne de commande'
         verbose_name_plural = 'Lignes de commande'
     
@@ -150,7 +151,7 @@ class Delivery(models.Model):
     receptionnaire = models.CharField(max_length=100)
     
     class Meta:
-        db_table = 'livraisons'
+        db_table = 'supplier_deliveries'
         verbose_name = 'Livraison'
         verbose_name_plural = 'Livraisons'
         ordering = ['-date_livraison']

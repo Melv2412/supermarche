@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Rapport d'Inventaire</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 40px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .company-name {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .report-title {
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+        .section {
+            margin-bottom: 30px;
+        }
+        .section-title {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: #2c5282;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f5f5f5;
+        }
+        .alert {
+            color: #e53e3e;
+            font-weight: bold;
+        }
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="company-name">SUPERMARCHÉ AGL</div>
+        <div class="report-title">Rapport d'Inventaire</div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">Produits en Stock Faible</div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Produit</th>
+                    <th>Catégorie</th>
+                    <th>Quantité</th>
+                    <th>Seuil Minimal</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for stock in low_stock_products %}
+                <tr {% if stock.quantity == 0 %}class="alert"{% endif %}>
+                    <td>{{ stock.product.name }}</td>
+                    <td>{{ stock.product.category.name }}</td>
+                    <td>{{ stock.quantity }}</td>
+                    <td>{{ stock.min_threshold }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="section">
+        <div class="section-title">Résumé par Catégorie</div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Catégorie</th>
+                    <th>Nombre de Produits</th>
+                    <th>Valeur Totale</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for category in categories %}
+                <tr>
+                    <td>{{ category.name }}</td>
+                    <td>{{ category.product_set.count }}</td>
+                    <td>{{ category.total_value|floatformat:2 }} €</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="footer">
+        Généré le {{ generated_at|date:"d/m/Y H:i" }}
+        <br>
+        Total des produits : {{ total_products }}
+        <br>
+        Page 1/1
+    </div>
+</body>
+</html>

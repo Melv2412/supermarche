@@ -10,14 +10,14 @@
         <h1 class="text-3xl font-bold gradient-text-violet">🚚 Fournisseurs</h1>
         <p class="text-gray-600 mt-1">Gestion des fournisseurs et commandes</p>
       </div>
-      <button class="btn-primary" onclick="Suppliers.gotoSupplierForm();return false;">
+      <button class="btn-primary" onclick="if(window.App && window.App.Suppliers) { App.Suppliers.gotoSupplierForm(); } else { window.location.href='/suppliers/create/'; } return false;">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
         </svg>
         Nouveau fournisseur
       </button>
     </div>
-    
+   
     <!-- Filtres -->
     <div class="flex flex-wrap gap-4">
       <div class="flex-1 min-w-64">
@@ -28,7 +28,7 @@
       </div>
     </div>
   </div>
-
+  
   <!-- Tableau -->
   <div class="card-modern animate-slide-up">
     <table class="table-modern">
@@ -42,12 +42,34 @@
           <th class="text-center">Actions</th>
         </tr>
       </thead>
-      <tbody id="sup-tbody"></tbody>
+      <tbody id="sup-tbody">
+        <tr>
+          <td colspan="6" class="text-center py-8 text-gray-500">
+            Chargement des fournisseurs...
+          </td>
+        </tr>
+      </tbody>
     </table>
   </div>
 </div>
 {% endblock %}
+
 {% block extra_js %}
-<script src="{% static 'js/suppliers.js' %}?v=2"></script>
-<script>Suppliers.initSupplierList();</script>
+<script src="{% static 'js/suppliers.js' %}?v={{ timestamp }}"></script>
+<script>
+  // Attendre que le DOM ET le script suppliers.js soient chargés
+  (function initPage() {
+    if (typeof window.App !== 'undefined' && window.App.Suppliers) {
+      // Le script est chargé, on peut initialiser
+      document.addEventListener('DOMContentLoaded', function() {
+        console.log('Initialisation de la liste des fournisseurs...');
+        App.Suppliers.initSupplierList();
+      });
+    } else {
+      // Le script n'est pas encore chargé, on réessaie dans 50ms
+      console.log('En attente du chargement de App.Suppliers...');
+      setTimeout(initPage, 50);
+    }
+  })();
+</script>
 {% endblock %}

@@ -2,7 +2,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import get_object_or_404
-from django.db.models import Sum, Count, Avg
+from django.db.models import Sum, Count, Avg, Value, DecimalField
 from datetime import datetime, timedelta
 from django.db import transaction
 from products.models import Product, StockMovement
@@ -209,8 +209,8 @@ def sales_report(request):
     paiements = Payment.objects.filter(
         id_transaction__in=transactions
     ).values('mode_paiement').annotate(
-        total=Sum('montant'),
-        pourcentage=Sum('montant') * 100.0 / stats['chiffre_affaires'] if stats['chiffre_affaires'] > 0 else 0
+        total=Sum('montant_final'),
+        pourcentage=Sum('montant_final') * 100.0 / Value(stats['chiffre_affaires'], output_field=DecimalField())
     )
     
     return Response({
