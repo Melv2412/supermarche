@@ -15,4 +15,5 @@ urlpatterns = [
     
     # Online Shopping
     path('checkout/', api_views.online_checkout, name='api_online_checkout'),  # POST /api/sales/checkout/
+    
 ]

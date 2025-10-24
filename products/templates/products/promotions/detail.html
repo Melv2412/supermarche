@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load product_extras %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <!-- En-tête avec actions -->
+    <div class="flex justify-between items-center mb-6">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-800">{{ promotion.nom }}</h1>
+            <p class="text-gray-600">{{ promotion.get_type_promotion_display }}</p>
+        </div>
+        <div class="space-x-4">
+            <a href="{% url 'products:modifier_promotion' promotion.id_promotion %}" 
+               class="bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded">
+                Modifier
+            </a>
+            <a href="{% url 'products:liste_promotions' %}" 
+               class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded">
+                Retour
+            </a>
+        </div>
+    </div>
+
+    <!-- Informations générales -->
+    <div class="bg-white rounded-lg shadow mb-8">
+        <div class="border-b border-gray-200 p-4">
+            <h2 class="text-xl font-semibold text-gray-700">Détails de la promotion</h2>
+        </div>
+        <div class="p-6">
+            <dl class="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6">
+                <div>
+                    <dt class="text-sm font-medium text-gray-500">Type de promotion</dt>
+                    <dd class="mt-1 text-lg text-gray-900">{{ promotion.get_type_promotion_display }}</dd>
+                </div>
+                <div>
+                    <dt class="text-sm font-medium text-gray-500">Valeur</dt>
+                    <dd class="mt-1 text-lg text-gray-900">
+                        {% if promotion.type_promotion == 'pourcentage' %}
+                            {{ promotion.valeur }}%
+                        {% else %}
+                            {{ promotion.valeur }} FCFA
+                        {% endif %}
+                    </dd>
+                </div>
+                <div>
+                    <dt class="text-sm font-medium text-gray-500">Date de début</dt>
+                    <dd class="mt-1 text-lg text-gray-900">{{ promotion.date_debut|date:"d/m/Y" }}</dd>
+                </div>
+                <div>
+                    <dt class="text-sm font-medium text-gray-500">Date de fin</dt>
+                    <dd class="mt-1 text-lg text-gray-900">{{ promotion.date_fin|date:"d/m/Y" }}</dd>
+                </div>
+                <div class="md:col-span-2">
+                    <dt class="text-sm font-medium text-gray-500">Description</dt>
+                    <dd class="mt-1 text-gray-900">{{ promotion.description|linebreaks }}</dd>
+                </div>
+            </dl>
+        </div>
+    </div>
+
+    <!-- Produits en promotion -->
+    <div class="bg-white rounded-lg shadow mb-8">
+        <div class="border-b border-gray-200 p-4">
+            <h2 class="text-xl font-semibold text-gray-700">Produits concernés</h2>
+        </div>
+        <div class="p-4">
+            {% if produits_en_promo %}
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {% for produit in produits_en_promo %}
+                <div class="bg-gray-50 rounded-lg p-4">
+                    {% if produit.image %}
+                    <img src="{{ produit.image.url }}" alt="{{ produit.nom }}" 
+                         class="w-full h-48 object-cover rounded-lg mb-4">
+                    {% endif %}
+                    <h3 class="font-semibold text-lg">{{ produit.nom }}</h3>
+                    <p class="text-gray-600">Prix normal: {{ produit.prix_unitaire }} FCFA</p>
+                    <p class="text-green-600 font-semibold">
+                        Prix promo: {{ produit.prix_unitaire|calc_promotion_price:promotion }} FCFA
+                    </p>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p class="text-gray-500 text-center py-4">Aucun produit spécifique en promotion.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Catégories en promotion -->
+    <div class="bg-white rounded-lg shadow">
+        <div class="border-b border-gray-200 p-4">
+            <h2 class="text-xl font-semibold text-gray-700">Catégories concernées</h2>
+        </div>
+        <div class="p-4">
+            {% if categories_en_promo %}
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                {% for categorie in categories_en_promo %}
+                <div class="bg-gray-50 rounded-lg p-4 text-center">
+                    <h3 class="font-semibold">{{ categorie.nom }}</h3>
+                    <p class="text-sm text-gray-600">{{ categorie.produits.count }} produits</p>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p class="text-gray-500 text-center py-4">Aucune catégorie en promotion.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,788 @@
+const Sales = {
+    // État de l'application
+    state: {
+        cart: [],
+        currentTransaction: null,
+
+    products: [],  formatPrice(v) {
+
+    promotions: [],    const amount = (v || 0).toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+    customers: []    return amount + ' FCFA';
+
+  },  },
+
+
+
+  // Fonctions utilitaires  // State
+
+  fmt(v) {  const state = {
+
+    return (v || 0).toLocaleString('fr-FR');    cart: [],
+
+  },    currentTransaction: null,
+
+      products: [],
+
+  formatPrice(v) {    promotions: [],
+
+    const amount = (v || 0).toLocaleString('fr-FR', {     customers: []
+
+      minimumFractionDigits: 2,   };
+
+      maximumFractionDigits: 2 
+
+    });  // Navigation
+
+    return amount + ' FCFA';  function gotoPOS(){ window.location.href = '/sales/pos/'; }
+
+  },  function gotoDashboard(){ window.location.href = '/sales/'; }
+
+  function gotoPOSInterface(){ window.location.href = '/sales/pos/interface/'; }
+
+  // Navigation
+
+  gotoPOS() {  // Load data
+
+    window.location.href = '/sales/pos/';  async function loadTransactions(){ 
+
+  },    const res = await fetch('/api/sales/transactions/'); 
+
+      return await res.json(); 
+
+  gotoDashboard() {  }
+
+    window.location.href = '/sales/';  async function loadProducts(){ 
+
+  },    const res = await fetch('/api/products/'); 
+
+      return await res.json(); 
+
+  gotoPOSInterface() {  }
+
+    window.location.href = '/sales/pos/interface/';  async function loadPromotions(){ 
+
+  },    const res = await fetch('/api/promotions/'); 
+
+    return await res.json(); 
+
+  // Chargement des données  }
+
+  async loadTransactions() {  async function loadCustomers(){ 
+
+    const res = await fetch('/api/sales/transactions/');    const res = await fetch('/api/customers/'); 
+
+    return await res.json();    return await res.json(); 
+
+  },  }
+
+    async function loadCaisses(){ 
+
+  async loadProducts() {    const res = await fetch('/static/data/caisses.json'); 
+
+    const res = await fetch('/api/products/');    return await res.json(); 
+
+    return await res.json();  }
+
+  },
+
+    // Dashboard
+
+  async loadPromotions() {  async function initDashboard(){
+
+    const res = await fetch('/api/promotions/');    try{
+
+    return await res.json();      const [transactions, products, customers] = await Promise.all([
+
+  },        loadTransactions(), loadProducts(), loadCustomers()
+
+        ]);
+
+  async loadCustomers() {
+
+    const res = await fetch('/api/customers/');      // Merge data for display
+
+    return await res.json();      const transactionsWithDetails = transactions.map(t => {
+
+  },        const customer = customers.find(c => c.id === t.id_client);
+
+          const totalLignes = t.lignes.reduce((sum, l) => sum + l.sous_total, 0);
+
+  async loadCurrentCashier() {        return {
+
+    const res = await fetch('/api/employees/current/');          ...t,
+
+    return await res.json();          customer: customer?.name || 'Client anonyme',
+
+  },          total_lignes: totalLignes
+
+        };
+
+  // Gestion du panier      });
+
+  addToCart(productId) {
+
+    const product = this.state.products.find(p => p.id_produit === productId);      renderDashboard(transactionsWithDetails);
+
+    if (!product) return;      
+
+      // KPIs
+
+    const existingItem = this.state.cart.find(item => item.id_produit === productId);      const totalRevenue = transactions.reduce((sum, t) => sum + t.montant_net, 0);
+
+    if (existingItem) {      const totalTransactions = transactions.length;
+
+      existingItem.quantite += 1;      const avgTicket = totalTransactions ? totalRevenue / totalTransactions : 0;
+
+      existingItem.sous_total = existingItem.prix_unitaire * existingItem.quantite;      const todayTransactions = transactions.filter(t => 
+
+    } else {        new Date(t.date_transaction).toDateString() === new Date().toDateString()
+
+      this.state.cart.push({      ).length;
+
+        id_produit: productId,
+
+        nom: product.nom,  var kpr = document.getElementById('kpi-revenue'); if (kpr) kpr.textContent = formatPrice(totalRevenue);
+
+        prix_unitaire: product.prix_unitaire,  var kpt = document.getElementById('kpi-transactions'); if (kpt) kpt.textContent = fmt(totalTransactions);
+
+        quantite: 1,  var kpa = document.getElementById('kpi-avg-ticket'); if (kpa) kpa.textContent = formatPrice(avgTicket);
+
+        sous_total: product.prix_unitaire  var kpd = document.getElementById('kpi-today'); if (kpd) kpd.textContent = fmt(todayTransactions);
+
+      });
+
+    }    }catch(e){ console.error('Sales dashboard error:', e); }
+
+      }
+
+    this.updateCartTotals();
+
+    this.renderCart();  function renderDashboard(transactions){
+
+  },    const tbody = document.getElementById('sales-tbody');
+
+    if(!tbody) return;
+
+  removeFromCart(productId) {    
+
+    this.state.cart = this.state.cart.filter(item => item.id_produit !== productId);    tbody.innerHTML = '';
+
+    this.updateCartTotals();    transactions.forEach(t => {
+
+    this.renderCart();      const tr = document.createElement('tr');
+
+  },      tr.innerHTML = `
+
+        <td>${t.numero_ticket}</td>
+
+  updateCartQuantity(productId, quantity) {        <td>${new Date(t.date_transaction).toLocaleDateString('fr-FR')}</td>
+
+    const item = this.state.cart.find(item => item.id_produit === productId);        <td>${t.customer}</td>
+
+    if (item) {        <td class="text-center">${t.lignes.length}</td>
+
+      if (quantity <= 0) {        <td class="text-end">${formatPrice(t.montant_brut)}</td>
+
+        this.removeFromCart(productId);        <td class="text-end">${formatPrice(t.montant_remises)}</td>
+
+      } else {        <td class="text-end">${formatPrice(t.montant_net)}</td>
+
+        item.quantite = quantity;        <td><span class="badge bg-${t.statut === 'terminee' ? 'success' : 'warning'}">${t.statut}</span></td>
+
+        item.sous_total = item.prix_unitaire * quantity;      `;
+
+        this.updateCartTotals();      tbody.appendChild(tr);
+
+        this.renderCart();    });
+
+      }  }
+
+    }
+
+  },  // Dashboard Caisse
+
+  async function loadCurrentCashier() {
+
+  updateCartTotals() {    const res = await fetch('/api/employees/current/');
+
+    const montantBrut = this.state.cart.reduce((sum, item) => sum + item.sous_total, 0);    return await res.json();
+
+    const montantRemises = 0; // À calculer selon les promotions  }
+
+    const montantNet = montantBrut - montantRemises;
+
+    const montantTVA = montantNet * 0.20; // 20% TVA  async function initPOSDashboard(){
+
+    try {
+
+    this.state.cartTotals = {      checkInit();
+
+      montant_brut: montantBrut,      const [transactions, cashier] = await Promise.all([
+
+      montant_remises: montantRemises,        loadTransactions(),
+
+      montant_net: montantNet,        loadCurrentCashier()
+
+      montant_tva: montantTVA      ]);
+
+    };
+
+  },      // Filtrer les transactions du caissier courant
+
+      const cashierTransactions = transactions.filter(t => t.id_caissier === cashier.id);
+
+  clearCart() {
+
+    this.state.cart = [];      // Date du jour (sans l'heure)
+
+    this.state.cartTotals = null;      const today = new Date();
+
+    this.renderCart();      today.setHours(0, 0, 0, 0);
+
+    document.getElementById('pos-customer')?.value = '';
+
+    document.getElementById('pos-promotion')?.value = '';      // Ventes du jour
+
+    document.getElementById('pos-payment-method')?.value = '';      const todayTransactions = cashierTransactions.filter(t => {
+
+  },        const transDate = new Date(t.date_transaction);
+
+        transDate.setHours(0, 0, 0, 0);
+
+  // Rendu de l'interface        return transDate.getTime() === today.getTime();
+
+  renderProducts(products) {      });
+
+    const tbody = document.getElementById('pos-products-tbody');      
+
+    if (!tbody) return;      // Calculs
+
+          const todaySales = todayTransactions.reduce((sum, t) => sum + t.montant_net, 0);
+
+    tbody.innerHTML = '';      const totalTransactions = cashierTransactions.length;
+
+    products.forEach(p => {      const averageBasket = totalTransactions > 0 
+
+      const tr = document.createElement('tr');        ? cashierTransactions.reduce((sum, t) => sum + t.montant_net, 0) / totalTransactions 
+
+      tr.innerHTML = `        : 0;
+
+        <td>${p.nom}</td>      const totalItems = cashierTransactions.reduce((sum, t) => 
+
+        <td class="text-end">${this.formatPrice(p.prix_unitaire)}</td>        sum + t.lignes.reduce((s, l) => s + l.quantite, 0), 0);
+
+        <td class="text-center">
+
+          <button class="btn btn-sm btn-primary" onclick="Sales.addToCart(${p.id_produit})">      // Mise à jour des KPIs
+
+            <i class="fas fa-plus"></i>      document.getElementById('kpi-sales')?.textContent = formatPrice(todaySales);
+
+          </button>      document.getElementById('kpi-transactions')?.textContent = fmt(totalTransactions);
+
+        </td>      document.getElementById('kpi-average')?.textContent = formatPrice(averageBasket);
+
+      `;      document.getElementById('kpi-items')?.textContent = fmt(totalItems);
+
+      tbody.appendChild(tr);
+
+    });      // Ajout du nom du caissier
+
+  },      document.getElementById('cashier-name')?.textContent = cashier.nom;
+
+
+
+  renderCart() {      // Affichage des transactions récentes
+
+    const tbody = document.getElementById('pos-cart-tbody');      renderRecentTransactions(cashierTransactions.slice(-5));
+
+    if (!tbody) return;
+
+        } catch(e) { 
+
+    tbody.innerHTML = '';      console.error('Dashboard error:', e); 
+
+    this.state.cart.forEach(item => {    }
+
+      const tr = document.createElement('tr');  }
+
+      tr.innerHTML = `
+
+        <td>${item.nom}</td>  function renderRecentTransactions(transactions) {
+
+        <td class="text-center">    const container = document.getElementById('recent-transactions');
+
+          <div class="input-group input-group-sm">    if (!container) return;
+
+            <button class="btn btn-outline-secondary" onclick="Sales.updateCartQuantity(${item.id_produit}, ${item.quantite - 1})">-</button>
+
+            <input type="number" class="form-control text-center" value="${item.quantite}"     const items = transactions.map(t => `
+
+                   onchange="Sales.updateCartQuantity(${item.id_produit}, parseInt(this.value))" min="1">      <div class="bg-white p-4 rounded-lg shadow-sm">
+
+            <button class="btn btn-outline-secondary" onclick="Sales.updateCartQuantity(${item.id_produit}, ${item.quantite + 1})">+</button>        <div class="flex justify-between items-center">
+
+          </div>          <div>
+
+        </td>            <div class="font-semibold">Ticket #${t.numero_ticket}</div>
+
+        <td class="text-end">${this.formatPrice(item.prix_unitaire)}</td>            <div class="text-sm text-gray-600">${new Date(t.date_transaction).toLocaleString('fr-FR')}</div>
+
+        <td class="text-end">${this.formatPrice(item.sous_total)}</td>          </div>
+
+        <td class="text-center">          <div class="text-right">
+
+          <button class="btn btn-sm btn-outline-danger" onclick="Sales.removeFromCart(${item.id_produit})">            <div class="text-lg font-bold">${formatPrice(t.montant_net)}</div>
+
+            <i class="fas fa-trash"></i>            <div class="text-sm text-gray-600">${t.lignes.length} articles</div>
+
+          </button>          </div>
+
+        </td>        </div>
+
+      `;      </div>
+
+      tbody.appendChild(tr);    `).join('');
+
+    });
+
+    container.innerHTML = items;
+
+    // Update totals  }
+
+    if (this.state.cartTotals) {
+
+      document.getElementById('pos-montant-brut')?.textContent = this.formatPrice(this.state.cartTotals.montant_brut);  // POS Interface
+
+      document.getElementById('pos-montant-remises')?.textContent = this.formatPrice(this.state.cartTotals.montant_remises);  async function initPOSInterface(){
+
+      document.getElementById('pos-montant-net')?.textContent = this.formatPrice(this.state.cartTotals.montant_net);    checkInit();
+
+      document.getElementById('pos-montant-tva')?.textContent = this.formatPrice(this.state.cartTotals.montant_tva);    try{
+
+    }      const [products, promotions, customers, caisses] = await Promise.all([
+
+  },        loadProducts(), loadPromotions(), loadCustomers(), loadCaisses()
+
+      ]);
+
+  // Initialisation du tableau de bord
+
+  async initPOSDashboard() {      state.products = products;
+
+    try {      state.promotions = promotions;
+
+      console.log('Chargement des données du tableau de bord...');      state.customers = customers;
+
+      const [transactions, cashier] = await Promise.all([
+
+        this.loadTransactions(),      // Render products
+
+        this.loadCurrentCashier()      renderProducts(products);
+
+      ]);      
+
+      // Render cart
+
+      console.log('Données reçues:', { transactions, cashier });      renderCart();
+
+      
+
+      // Filtrer les transactions du caissier courant      // Render customers
+
+      const cashierTransactions = transactions.filter(t => t.id_caissier === cashier.id);      renderCustomers(customers);
+
+      console.log('Transactions du caissier:', cashierTransactions);      
+
+      // Render promotions
+
+      // Date du jour (sans l'heure)      renderPromotions(promotions);
+
+      const today = new Date();
+
+      today.setHours(0, 0, 0, 0);      // Event listeners
+
+      document.getElementById('pos-search')?.addEventListener('input', (e) => {
+
+      // Ventes du jour        const query = e.target.value.toLowerCase();
+
+      const todayTransactions = cashierTransactions.filter(t => {        const filtered = products.filter(p => p.nom.toLowerCase().includes(query));
+
+        const transDate = new Date(t.date_transaction);        renderProducts(filtered);
+
+        transDate.setHours(0, 0, 0, 0);      });
+
+        return transDate.getTime() === today.getTime();
+
+      });      document.getElementById('pos-pay')?.addEventListener('click', processPayment);
+
+      console.log('Transactions du jour:', todayTransactions);      document.getElementById('pos-clear')?.addEventListener('click', clearCart);
+
+      
+
+      // Calculs    }catch(e){ console.error('POS interface error:', e); }
+
+      const todaySales = todayTransactions.reduce((sum, t) => sum + t.montant_net, 0);  }
+
+      const totalTransactions = cashierTransactions.length;
+
+      const averageBasket = totalTransactions > 0   function renderProducts(products){
+
+        ? cashierTransactions.reduce((sum, t) => sum + t.montant_net, 0) / totalTransactions     const tbody = document.getElementById('pos-products-tbody');
+
+        : 0;    if(!tbody) return;
+
+      const totalItems = cashierTransactions.reduce((sum, t) =>     
+
+        sum + t.lignes.reduce((s, l) => s + l.quantite, 0), 0);    tbody.innerHTML = '';
+
+    products.forEach(p => {
+
+      console.log('KPIs calculés:', {      const tr = document.createElement('tr');
+
+        todaySales,      tr.innerHTML = `
+
+        totalTransactions,        <td>${p.nom}</td>
+
+        averageBasket,        <td class="text-end">${formatPrice(p.prix_unitaire)}</td>
+
+        totalItems        <td class="text-center">
+
+      });          <button class="btn btn-sm btn-primary" onclick="Sales.addToCart(${p.id_produit})">
+
+            <i class="fas fa-plus"></i>
+
+      // Mise à jour des KPIs          </button>
+
+      document.getElementById('kpi-sales')?.textContent = this.formatPrice(todaySales);        </td>
+
+      document.getElementById('kpi-transactions')?.textContent = this.fmt(totalTransactions);      `;
+
+      document.getElementById('kpi-average')?.textContent = this.formatPrice(averageBasket);      tbody.appendChild(tr);
+
+      document.getElementById('kpi-items')?.textContent = this.fmt(totalItems);    });
+
+  }
+
+      // Ajout du nom du caissier
+
+      document.getElementById('cashier-name')?.textContent = cashier.nom;  function addToCart(productId){
+
+      console.log('Dashboard initialisé avec succès');    const product = state.products.find(p => p.id_produit === productId);
+
+    } catch(e) {     if(!product) return;
+
+      console.error('Dashboard error:', e);
+
+      alert('Erreur lors du chargement des données');    const existingItem = state.cart.find(item => item.id_produit === productId);
+
+    }    if(existingItem){
+
+  },      existingItem.quantite += 1;
+
+    } else {
+
+  // Initialisation de l'interface POS      state.cart.push({
+
+  async initPOSInterface() {        id_produit: productId,
+
+    try {        nom: product.nom,
+
+      console.log('Initialisation de l\'interface POS...');        prix_unitaire: product.prix_unitaire,
+
+      const [products, promotions, customers] = await Promise.all([        quantite: 1,
+
+        this.loadProducts(),        sous_total: product.prix_unitaire
+
+        this.loadPromotions(),      });
+
+        this.loadCustomers()    }
+
+      ]);    
+
+    updateCartTotals();
+
+      this.state.products = products;    renderCart();
+
+      this.state.promotions = promotions;  }
+
+      this.state.customers = customers;
+
+  function removeFromCart(productId){
+
+      console.log('Données chargées:', {    state.cart = state.cart.filter(item => item.id_produit !== productId);
+
+        products: products.length,    updateCartTotals();
+
+        promotions: promotions.length,    renderCart();
+
+        customers: customers.length  }
+
+      });
+
+  function updateCartQuantity(productId, quantity){
+
+      // Rendu initial    const item = state.cart.find(item => item.id_produit === productId);
+
+      this.renderProducts(products);    if(item){
+
+      this.renderCart();      if(quantity <= 0){
+
+        removeFromCart(productId);
+
+      // Event listeners      } else {
+
+      document.getElementById('pos-search')?.addEventListener('input', (e) => {        item.quantite = quantity;
+
+        const query = e.target.value.toLowerCase();        item.sous_total = item.prix_unitaire * quantity;
+
+        const filtered = products.filter(p => p.nom.toLowerCase().includes(query));        updateCartTotals();
+
+        this.renderProducts(filtered);        renderCart();
+
+      });      }
+
+    }
+
+      document.getElementById('pos-clear')?.addEventListener('click', () => this.clearCart());  }
+
+      document.getElementById('pos-pay')?.addEventListener('click', () => this.processPayment());
+
+  function updateCartTotals(){
+
+      console.log('Interface POS initialisée avec succès');    const montantBrut = state.cart.reduce((sum, item) => sum + item.sous_total, 0);
+
+    } catch(e) {    const montantRemises = 0; // À calculer selon les promotions
+
+      console.error('POS interface error:', e);    const montantNet = montantBrut - montantRemises;
+
+      alert('Erreur lors du chargement des données');    const montantTVA = montantNet * 0.20; // 20% TVA
+
+    }
+
+  },    state.cartTotals = {
+
+      montant_brut: montantBrut,
+
+  // Traitement du paiement      montant_remises: montantRemises,
+
+  async processPayment() {      montant_net: montantNet,
+
+    try {      montant_tva: montantTVA
+
+      if (this.state.cart.length === 0) {    };
+
+        alert('Le panier est vide');  }
+
+        return;
+
+      }  function renderCart(){
+
+    const tbody = document.getElementById('pos-cart-tbody');
+
+      const paymentMethod = document.getElementById('pos-payment-method')?.value;    if(!tbody) return;
+
+      if (!paymentMethod) {    
+
+        alert('Veuillez sélectionner un mode de paiement');    tbody.innerHTML = '';
+
+        return;    state.cart.forEach(item => {
+
+      }      const tr = document.createElement('tr');
+
+      tr.innerHTML = `
+
+      const transactionData = {        <td>${item.nom}</td>
+
+        id_client: document.getElementById('pos-customer')?.value || null,        <td class="text-center">
+
+        id_promotion: document.getElementById('pos-promotion')?.value || null,          <div class="input-group input-group-sm">
+
+        mode_paiement: paymentMethod,            <button class="btn btn-outline-secondary" onclick="Sales.updateCartQuantity(${item.id_produit}, ${item.quantite - 1})">-</button>
+
+        lignes: this.state.cart.map(item => ({            <input type="number" class="form-control text-center" value="${item.quantite}" 
+
+          id_produit: item.id_produit,                   onchange="Sales.updateCartQuantity(${item.id_produit}, parseInt(this.value))" min="1">
+
+          quantite: item.quantite,            <button class="btn btn-outline-secondary" onclick="Sales.updateCartQuantity(${item.id_produit}, ${item.quantite + 1})">+</button>
+
+          prix_unitaire: item.prix_unitaire,          </div>
+
+          sous_total: item.sous_total        </td>
+
+        })),        <td class="text-end">${formatPrice(item.prix_unitaire)}</td>
+
+        montant_brut: this.state.cartTotals.montant_brut,        <td class="text-end">${formatPrice(item.sous_total)}</td>
+
+        montant_remises: this.state.cartTotals.montant_remises,        <td class="text-center">
+
+        montant_net: this.state.cartTotals.montant_net,          <button class="btn btn-sm btn-outline-danger" onclick="Sales.removeFromCart(${item.id_produit})">
+
+        montant_tva: this.state.cartTotals.montant_tva            <i class="fas fa-trash"></i>
+
+      };          </button>
+
+        </td>
+
+      const response = await fetch('/api/sales/transactions/', {      `;
+
+        method: 'POST',      tbody.appendChild(tr);
+
+        headers: {    });
+
+          'Content-Type': 'application/json',
+
+          'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]')?.value || ''    // Update totals
+
+        },    if(state.cartTotals){
+
+        body: JSON.stringify(transactionData)      document.getElementById('pos-montant-brut')?.textContent = formatPrice(state.cartTotals.montant_brut);
+
+      });      document.getElementById('pos-montant-remises')?.textContent = formatPrice(state.cartTotals.montant_remises);
+
+      document.getElementById('pos-montant-net')?.textContent = formatPrice(state.cartTotals.montant_net);
+
+      if (response.ok) {      document.getElementById('pos-montant-tva')?.textContent = formatPrice(state.cartTotals.montant_tva);
+
+        const result = await response.json();    }
+
+        alert(`Transaction réussie !\nTicket : ${result.numero_ticket}\nTotal : ${this.formatPrice(result.montant_net)}`);  }
+
+        this.clearCart();
+
+        // Rafraîchir les KPIs  function renderCustomers(customers){
+
+        await this.initPOSDashboard();    const select = document.getElementById('pos-customer');
+
+      } else {    if(!select) return;
+
+        const error = await response.text();    
+
+        alert('Erreur lors du paiement : ' + error);    select.innerHTML = '<option value="">Client anonyme</option>';
+
+      }    customers.forEach(c => {
+
+    } catch (e) {      const opt = document.createElement('option');
+
+      console.error('Payment error:', e);      opt.value = c.id;
+
+      alert('Erreur lors du traitement du paiement');      opt.textContent = `${c.name} (${c.points} pts)`;
+
+    }      select.appendChild(opt);
+
+  }    });
+
+};  }
+
+
+
+// Exposer l'objet Sales globalement  function renderPromotions(promotions){
+
+window.Sales = Sales;    const select = document.getElementById('pos-promotion');
+    if(!select) return;
+    
+    select.innerHTML = '<option value="">Aucune promotion</option>';
+    promotions.filter(p => p.est_active).forEach(p => {
+      const opt = document.createElement('option');
+      opt.value = p.id_promotion;
+      opt.textContent = `${p.nom} (${p.code})`;
+      select.appendChild(opt);
+    });
+  }
+
+  async function processPayment(){
+    if(state.cart.length === 0){
+      alert('Le panier est vide');
+      return;
+    }
+
+    const customerId = document.getElementById('pos-customer')?.value;
+    const promotionId = document.getElementById('pos-promotion')?.value;
+    const paymentMethod = document.getElementById('pos-payment-method')?.value;
+
+    if(!paymentMethod){
+      alert('Veuillez sélectionner un mode de paiement');
+      return;
+    }
+
+    // Création de la transaction via API
+    const transactionData = {
+      montant_brut: state.cartTotals.montant_brut,
+      montant_remises: state.cartTotals.montant_remises,
+      montant_net: state.cartTotals.montant_net,
+      montant_tva: state.cartTotals.montant_tva,
+      statut: 'terminee',
+      id_caisse: 1,
+      id_client: customerId || null,
+      id_caissier: Number(localStorage.getItem('user_id')) || 1,
+      lignes: state.cart.map(item => ({
+        id_produit: item.id_produit,
+        quantite: item.quantite,
+        prix_unitaire: item.prix_unitaire,
+        sous_total: item.sous_total,
+        remise_appliquee: 0
+      })),
+      modes_paiement: [{
+        type: paymentMethod,
+        montant: state.cartTotals.montant_net,
+        reference: paymentMethod === 'carte' ? `CARD-${Date.now()}` : null,
+        statut: 'valide'
+      }]
+    };
+
+    try {
+      const response = await fetch('/api/transactions/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]')?.value || '',
+          'Authorization': 'Token ' + (localStorage.getItem('token') || '')
+        },
+        body: JSON.stringify(transactionData)
+      });
+
+      if(response.ok){
+        const transaction = await response.json();
+        console.log('Transaction créée:', transaction);
+        alert(`Transaction terminée!\nTicket: ${transaction.numero_ticket}\nMontant: ${formatPrice(transaction.montant_net)}`);
+        clearCart();
+      } else {
+        const error = await response.json();
+        console.error('Erreur transaction:', error);
+        alert('Erreur lors de la création de la transaction: ' + (error.detail || 'Erreur inconnue'));
+      }
+    } catch(error) {
+      console.error('Erreur:', error);
+      alert('Erreur lors de la création de la transaction');
+    }
+  }
+
+  function clearCart(){
+    checkInit();
+    state.cart = [];
+    state.cartTotals = null;
+    renderCart();
+    document.getElementById('pos-customer')?.value = '';
+    document.getElementById('pos-promotion')?.value = '';
+    document.getElementById('pos-payment-method')?.value = '';
+  }
+
+  // Export des fonctions publiques
+  return {
+    initPOSDashboard,
+    initPOSInterface,
+    addToCart,
+    removeFromCart,
+    updateCartQuantity,
+    clearCart,
+    gotoPOS,
+    gotoDashboard,
+    gotoPOSInterface
+  };
+
+  return {
+    gotoPOS, gotoDashboard, gotoPOSInterface,
+    initDashboard, initPOSInterface,
+    addToCart, removeFromCart, updateCartQuantity, clearCart, processPayment
+  };
+})();

@@ -1,0 +1,93 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+    .navbar-item {
+        @apply relative flex items-center gap-2 px-4 py-3 text-gray-700 hover:text-violet-600 transition-all duration-300;
+    }
+
+    .navbar-item.active {
+        @apply bg-violet-100 text-violet-600 rounded-xl;
+    }
+
+    .navbar-item:hover {
+        @apply bg-violet-50 rounded-xl transform scale-105;
+    }
+
+    .bubble-notification {
+        @apply absolute -top-1 -right-1 min-w-[20px] h-5 bg-violet-500 text-white text-xs rounded-full flex items-center justify-center px-1.5 animate-pulse;
+    }
+
+    .action-card {
+        @apply flex flex-col items-center justify-center p-6 bg-white rounded-2xl shadow-lg transition-all duration-300 hover:shadow-xl hover:transform hover:-translate-y-1;
+    }
+
+    .action-card.violet {
+        @apply bg-violet-600 text-white hover:bg-violet-700;
+    }
+
+    .action-card.gold {
+        @apply bg-gold-400 text-gray-900 hover:bg-gold-500;
+    }
+
+    .stat-card {
+        @apply bg-white rounded-2xl shadow-lg p-6 transition-all duration-300 hover:shadow-xl hover:transform hover:-translate-y-1;
+    }
+
+    .module-icon {
+        @apply w-12 h-12 rounded-xl flex items-center justify-center text-2xl mb-4;
+    }
+
+    .module-sales { @apply bg-violet-100 text-violet-600; }
+    .module-products { @apply bg-gold-100 text-gold-600; }
+    .module-customers { @apply bg-green-100 text-green-600; }
+    .module-hr { @apply bg-blue-100 text-blue-600; }
+    .module-suppliers { @apply bg-gray-100 text-gray-600; }
+    .module-reports { @apply bg-indigo-100 text-indigo-600; }
+
+    .alert-bubble {
+        @apply flex items-center gap-2 p-3 rounded-xl mb-3 transition-all duration-300;
+    }
+
+    .alert-bubble.warning {
+        @apply bg-gold-50 text-gold-800 border-l-4 border-gold-500;
+    }
+
+    .alert-bubble.info {
+        @apply bg-violet-50 text-violet-800 border-l-4 border-violet-500;
+    }
+
+    .alert-bubble.success {
+        @apply bg-green-50 text-green-800 border-l-4 border-green-500;
+    }
+
+    .floating-action-button {
+        @apply fixed bottom-6 right-6 p-4 rounded-full shadow-lg transform transition-all duration-300 hover:shadow-xl hover:scale-110;
+    }
+
+    .product-card {
+        @apply bg-white rounded-2xl shadow-sm p-4 transition-all duration-300 hover:shadow-lg hover:transform hover:-translate-y-1;
+    }
+
+    .product-grid {
+        @apply grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4;
+    }
+
+    .modern-input {
+        @apply w-full px-4 py-2 rounded-xl border-2 border-gray-200 focus:border-violet-500 focus:ring focus:ring-violet-200 transition-all duration-300;
+    }
+
+    .modern-select {
+        @apply w-full px-4 py-2 rounded-xl border-2 border-gray-200 focus:border-violet-500 focus:ring focus:ring-violet-200 transition-all duration-300;
+    }
+
+    .badge {
+        @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+    }
+
+    .badge-violet { @apply bg-violet-100 text-violet-800; }
+    .badge-gold { @apply bg-gold-100 text-gold-800; }
+    .badge-success { @apply bg-green-100 text-green-800; }
+    .badge-warning { @apply bg-yellow-100 text-yellow-800; }
+}

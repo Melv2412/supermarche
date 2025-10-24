@@ -16,6 +16,7 @@ urlpatterns = [
     path('stock/movements/', api_views.stock_movements, name='api_stock_movements'),
     
     # Promotions
+    path('promotions/current/', api_views.current_promotions, name='api_current_promotions'),
     path('promotions/', api_views.promotion_list, name='api_promotion_list'),
     path('promotions/<int:pk>/', api_views.promotion_detail, name='api_promotion_detail'),
 ]

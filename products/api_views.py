@@ -3,11 +3,28 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import get_object_or_404
 from django.db import models
+from django.utils import timezone
 from .models import Category, Product, StockMovement, Promotion
 from .serializers import (
     CategorySerializer, ProductSerializer, ProductListSerializer,
     StockMovementSerializer, PromotionSerializer
 )
+
+
+# ========== PROMOTIONS ==========
+
+@api_view(['GET'])
+def current_promotions(request):
+    """Récupère toutes les promotions actives actuellement"""
+    today = timezone.now().date()
+    promotions = Promotion.objects.filter(
+        actif=True,
+        date_debut__lte=today,
+        date_fin__gte=today
+    ).order_by('-date_debut')
+    
+    serializer = PromotionSerializer(promotions, many=True)
+    return Response(serializer.data)
 
 
 # ========== CATEGORIES ==========

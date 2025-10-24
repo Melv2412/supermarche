@@ -1,0 +1,230 @@
+/* Thème personnalisé avec violet, or et bleu */
+:root {
+    --primary-violet: #8B5CF6;
+    --primary-gold: #FFD700;
+    --primary-blue: #3B82F6;
+    --hover-violet: #7C3AED;
+    --hover-gold: #FFC000;
+    --hover-blue: #2563EB;
+    --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --card-shadow-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Animations */
+@keyframes slideDown {
+    from { transform: translateY(-20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+    from { transform: scale(0.95); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.animate-slide-down {
+    animation: slideDown 0.5s ease-out;
+}
+
+.animate-slide-up {
+    animation: slideUp 0.5s ease-out;
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.5s ease-out;
+}
+
+.animate-scale-in {
+    animation: scaleIn 0.5s ease-out;
+}
+
+/* Composants modernes */
+.card-modern {
+    background: white;
+    border-radius: 1rem;
+    box-shadow: var(--card-shadow);
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.card-modern:hover {
+    box-shadow: var(--card-shadow-hover);
+    transform: translateY(-2px);
+}
+
+.card-header-modern {
+    background: linear-gradient(135deg, var(--primary-violet), var(--primary-blue));
+    color: white;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.input-modern {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 2px solid #E5E7EB;
+    border-radius: 0.5rem;
+    transition: all 0.3s ease;
+    outline: none;
+    font-size: 0.875rem;
+}
+
+.input-modern:focus {
+    border-color: var(--primary-violet);
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
+}
+
+.table-modern {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.table-modern th {
+    background: var(--primary-gold);
+    color: #1F2937;
+    font-weight: 600;
+    padding: 1rem;
+    text-align: left;
+}
+
+.table-modern td {
+    padding: 1rem;
+    border-bottom: 1px solid #E5E7EB;
+    transition: all 0.2s ease;
+}
+
+.table-modern tbody tr {
+    transition: all 0.2s ease;
+}
+
+.table-modern tbody tr:hover {
+    background-color: rgba(139, 92, 246, 0.05);
+}
+
+/* Classes utilitaires modernes */
+.bg-gradient-primary {
+    background: linear-gradient(135deg, var(--primary-violet), var(--primary-blue));
+}
+
+.bg-gradient-secondary {
+    background: linear-gradient(135deg, var(--primary-gold), var(--hover-gold));
+}
+
+.btn-modern {
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    gap: 0.5rem;
+}
+
+.btn-modern-primary {
+    background: linear-gradient(135deg, var(--primary-violet), var(--primary-blue));
+    color: white;
+}
+
+.btn-modern-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px -1px rgba(139, 92, 246, 0.3);
+}
+
+.btn-modern-secondary {
+    background: linear-gradient(135deg, var(--primary-gold), var(--hover-gold));
+    color: #1F2937;
+}
+
+.btn-modern-secondary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px -1px rgba(255, 215, 0, 0.3);
+}
+
+.text-custom-violet {
+    color: var(--primary-violet);
+}
+
+.text-custom-gold {
+    color: var(--primary-gold);
+}
+
+.text-custom-blue {
+    color: var(--primary-blue);
+}
+
+/* Styles pour les boutons */
+.btn-violet {
+    background-color: var(--primary-violet);
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.btn-violet:hover {
+    background-color: var(--hover-violet);
+}
+
+.btn-gold {
+    background-color: var(--primary-gold);
+    color: black;
+    transition: all 0.3s ease;
+}
+
+.btn-gold:hover {
+    background-color: var(--hover-gold);
+}
+
+.btn-blue {
+    background-color: var(--primary-blue);
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.btn-blue:hover {
+    background-color: var(--hover-blue);
+}
+
+/* Styles pour la sidebar */
+.sidebar-modern {
+    background: linear-gradient(to bottom, var(--primary-violet), var(--primary-blue));
+    color: white;
+}
+
+/* Styles pour les cartes et conteneurs */
+.card-gold-border {
+    border: 2px solid var(--primary-gold);
+}
+
+.card-violet-shadow {
+    box-shadow: 0 4px 6px -1px rgba(139, 92, 246, 0.1), 0 2px 4px -1px rgba(139, 92, 246, 0.06);
+}
+
+/* Styles pour les tableaux */
+.table-header-gold {
+    background-color: var(--primary-gold);
+    color: black;
+}
+
+.table-row-hover:hover {
+    background-color: rgba(139, 92, 246, 0.1);
+}
+
+/* Styles pour les formulaires */
+.input-violet-border {
+    border: 2px solid var(--primary-violet);
+}
+
+.input-violet-border:focus {
+    border-color: var(--hover-violet);
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
+}

@@ -9,11 +9,195 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{% static 'css/style.css' %}?v=6">
-  <link rel="stylesheet" href="{% static 'css/theme.css' %}?v=1">
-  <link rel="stylesheet" href="{% static 'css/tables.css' %}?v=1">
-  <link rel="stylesheet" href="{% static 'css/pages.css' %}?v=1">
-  <link rel="stylesheet" href="{% static 'css/dashboards.css' %}?v=1">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            violet: {
+              50: '#f5f3ff',
+              100: '#ede9fe',
+              200: '#ddd6fe',
+              300: '#c4b5fd',
+              400: '#a78bfa',
+              500: '#8b5cf6',
+              600: '#7c3aed',
+              700: '#6d28d9',
+              800: '#5b21b6',
+              900: '#4c1d95',
+            },
+            gold: {
+              50: '#fefce8',
+              100: '#fef9c3',
+              200: '#fef08a',
+              300: '#fde047',
+              400: '#facc15',
+              500: '#eab308',
+              600: '#ca8a04',
+              700: '#a16207',
+              800: '#854d0e',
+              900: '#713f12',
+            }
+          },
+          animation: {
+            'float': 'float 3s ease-in-out infinite',
+            'pulse-gentle': 'pulseGentle 2s ease-in-out infinite',
+            'scale-in': 'scaleIn 0.3s ease-out',
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0)' },
+              '50%': { transform: 'translateY(-5px)' },
+            },
+            pulseGentle: {
+              '0%, 100%': { transform: 'scale(1)' },
+              '50%': { transform: 'scale(1.05)' },
+            },
+            scaleIn: {
+              '0%': { transform: 'scale(0.9)', opacity: '0' },
+              '100%': { transform: 'scale(1)', opacity: '1' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Composants de navigation */
+    .navbar-item {
+      @apply relative flex items-center gap-2 px-4 py-3 text-gray-700 hover:text-violet-600 transition-all duration-300 rounded-xl hover:bg-violet-50 hover:scale-105;
+    }
+    .navbar-item.active {
+      @apply bg-violet-100 text-violet-600;
+    }
+    
+    /* Cartes et conteneurs */
+    .module-card {
+      @apply bg-white rounded-2xl shadow-lg p-6 transition-all duration-300 hover:shadow-xl hover:-translate-y-1;
+    }
+    .stat-card {
+      @apply bg-white rounded-2xl shadow-md p-6 hover:shadow-lg transition-all duration-300;
+    }
+    
+    /* Alertes et notifications */
+    .bubble-notification {
+      @apply absolute -top-1 -right-1 min-w-[20px] h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center px-1.5 animate-pulse;
+    }
+    .alert-card {
+      @apply rounded-xl p-4 mb-4 border-l-4;
+    }
+    .alert-warning {
+      @apply bg-gold-50 border-gold-500 text-gold-700;
+    }
+    .alert-info {
+      @apply bg-violet-50 border-violet-500 text-violet-700;
+    }
+    .alert-success {
+      @apply bg-green-50 border-green-500 text-green-700;
+    }
+
+    /* Badges et étiquettes */
+    .badge {
+      @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+    }
+    .badge-violet {
+      @apply bg-violet-100 text-violet-800;
+    }
+    .badge-gold {
+      @apply bg-gold-100 text-gold-800;
+    }
+    .badge-success {
+      @apply bg-green-100 text-green-800;
+    }
+    
+    /* Boutons d'action */
+    .action-button {
+      @apply px-6 py-3 rounded-xl font-medium transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2;
+    }
+    .action-button-primary {
+      @apply bg-violet-600 text-white hover:bg-violet-700 focus:ring-violet-500;
+    }
+    
+    /* Styles de base */
+    body {
+      @apply bg-gray-50 text-gray-900;
+    }
+    }
+
+    /* Styles d'animation */
+    .animate-fade-in {
+      animation: fadeIn 0.5s ease-in;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    /* Style des boutons */
+    .btn-primary {
+      background-color: var(--primary-violet) !important;
+      border-color: var(--primary-violet) !important;
+      color: white !important;
+    }
+
+    .btn-secondary {
+      background-color: var(--primary-gold) !important;
+      border-color: var(--primary-gold) !important;
+      color: #333 !important;
+    }
+
+    /* Style de la sidebar */
+    .sidebar-modern {
+      background: linear-gradient(135deg, var(--primary-violet), var(--primary-blue));
+      color: white;
+    }
+
+    /* Style des cartes */
+    .card {
+      border: none;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+
+    /* Style des tableaux */
+    .table th {
+      background-color: var(--primary-gold);
+      color: #333;
+      font-weight: 600;
+    }
+
+    /* Style des formulaires */
+    .form-control:focus {
+      border-color: var(--primary-violet);
+      box-shadow: 0 0 0 0.2rem rgba(139, 92, 246, 0.25);
+    }
+
+    /* Style des liens */
+    a {
+      color: var(--primary-blue);
+      text-decoration: none;
+    }
+
+    a:hover {
+      color: var(--primary-violet);
+    }
+
+    /* Gradient text */
+    .gradient-text-violet {
+      background: linear-gradient(45deg, var(--primary-violet), var(--primary-blue));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+  </style>
+  <link rel="stylesheet" href="{% static 'css/custom.css' %}">
   {% block extra_css %}{% endblock %}
 </head>
 <body class="bg-gray-50 font-sans">

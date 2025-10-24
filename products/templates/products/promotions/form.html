@@ -1,0 +1,156 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-3xl mx-auto">
+        <!-- En-tête -->
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-2xl font-bold text-gray-800">
+                {% if promotion %}Modifier{% else %}Nouvelle{% endif %} Promotion
+            </h1>
+            <a href="{% url 'products:liste_promotions' %}" 
+               class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded">
+                Annuler
+            </a>
+        </div>
+
+        <!-- Formulaire -->
+        <form method="post" class="bg-white rounded-lg shadow p-6">
+            {% csrf_token %}
+            
+            <!-- Informations de base -->
+            <div class="space-y-6">
+                <div>
+                    <label for="nom" class="block text-sm font-medium text-gray-700">Nom de la promotion</label>
+                    <input type="text" name="nom" id="nom" required
+                           value="{{ promotion.nom|default:'' }}"
+                           class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                </div>
+
+                <div>
+                    <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
+                    <textarea name="description" id="description" rows="3" required
+                              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">{{ promotion.description|default:'' }}</textarea>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="type_promotion" class="block text-sm font-medium text-gray-700">Type de promotion</label>
+                        <select name="type_promotion" id="type_promotion" required
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                            {% for value, label in types_promotion %}
+                            <option value="{{ value }}" {% if promotion and promotion.type_promotion == value %}selected{% endif %}>
+                                {{ label }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="valeur" class="block text-sm font-medium text-gray-700">Valeur</label>
+                        <input type="number" name="valeur" id="valeur" step="0.01" required
+                               value="{{ promotion.valeur|default:'' }}"
+                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="date_debut" class="block text-sm font-medium text-gray-700">Date de début</label>
+                        <input type="date" name="date_debut" id="date_debut" required
+                               value="{{ promotion.date_debut|date:'Y-m-d'|default:'' }}"
+                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    </div>
+
+                    <div>
+                        <label for="date_fin" class="block text-sm font-medium text-gray-700">Date de fin</label>
+                        <input type="date" name="date_fin" id="date_fin" required
+                               value="{{ promotion.date_fin|date:'Y-m-d'|default:'' }}"
+                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    </div>
+                </div>
+
+                {% if promotion %}
+                <div>
+                    <label class="inline-flex items-center">
+                        <input type="checkbox" name="actif" 
+                               {% if promotion.actif %}checked{% endif %}
+                               class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                        <span class="ml-2">Promotion active</span>
+                    </label>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Sélection des produits -->
+            <div class="mt-8">
+                <h3 class="text-lg font-medium text-gray-900 mb-4">Produits en promotion</h3>
+                <div class="max-h-60 overflow-y-auto border rounded-md p-2">
+                    {% for produit in produits %}
+                    <label class="flex items-center space-x-3 py-2 px-2 hover:bg-gray-50">
+                        <input type="checkbox" name="produits" value="{{ produit.id_produit }}"
+                               {% if promotion and produit in promotion.produits.all %}checked{% endif %}
+                               class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                        <span>{{ produit.nom }} ({{ produit.prix_unitaire }} FCFA)</span>
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Sélection des catégories -->
+            <div class="mt-8">
+                <h3 class="text-lg font-medium text-gray-900 mb-4">Catégories en promotion</h3>
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                    {% for categorie in categories %}
+                    <label class="flex items-center space-x-3 p-2 bg-gray-50 rounded-md">
+                        <input type="checkbox" name="categories" value="{{ categorie.id_categorie }}"
+                               {% if promotion and categorie in promotion.categories.all %}checked{% endif %}
+                               class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                        <span>{{ categorie.nom }}</span>
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Bouton de soumission -->
+            <div class="mt-8">
+                <button type="submit" 
+                        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                    {% if promotion %}Mettre à jour{% else %}Créer{% endif %} la promotion
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const typeSelect = document.getElementById('type_promotion');
+    const valeurInput = document.getElementById('valeur');
+    const valeurLabel = valeurInput.previousElementSibling;
+    
+    function updateValeurLabel() {
+        const type = typeSelect.value;
+        if (type === 'pourcentage') {
+            valeurLabel.textContent = 'Pourcentage de réduction (%)';
+            valeurInput.min = '0';
+            valeurInput.max = '100';
+        } else if (type === 'montant_fixe') {
+            valeurLabel.textContent = 'Montant de la réduction (FCFA)';
+            valeurInput.min = '0';
+            valeurInput.removeAttribute('max');
+        } else {
+            valeurLabel.textContent = 'Valeur';
+            valeurInput.removeAttribute('min');
+            valeurInput.removeAttribute('max');
+        }
+    }
+    
+    typeSelect.addEventListener('change', updateValeurLabel);
+    updateValeurLabel();
+});
+</script>
+{% endblock %}
+{% endblock %}

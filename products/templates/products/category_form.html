@@ -2,28 +2,40 @@
 {% load static %}
 {% block title %}Catégorie - Formulaire{% endblock %}
 {% block content %}
-<div class="container py-3">
-  <div class="card">
-    <div class="card-header d-flex justify-content-between align-items-center">
-      <strong>Nouvelle catégorie</strong>
-      <a class="btn btn-sm btn-outline-secondary" href="#" onclick="Products.gotoCategoryList();return false;">Retour à la liste</a>
+<div class="max-w-7xl mx-auto px-4 py-6">
+  <div class="mb-6 animate-slide-down">
+    <div class="flex justify-between items-center">
+      <div>
+        <h1 class="text-3xl font-bold gradient-text-violet">Nouvelle catégorie</h1>
+        <p class="text-gray-600 mt-1">Créer une nouvelle catégorie de produits</p>
+      </div>
+      <button class="btn-outline" onclick="Products.gotoCategoryList();return false;">Retour à la liste</button>
     </div>
-    <div class="card-body">
+  </div>
+
+  <div class="card-modern animate-scale-in">
+    <div class="p-8">
       <form id="category-form" novalidate>
-        <div class="row g-3">
-          <div class="col-md-6">
-            <label class="form-label">Nom</label>
-            <input id="c-name" type="text" class="form-control" required>
-            <div class="invalid-feedback">Nom requis.</div>
+        {% csrf_token %}
+        <div class="space-y-6">
+          <div>
+            <label for="c-name" class="block text-sm font-medium text-gray-700 mb-2">Nom</label>
+            <input id="c-name" type="text" class="input-modern" placeholder="Ex: Produits laitiers" required>
+            <div id="name-error" class="hidden text-red-600 text-sm mt-1">Nom requis.</div>
           </div>
-          <div class="col-12">
-            <label class="form-label">Description</label>
-            <text area id="c-desc" class="form-control" rows="2"></textarea>
+          <div>
+            <label for="c-desc" class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+            <textarea id="c-desc" class="input-modern" rows="3" placeholder="Description de la catégorie..."></textarea>
           </div>
         </div>
-        <div class="d-flex justify-content-end gap-2 mt-3">
-          <button class="btn btn-outline-secondary" type="reset">Réinitialiser</button>
-          <button class="btn btn-primary" type="submit">Enregistrer</button>
+        <div class="flex justify-end gap-3 mt-6">
+          <button class="btn-outline" type="reset">Réinitialiser</button>
+          <button class="btn-success flex items-center gap-2 px-6" type="submit">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+            <span>Enregistrer</span>
+          </button>
         </div>
       </form>
     </div>

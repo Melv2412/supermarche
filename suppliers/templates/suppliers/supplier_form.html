@@ -2,49 +2,94 @@
 {% load static %}
 {% block title %}Fournisseur - Formulaire{% endblock %}
 {% block content %}
-<div class="container py-3">
-  <div class="card">
-    <div class="card-header d-flex justify-content-between align-items-center">
-      <strong>Nouveau fournisseur</strong>
-      <a class="btn btn-sm btn-outline-secondary" href="#" onclick="Suppliers.gotoSupplierList();return false;">Retour à la liste</a>
-    </div>
-    <div class="card-body">
-      <form id="supplier-form" novalidate>
-        <div class="row g-3">
-          <div class="col-md-6">
-            <label class="form-label">Nom</label>
-            <input id="f-name" type="text" class="form-control" required>
-            <div class="invalid-feedback">Nom requis.</div>
-          </div>
-          <div class="col-md-6">
-            <label class="form-label">Email</label>
-            <input id="f-email" type="email" class="form-control" required>
-            <div class="invalid-feedback">Email invalide.</div>
-          </div>
-          <div class="col-md-6">
-            <label class="form-label">Téléphone</label>
-            <input id="f-phone" type="text" class="form-control">
-          </div>
-          <div class="col-md-6">
-            <label class="form-label">Catégories (séparées par des virgules)</label>
-            <input id="f-categories" type="text" class="form-control" placeholder="Épicerie, Frais">
-          </div>
-          <div class="col-12">
-            <label class="form-label">Adresse</label>
-            <input id="f-address" type="text" class="form-control">
-          </div>
-          <div class="col-12">
-            <label class="form-label">Notes</label>
-            <textarea id="f-notes" class="form-control" rows="2"></textarea>
-          </div>
+<div class="max-w-7xl mx-auto px-4 py-8">
+    <!-- En-tête avec animation -->
+    <div class="mb-8 animate-slide-down">
+        <div class="flex justify-between items-center">
+            <div>
+                <h1 class="text-4xl font-bold gradient-text-violet">🏢 Nouveau Fournisseur</h1>
+                <p class="text-gray-600 mt-2 text-lg">Ajout d'un nouveau partenaire commercial</p>
+            </div>
+            <button onclick="window.location.href='/suppliers/'" class="btn-modern btn-modern-secondary">
+                Retour à la liste
+            </button>
         </div>
-        <div class="d-flex justify-content-end gap-2 mt-3">
-          <button class="btn btn-outline-secondary" type="reset">Réinitialiser</button>
-          <button class="btn btn-primary" type="submit">Enregistrer (simulation)</button>
-        </div>
-      </form>
     </div>
-  </div>
+
+    <!-- Formulaire -->
+    <div class="card-modern animate-fade-in">
+        <form id="supplier-form" class="space-y-6" novalidate>
+            {% csrf_token %}
+            
+            <!-- Informations de base -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label for="f-name" class="block text-sm font-medium text-gray-700 mb-2">Nom du fournisseur *</label>
+                    <input type="text" id="f-name" name="name" required
+                           class="input-modern"
+                           placeholder="Nom de l'entreprise">
+                    <div class="text-red-600 text-sm hidden mt-1" id="name-error">
+                        Veuillez saisir le nom du fournisseur
+                    </div>
+                </div>
+
+                <div>
+                    <label for="f-email" class="block text-sm font-medium text-gray-700 mb-2">Email professionnel *</label>
+                    <input type="email" id="f-email" name="email" required
+                           class="input-modern"
+                           placeholder="contact@entreprise.com">
+                    <div class="text-red-600 text-sm hidden mt-1" id="email-error">
+                        Veuillez saisir une adresse email valide
+                    </div>
+                </div>
+
+                <div>
+                    <label for="f-phone" class="block text-sm font-medium text-gray-700 mb-2">Téléphone *</label>
+                    <input type="tel" id="f-phone" name="phone" required
+                           class="input-modern"
+                           placeholder="Ex: 0123456789">
+                    <div class="text-red-600 text-sm hidden mt-1" id="phone-error">
+                        Veuillez saisir un numéro de téléphone valide
+                    </div>
+                </div>
+
+                <div>
+                    <label for="f-categories" class="block text-sm font-medium text-gray-700 mb-2">Catégories de produits</label>
+                    <input type="text" id="f-categories" name="categories"
+                           class="input-modern"
+                           placeholder="Ex: Viande, Fruits, Légumes">
+                    <p class="text-gray-500 text-sm mt-1">Séparez les catégories par des virgules</p>
+                </div>
+            </div>
+
+            <!-- Adresse et notes -->
+            <div class="space-y-6">
+                <div>
+                    <label for="f-address" class="block text-sm font-medium text-gray-700 mb-2">Adresse complète</label>
+                    <input type="text" id="f-address" name="address"
+                           class="input-modern"
+                           placeholder="Numéro, rue, ville, pays">
+                </div>
+
+                <div>
+                    <label for="f-notes" class="block text-sm font-medium text-gray-700 mb-2">Notes additionnelles</label>
+                    <textarea id="f-notes" name="notes" rows="3"
+                              class="input-modern"
+                              placeholder="Informations complémentaires, conditions spéciales..."></textarea>
+                </div>
+            </div>
+
+            <!-- Boutons d'action -->
+            <div class="flex justify-end space-x-4 pt-4 border-t border-gray-200">
+                <button type="reset" class="btn-modern btn-modern-secondary">
+                    Réinitialiser
+                </button>
+                <button type="submit" class="btn-modern btn-modern-primary">
+                    Enregistrer
+                </button>
+            </div>
+        </form>
+    </div>
 </div>
 {% endblock %}
 {% block extra_js %}

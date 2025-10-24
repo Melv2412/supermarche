@@ -1,0 +1,287 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 py-6">
+    <!-- En-tête -->
+    <div class="mb-8 animate-slide-down">
+        <div class="flex justify-between items-center">
+            <div>
+                <h1 class="text-4xl font-bold gradient-text-violet">📊 Tableau de Bord</h1>
+                <p class="text-gray-600 mt-2 text-lg">Suivi des ventes et performances</p>
+            </div>
+            <div class="flex space-x-4">
+                <button class="btn-modern btn-modern-secondary" onclick="window.location.href='/sales/pos'">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                    </svg>
+                    Caisse
+                </button>
+                <button class="btn-modern btn-modern-primary" onclick="window.location.href='/sales/reports'">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    Rapports
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistiques principales avec animations -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <!-- Ventes du jour -->
+        <div class="card-modern p-6 animate-fade-in" style="animation-delay: 0ms">
+            <div class="flex items-center justify-between mb-4">
+                <div class="bg-violet-100 p-3 rounded-full">
+                    <svg class="w-6 h-6 text-violet-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </div>
+                <span class="text-sm font-medium text-violet-600 bg-violet-50 px-2.5 py-0.5 rounded-full">Aujourd'hui</span>
+            </div>
+            <h3 class="text-gray-500 text-sm font-medium truncate">Ventes du jour</h3>
+            <div class="mt-2 flex items-baseline">
+                <p class="text-3xl font-bold text-gray-900">{{ stats.ventes_jour.total|default:0|floatformat:2 }} FCFA</p>
+                <p class="ml-2 flex items-baseline text-sm font-semibold">
+                    <span class="text-green-600">+{{ stats.ventes_jour.progression|default:0 }}%</span>
+                </p>
+            </div>
+            <p class="text-sm text-gray-500 mt-1">{{ stats.ventes_jour.nombre|default:0 }} transactions</p>
+        </div>
+
+        <!-- Ventes de la veille -->
+        <div class="card-modern p-6 animate-fade-in" style="animation-delay: 100ms">
+            <div class="flex items-center justify-between mb-4">
+                <div class="bg-blue-100 p-3 rounded-full">
+                    <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                    </svg>
+                </div>
+                <span class="text-sm font-medium text-blue-600 bg-blue-50 px-2.5 py-0.5 rounded-full">Hier</span>
+            </div>
+            <h3 class="text-gray-500 text-sm font-medium truncate">Ventes d'hier</h3>
+            <div class="mt-2">
+                <p class="text-3xl font-bold text-gray-900">{{ stats.ventes_veille.total|default:0|floatformat:2 }} FCFA</p>
+            </div>
+            <p class="text-sm text-gray-500 mt-1">{{ stats.ventes_veille.nombre|default:0 }} transactions</p>
+        </div>
+
+        <!-- Ventes du mois -->
+        <div class="card-modern p-6 animate-fade-in" style="animation-delay: 200ms">
+            <div class="flex items-center justify-between mb-4">
+                <div class="bg-amber-100 p-3 rounded-full">
+                    <svg class="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                    </svg>
+                </div>
+                <span class="text-sm font-medium text-amber-600 bg-amber-50 px-2.5 py-0.5 rounded-full">Ce mois</span>
+            </div>
+            <h3 class="text-gray-500 text-sm font-medium truncate">Total du mois</h3>
+            <div class="mt-2">
+                <p class="text-3xl font-bold text-gray-900">{{ stats.ventes_mois.total|default:0|floatformat:2 }} FCFA</p>
+            </div>
+            <p class="text-sm text-gray-500 mt-1">{{ stats.ventes_mois.nombre|default:0 }} transactions</p>
+        </div>
+
+        <!-- Moyenne journalière -->
+        <div class="card-modern p-6 animate-fade-in" style="animation-delay: 300ms">
+            <div class="flex items-center justify-between mb-4">
+                <div class="bg-green-100 p-3 rounded-full">
+                    <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    </svg>
+                </div>
+                <span class="text-sm font-medium text-green-600 bg-green-50 px-2.5 py-0.5 rounded-full">Moyenne</span>
+            </div>
+            <h3 class="text-gray-500 text-sm font-medium truncate">Moyenne journalière</h3>
+            <div class="mt-2">
+                <p class="text-3xl font-bold text-gray-900">{{ stats.moyenne_jour.moyenne|default:0|floatformat:2 }} FCFA</p>
+            </div>
+            <p class="text-sm text-gray-500 mt-1">{{ stats.caisses_actives }} caisses actives</p>
+        </div>
+    </div>
+
+    <!-- Graphiques avec animations -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+        <!-- Graphique évolution des ventes -->
+        <div class="card-modern overflow-hidden animate-slide-up" style="animation-delay: 400ms">
+            <div class="card-header-modern flex items-center justify-between">
+                <h3 class="text-lg font-semibold text-white flex items-center">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                    </svg>
+                    Évolution sur 7 jours
+                </h3>
+                <div class="flex space-x-2">
+                    <button class="btn-modern-outline text-sm text-white" onclick="changeChartPeriod('week')">7J</button>
+                    <button class="btn-modern-outline text-sm text-white" onclick="changeChartPeriod('month')">30J</button>
+                </div>
+            </div>
+            <div class="p-6 bg-white">
+                <canvas id="evolutionChart" height="300"></canvas>
+            </div>
+        </div>
+
+        <!-- Graphique des heures de pointe -->
+        <div class="card-modern overflow-hidden animate-slide-up" style="animation-delay: 500ms">
+            <div class="card-header-modern flex items-center justify-between">
+                <h3 class="text-lg font-semibold text-white flex items-center">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    Heures de pointe
+                </h3>
+                <div class="flex space-x-2">
+                    <button class="btn-modern-outline text-sm text-white" onclick="changeHeatmapView('day')">Jour</button>
+                    <button class="btn-modern-outline text-sm text-white" onclick="changeHeatmapView('week')">Semaine</button>
+                </div>
+            </div>
+            <div class="p-6 bg-white">
+                <canvas id="peakHoursChart" height="300"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dernières transactions -->
+    <div class="card-modern animate-slide-up" style="animation-delay: 600ms">
+        <div class="card-header-modern flex items-center justify-between">
+            <h3 class="text-lg font-semibold text-white flex items-center">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                </svg>
+                Dernières transactions
+            </h3>
+            <button class="btn-modern-outline text-sm text-white" onclick="window.location.href='/sales/transactions'">
+                Voir tout
+            </button>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="table-modern w-full">
+                <thead>
+                    <tr>
+                        <th>N° Transaction</th>
+                        <th>Date</th>
+                        <th>Caisse</th>
+                        <th>Articles</th>
+                        <th class="text-right">Montant</th>
+                        <th>Statut</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    {% for transaction in dernieres_transactions %}
+                    <tr>
+                        <td class="font-medium">#{{ transaction.numero }}</td>
+                        <td>{{ transaction.date|date:"H:i" }}</td>
+                        <td>Caisse {{ transaction.caisse }}</td>
+                        <td>{{ transaction.nb_articles }} article(s)</td>
+                        <td class="text-right font-medium">{{ transaction.montant|floatformat:2 }} FCFA</td>
+                        <td>
+                            <span class="badge-{{ transaction.statut_badge }}">
+                                {{ transaction.statut }}
+                            </span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Meilleures ventes -->
+    <div class="mt-8 bg-white rounded-lg shadow p-6">
+        <h3 class="text-lg font-semibold text-gray-700 mb-4">Top 5 des ventes du mois</h3>
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead>
+                    <tr>
+                        <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Produit</th>
+                        <th class="px-6 py-3 bg-gray-50 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Quantité vendue</th>
+                        <th class="px-6 py-3 bg-gray-50 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Chiffre d'affaires</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    {% for produit in meilleures_ventes %}
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ produit.nom }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-right text-gray-900">{{ produit.total_vendu }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-right text-gray-900">{{ produit.chiffre_affaires|floatformat:2 }} FCFA</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Données pour l'évolution des ventes
+    const evolutionData = {
+        labels: [{% for jour in evolution_ventes %}'{{ jour.date_transaction__date|date:"d/m" }}'{% if not forloop.last %}, {% endif %}{% endfor %}],
+        datasets: [{
+            label: 'Chiffre d\'affaires',
+            data: [{% for jour in evolution_ventes %}{{ jour.total|default:0 }}{% if not forloop.last %}, {% endif %}{% endfor %}],
+            borderColor: 'rgb(59, 130, 246)',
+            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+            fill: true
+        }]
+    };
+
+    // Données pour les heures de pointe
+    const peakHoursData = {
+        labels: [{%for heure in heures_pointe %}'{{ heure.heure }}h'{% if not forloop.last %}, {% endif %}{% endfor %}],
+        datasets: [{
+            label: 'Nombre de transactions',
+            data: [{% for heure in heures_pointe %}{{ heure.transactions }}{% if not forloop.last %}, {% endif %}{% endfor %}],
+            backgroundColor: 'rgba(59, 130, 246, 0.8)'
+        }]
+    };
+
+    // Configuration des graphiques
+    const lineConfig = {
+        type: 'line',
+        data: evolutionData,
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'top',
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    };
+
+    const barConfig = {
+        type: 'bar',
+        data: peakHoursData,
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'top',
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    };
+
+    // Création des graphiques
+    new Chart(document.getElementById('evolutionChart'), lineConfig);
+    new Chart(document.getElementById('peakHoursChart'), barConfig);
+});
+</script>
+{% endblock %}
+{% endblock %}

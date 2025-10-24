@@ -34,7 +34,7 @@ class ProductListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = [
-            'id_produit', 'nom', 'code_barre', 'prix_unitaire', 
+            'id_produit', 'nom', 'code_barre', 'prix_unitaire', 'prix_achat',
             'stock', 'id_categorie', 'categorie_nom', 'actif',
             'est_perissable', 'seuil_reapprovisionnement'
         ]
@@ -53,7 +53,12 @@ class StockMovementSerializer(serializers.ModelSerializer):
 class PromotionSerializer(serializers.ModelSerializer):
     """Serializer pour les promotions"""
     type_promotion_display = serializers.CharField(source='get_type_promotion_display', read_only=True)
+    categories = serializers.SerializerMethodField()
     
     class Meta:
         model = Promotion
         fields = '__all__'
+    
+    def get_categories(self, obj):
+        """Retourne la liste des noms des catégories concernées par la promotion"""
+        return [cat.nom for cat in obj.categories.all()]

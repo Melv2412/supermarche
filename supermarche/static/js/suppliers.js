@@ -3,6 +3,7 @@ window.Suppliers = (function(){
     const amount = (v || 0).toLocaleString('fr-FR', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
     return amount + ' FCFA';
   };
+  
   const badgeStatus = (s)=>{
     const map={pending:'secondary',confirmed:'primary',shipped:'info',delivered:'success',cancelled:'danger',in_transit:'info',delayed:'warning'};
     const label={pending:'En attente',confirmed:'Confirmée',shipped:'Expédiée',delivered:'Livrée',cancelled:'Annulée',in_transit:'En transit',delayed:'Retardée'};
@@ -20,10 +21,12 @@ window.Suppliers = (function(){
     const res = await fetch('/api/suppliers/');
     return await res.json();
   }
+  
   async function loadOrders(){
     const res = await fetch('/api/purchase-orders/');
     return await res.json();
   }
+  
   async function loadTracking(){
     const res = await fetch('/api/deliveries/');
     return await res.json();
@@ -36,6 +39,7 @@ window.Suppliers = (function(){
       const qEl = document.getElementById('sup-search');
       const tbody = document.getElementById('sup-tbody');
       const count = document.getElementById('sup-count');
+      
       function render(){
         const q = (qEl.value||'').toLowerCase();
         const filtered = data.filter(s => (s.name+' '+s.email+' '+(s.phone||'')).toLowerCase().includes(q));
@@ -43,19 +47,122 @@ window.Suppliers = (function(){
         filtered.forEach(s => {
           const tr = document.createElement('tr');
           tr.innerHTML = `
-            <td>${s.name}</td>
+            <td class="text-violet-600 font-medium">${s.name}</td>
             <td>${s.email||'-'}</td>
             <td>${s.phone||'-'}</td>
             <td>${(s.categories||[]).join(', ')||'-'}</td>
-            <td class="text-end"><a href="#" class="btn btn-sm btn-outline-primary" onclick="Suppliers.gotoSupplierDetail(${s.id});return false;">Voir</a></td>`;
+            <td class="text-end">
+              <button onclick="Suppliers.gotoSupplierDetail(${s.id})" 
+                      class="btn-modern btn-modern-secondary btn-sm">
+                Voir détails
+              </button>
+            </td>`;
           tbody.appendChild(tr);
         });
         count.textContent = filtered.length;
       }
-      qEl.addEventListener('input', render);
+      qEl?.addEventListener('input', render);
       render();
     }catch(e){ console.error('Supplier list error:', e); }
   }
+
+  // Gestion des erreurs de formulaire
+  function showError(elementId, show) {
+    const error = document.getElementById(elementId);
+    if (error) {
+      if (show) {
+        error.classList.remove('hidden');
+      } else {
+        error.classList.add('hidden');
+      }
+    }
+  }
+
+  function validateField(input, errorId, condition) {
+    if (!input) return true;
+    const isValid = condition(input.value);
+    if (isValid) {
+      input.classList.remove('border-red-500');
+      input.classList.add('border-green-500');
+    } else {
+      input.classList.remove('border-green-500');
+      input.classList.add('border-red-500');
+    }
+    showError(errorId, !isValid);
+    return isValid;
+  }
+
+  // Supplier Form
+  async function initSupplierForm(){
+    const form = document.getElementById('supplier-form');
+    if (!form) return;
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      // Récupération des champs
+      const name = document.getElementById('f-name');
+      const email = document.getElementById('f-email');
+      const phone = document.getElementById('f-phone');
+      const categories = document.getElementById('f-categories');
+      const address = document.getElementById('f-address');
+      const notes = document.getElementById('f-notes');
+
+      // Validation
+      const isValid = 
+        validateField(name, 'name-error', value => value.trim().length > 0) &&
+        validateField(email, 'email-error', value => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) &&
+        validateField(phone, 'phone-error', value => value.trim().length >= 8);
+
+      if (!isValid) {
+        return;
+      }
+
+      try {
+        const formData = {
+          nom: name.value.trim(),
+          email: email.value.trim(),
+          telephone: phone.value.trim(),
+          categories: categories.value.split(',').map(c => c.trim()).filter(c => c),
+          adresse: address.value.trim(),
+          notes: notes.value.trim()
+        };
+
+        const response = await fetch('/api/suppliers/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+          },
+          body: JSON.stringify(formData)
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          // Redirection vers la liste des fournisseurs avec un message de succès
+          window.location.href = '/suppliers/?success=created';
+        } else {
+          const error = await response.text();
+          alert('Erreur lors de la création : ' + error);
+        }
+      } catch (error) {
+        console.error('Erreur:', error);
+        alert('Une erreur est survenue lors de la création du fournisseur.');
+      }
+    });
+  }
+
+  return { 
+    initSupplierList, 
+    initSupplierForm,
+    gotoSupplierList, 
+    gotoSupplierForm, 
+    gotoSupplierDetail,
+    gotoOrderList,
+    gotoOrderForm,
+    gotoOrderDetail
+  };
+})();
 
   // Supplier Detail
   async function initSupplierDetail(){
@@ -82,21 +189,51 @@ window.Suppliers = (function(){
   }
 
   // Supplier Form
-  function setValidity(input, valid){
-    if(valid){ input.classList.remove('is-invalid'); input.classList.add('is-valid'); }
-    else { input.classList.remove('is-valid'); input.classList.add('is-invalid'); }
+  function showError(elementId, show) {
+    const error = document.getElementById(elementId);
+    if (error) {
+      if (show) {
+        error.classList.remove('hidden');
+      } else {
+        error.classList.add('hidden');
+      }
+    }
   }
+
+  function validateField(input, errorId, condition) {
+    if (!input) return true;
+    const isValid = condition(input.value);
+    if (isValid) {
+      input.classList.remove('border-red-500');
+      input.classList.add('border-green-500');
+    } else {
+      input.classList.remove('border-green-500');
+      input.classList.add('border-red-500');
+    }
+    showError(errorId, !isValid);
+    return isValid;
+  }
+
   async function initSupplierForm(){
     const form = document.getElementById('supplier-form');
-    form?.addEventListener('submit', async (e)=>{
+    if (!form) return;
+
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
+
+      // Récupération des champs
       const name = document.getElementById('f-name');
       const email = document.getElementById('f-email');
       const phone = document.getElementById('f-phone');
+      const categories = document.getElementById('f-categories');
       const address = document.getElementById('f-address');
-      
-      const okName = name.value.trim().length>0;
-      const okEmail = email.checkValidity();
+      const notes = document.getElementById('f-notes');
+
+      // Validation
+      const isValid = 
+        validateField(name, 'name-error', value => value.trim().length > 0) &&
+        validateField(email, 'email-error', value => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) &&
+        validateField(phone, 'phone-error', value => value.trim().length >= 8);
       setValidity(name, okName);
       setValidity(email, okEmail);
       
@@ -324,4 +461,4 @@ window.Suppliers = (function(){
     gotoSupplierList, gotoSupplierDetail, gotoSupplierForm,
     gotoOrderList, gotoOrderDetail, gotoOrderForm
   };
-})();
+

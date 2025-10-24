@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Sum, Count, Avg, F
 from django.db.models.functions import TruncDate, ExtractHour
 from django.utils import timezone
-from datetime import timedelta
+from datetime import timedelta, datetime
 from .models import Transaction, CashRegister
 from products.models import Product
 
