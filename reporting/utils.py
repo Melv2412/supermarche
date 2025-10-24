@@ -109,9 +109,25 @@ def generate_employee_schedule_report(date=None):
     
     employees = Employee.objects.filter(actif=True)
     
+    # Regrouper par département
+    departments = {}
+    for employee in employees:
+        dept = employee.departement
+        if dept not in departments:
+            departments[dept] = []
+        departments[dept].append(employee)
+    
+    # Statistiques de présence
+    present_employees = employees.filter(statut='present').count()
+    total_employees = employees.count()
+    absent_employees = total_employees - present_employees
+    
     context = {
         'date': date,
-        'employees': employees,
+        'departments': departments,
+        'total_employees': total_employees,
+        'present_employees': present_employees,
+        'absent_employees': absent_employees,
         'generated_at': datetime.now(),
     }
     return render_to_pdf('reporting/schedule_report.html', context)

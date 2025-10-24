@@ -1,0 +1,177 @@
+{% extends 'base.html' %}
+{% block title %}Gestion des Plannings{% endblock %}
+
+{% block extra_css %}
+<style>
+.planning-card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+.planning-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+.status-badge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.875rem;
+}
+.status-present { background: #dcfce7; color: #166534; }
+.status-absent { background: #fee2e2; color: #991b1b; }
+.status-conge { background: #dbeafe; color: #1e40af; }
+.status-malade { background: #fef9c3; color: #854d0e; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 py-8">
+    <!-- En-tête -->
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-900 mb-4">Gestion des Plannings</h1>
+        
+        <!-- Filtres et recherche -->
+        <div class="flex flex-wrap gap-4 mb-6">
+            <form method="get" class="flex flex-wrap gap-4">
+                <input type="text" 
+                       name="search" 
+                       value="{{ search_query }}"
+                       placeholder="Rechercher un employé..." 
+                       class="px-4 py-2 border rounded-lg">
+                
+                <select name="departement" class="px-4 py-2 border rounded-lg">
+                    <option value="">Tous les départements</option>
+                    {% for code, nom in departements.items %}
+                    <option value="{{ code }}" {% if departement_filter == code %}selected{% endif %}>
+                        {{ nom }}
+                    </option>
+                    {% endfor %}
+                </select>
+                
+                <button type="submit" class="btn-primary">
+                    Filtrer
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modification par lot -->
+    <div class="mb-8 p-6 bg-white rounded-lg shadow">
+        <h2 class="text-xl font-semibold mb-4">Modification par lot</h2>
+        <form method="post" action="{% url 'employees:planning_batch_edit' %}" id="batchForm">
+            {% csrf_token %}
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Horaires</label>
+                    <div class="mt-1 flex gap-2">
+                        <input type="time" name="horaire_debut" class="form-input rounded-md">
+                        <span class="self-center">-</span>
+                        <input type="time" name="horaire_fin" class="form-input rounded-md">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Pause</label>
+                    <div class="mt-1 flex gap-2">
+                        <input type="time" name="pause_debut" class="form-input rounded-md">
+                        <span class="self-center">-</span>
+                        <input type="time" name="pause_fin" class="form-input rounded-md">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Statut</label>
+                    <select name="statut" class="mt-1 form-select rounded-md w-full">
+                        <option value="">Ne pas modifier</option>
+                        <option value="present">Présent</option>
+                        <option value="absent">Absent</option>
+                        <option value="conge">En congé</option>
+                        <option value="malade">Malade</option>
+                    </select>
+                </div>
+            </div>
+            <button type="submit" class="btn-primary" id="batchSubmit" disabled>
+                Appliquer aux employés sélectionnés
+            </button>
+        </form>
+    </div>
+
+    <!-- Liste des employés -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for employee in employees %}
+        <div class="planning-card p-6">
+            <div class="flex items-start justify-between mb-4">
+                <div>
+                    <h3 class="text-lg font-semibold">{{ employee.nom_complet }}</h3>
+                    <p class="text-gray-600">{{ employee.get_departement_display }}</p>
+                </div>
+                <input type="checkbox" 
+                       name="employee_ids" 
+                       value="{{ employee.id_employe }}"
+                       form="batchForm"
+                       class="employee-checkbox">
+            </div>
+            
+            <div class="space-y-3">
+                <div>
+                    <span class="text-sm text-gray-500">Horaires:</span>
+                    <span class="ml-2">
+                        {% if employee.horaire_debut and employee.horaire_fin %}
+                            {{ employee.horaire_debut|time:"H:i" }} - {{ employee.horaire_fin|time:"H:i" }}
+                        {% else %}
+                            Non défini
+                        {% endif %}
+                    </span>
+                </div>
+                
+                <div>
+                    <span class="text-sm text-gray-500">Pause:</span>
+                    <span class="ml-2">
+                        {% if employee.pause_debut and employee.pause_fin %}
+                            {{ employee.pause_debut|time:"H:i" }} - {{ employee.pause_fin|time:"H:i" }}
+                        {% else %}
+                            Non défini
+                        {% endif %}
+                    </span>
+                </div>
+                
+                <div>
+                    <span class="text-sm text-gray-500">Statut:</span>
+                    <span class="status-badge status-{{ employee.statut }} ml-2">
+                        {{ employee.get_statut_display }}
+                    </span>
+                </div>
+            </div>
+            
+            <div class="mt-4">
+                <a href="{% url 'employees:planning_edit' employee.id_employe %}" 
+                   class="btn-secondary w-full text-center">
+                    Modifier
+                </a>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-span-full text-center py-8">
+            <p class="text-gray-500">Aucun employé trouvé</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const checkboxes = document.querySelectorAll('.employee-checkbox');
+    const batchSubmit = document.getElementById('batchSubmit');
+    
+    function updateBatchSubmit() {
+        const checked = document.querySelectorAll('.employee-checkbox:checked');
+        batchSubmit.disabled = checked.length === 0;
+    }
+    
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', updateBatchSubmit);
+    });
+});
+</script>
+{% endblock %}
+{% endblock %}

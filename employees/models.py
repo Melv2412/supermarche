@@ -13,6 +13,21 @@ class Employee(models.Model):
         ('securite', 'Sécurité'),
     ]
     
+    DEPARTEMENT_CHOICES = [
+        ('caisse', 'Caisse'),
+        ('rayons', 'Rayons'),
+        ('logistique', 'Logistique'),
+        ('administration', 'Administration'),
+        ('securite', 'Sécurité'),
+    ]
+    
+    STATUT_CHOICES = [
+        ('present', 'Présent'),
+        ('absent', 'Absent'),
+        ('conge', 'En congé'),
+        ('malade', 'Malade'),
+    ]
+    
     id_employe = models.AutoField(primary_key=True)
     nom = models.CharField(max_length=100)
     prenom = models.CharField(max_length=100)
@@ -29,6 +44,14 @@ class Employee(models.Model):
     )
     actif = models.BooleanField(default=True)
     photo = models.ImageField(upload_to='employees/', blank=True, null=True)
+    
+    # Champs pour le planning
+    departement = models.CharField(max_length=50, choices=DEPARTEMENT_CHOICES, default='caisse')
+    horaire_debut = models.TimeField(null=True)
+    horaire_fin = models.TimeField(null=True)
+    pause_debut = models.TimeField(null=True, blank=True)
+    pause_fin = models.TimeField(null=True, blank=True)
+    statut = models.CharField(max_length=20, choices=STATUT_CHOICES, default='present')
     
     class Meta:
         db_table = 'employes'

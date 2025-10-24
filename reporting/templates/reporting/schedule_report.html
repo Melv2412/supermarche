@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <title>Planning des Employés</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .employee-info {
+            background: #f9f9f9;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        .schedule-section {
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Planning des Employés</h1>
+        <p>Date : {{ date|date:"d/m/Y" }}</p>
+    </div>
+
+    {% for department, employees in departments.items %}
+    <div class="schedule-section">
+        <h2>{{ department }}</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Employé</th>
+                    <th>Poste</th>
+                    <th>Horaires</th>
+                    <th>Pause</th>
+                    <th>Statut</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for employee in employees %}
+                <tr>
+                    <td>{{ employee.nom }} {{ employee.prenom }}</td>
+                    <td>{{ employee.poste }}</td>
+                    <td>{{ employee.horaire_debut }} - {{ employee.horaire_fin }}</td>
+                    <td>{{ employee.pause_debut }} - {{ employee.pause_fin }}</td>
+                    <td>{{ employee.statut }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endfor %}
+
+    <div class="summary">
+        <h2>Résumé</h2>
+        <ul>
+            <td>Nombre total d'employés : {{ total_employees }}</td>
+            <td>Employés présents : {{ present_employees }}</td>
+            <td>Employés absents : {{ absent_employees }}</td>
+        </ul>
+    </div>
+</body>
+</html>
